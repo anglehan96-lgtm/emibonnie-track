@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>EmiBonnie </title>
+    <title>EmiBonnie</title>
     <style>
         :root {
             --bg-color: #F4F6F9;
@@ -27,7 +27,7 @@
         .gradient-title { font-size: 2.2rem; font-weight: 900; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 6px; letter-spacing: 0.5px; }
         header p { font-size: 13px; color: var(--text-muted); font-weight: 500; }
 
-        /* 同步狀態條 */
+        /* 雲端同步狀態條 */
         .sync-status { font-size: 13px; font-weight: 600; margin-top: 12px; color: var(--text-muted); display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--bg-color); padding: 6px 14px; border-radius: 20px; }
         .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #A0AEC0; display: inline-block; }
         .status-online { background: #48BB78; box-shadow: 0 0 8px rgba(72,187,120,0.5); }
@@ -138,7 +138,7 @@
 
     <header>
         <h1 class="gradient-title">EmiBonnie</h1>
-        <p>跨裝置自動同步 · 專屬追星大事記</p>
+        <p>個人應援記事與歷程紀錄</p>
         <div class="sync-status">
             <span class="status-dot" id="syncDot"></span>
             <span id="syncText">正在連線雲端...</span>
@@ -153,7 +153,7 @@
         <button class="tab-btn" id="tabAlbum" onclick="switchView('album')">🖼️ 照片</button>
     </div>
 
-    <!-- 控制列 -->
+    <!-- 工具列 -->
     <div class="controls" id="controlsBar">
         <input type="text" id="searchInput" placeholder="搜尋事件名稱或內容..." oninput="renderTimeline()">
         <select id="categoryFilter" onchange="renderTimeline()">
@@ -204,9 +204,9 @@
     <div class="modal" id="syncModal">
         <div class="modal-content">
             <h3>⚙️ 雲端同步金鑰設定</h3>
-            <p style="font-size:12px; color:var(--text-muted);">只需設定一次，填入後任何裝置開啟此網頁皆可自動同步資料。</p>
+            <p style="font-size:12px; color:var(--text-muted);">填入 GitHub 金鑰後，跨裝置皆可自由同步資料。</p>
             <label style="font-size:13px; font-weight:bold;">GitHub Gist ID：</label>
-            <input type="text" id="inputGistId" placeholder="貼上 Gist ID...">
+            <input type="text" id="inputGistId" placeholder="貼上純 Gist ID...">
             <label style="font-size:13px; font-weight:bold;">GitHub Token：</label>
             <input type="text" id="inputGistToken" placeholder="貼上 ghp_ 開頭的金鑰...">
             <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:8px;">
@@ -356,56 +356,6 @@
         let currentSingleImage = '';
         let currentCalendarDate = new Date();
 
-        // 依據生日字串 (YYYY.MM.DD / YYYY-MM-DD) 動態計算實歲年齡
-        function getAge(birthdayStr) {
-            if (!birthdayStr) return null;
-            const parts = birthdayStr.replace(/\./g, '-').split('-');
-            if (parts.length < 3) return null;
-            
-            const birthDate = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
-            if (isNaN(birthDate.getTime())) return null;
-
-            const today = new Date();
-            let age = today.getFullYear() - birthDate.getFullYear();
-            const monthDiff = today.getMonth() - birthDate.getMonth();
-            
-            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-                age--;
-            }
-            return age >= 0 ? age : null;
-        }
-
-        function linkify(text) {
-            if (!text) return '';
-            const urlRegex = /(https?:\/\/[^\s]+)/g;
-            return text.replace(urlRegex, url => `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`);
-        }
-
-        // 圖片壓縮為 Base64 (防止 API 上傳超限)
-        function compressImage(file, maxWidth = 800, quality = 0.7) {
-            return new Promise((resolve) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = (e) => {
-                    const img = new Image();
-                    img.src = e.target.result;
-                    img.onload = () => {
-                        const canvas = document.createElement('canvas');
-                        let w = img.width, h = img.height;
-                        if (w > maxWidth) {
-                            h = Math.round((h * maxWidth) / w);
-                            w = maxWidth;
-                        }
-                        canvas.width = w;
-                        canvas.height = h;
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0, w, h);
-                        resolve(canvas.toDataURL('image/jpeg', quality));
-                    };
-                };
-            });
-        }
-
         function updateSyncStatus(status, text) {
             const dot = document.getElementById('syncDot');
             const txt = document.getElementById('syncText');
@@ -427,19 +377,30 @@
                 });
                 if (!res.ok) throw new Error('API連線失敗');
                 const data = await res.json();
-                if (data.files && data.files["emibonnie_data.json"]) {
-                    const content = JSON.parse(data.files["emibonnie_data.json"].content);
-                    events = content.events || [];
-                    profiles = content.profiles || defaultProfiles;
-                    albumPhotos = content.albumPhotos || [];
-                    updateSyncStatus('online', '已連線雲端 (即時同步)');
+                
+                let foundFile = data.files["emibonnie_data.json"];
+                if (!foundFile) {
+                    const firstKey = Object.keys(data.files)[0];
+                    if (firstKey) foundFile = data.files[firstKey];
+                }
+
+                if (foundFile && foundFile.content) {
+                    try {
+                        const content = JSON.parse(foundFile.content);
+                        events = content.events || [];
+                        profiles = content.profiles || defaultProfiles;
+                        albumPhotos = content.albumPhotos || [];
+                        updateSyncStatus('online', '已連線雲端 (即時同步)');
+                    } catch(err) {
+                        updateSyncStatus('online', '雲端資料格式建立中');
+                    }
                 } else {
                     updateSyncStatus('online', '雲端為空，準備建立新紀錄');
                 }
                 renderTimeline();
             } catch (e) {
                 console.error(e);
-                updateSyncStatus('offline', '載入失敗，請檢查金鑰');
+                updateSyncStatus('offline', '載入失敗，請檢查金鑰或Gist ID');
             }
         }
 
@@ -481,12 +442,67 @@
         }
 
         function saveSyncSettings() {
-            gistId = document.getElementById('inputGistId').value.trim();
+            let rawGistId = document.getElementById('inputGistId').value.trim();
+            if (rawGistId.includes('/')) {
+                const parts = rawGistId.split('/');
+                rawGistId = parts[parts.length - 1];
+            }
+            
+            gistId = rawGistId;
             gistToken = document.getElementById('inputGistToken').value.trim();
+            
             localStorage.setItem('emibonnie_gist_id', gistId);
             localStorage.setItem('emibonnie_gist_token', gistToken);
             closeModal('syncModal');
             loadCloudData();
+        }
+
+        function getAge(birthdayStr) {
+            if (!birthdayStr) return null;
+            const parts = birthdayStr.replace(/\./g, '-').split('-');
+            if (parts.length < 3) return null;
+            
+            const birthDate = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+            if (isNaN(birthDate.getTime())) return null;
+
+            const today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            return age >= 0 ? age : null;
+        }
+
+        function linkify(text) {
+            if (!text) return '';
+            const urlRegex = /(https?:\/\/[^\s]+)/g;
+            return text.replace(urlRegex, url => `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`);
+        }
+
+        function compressImage(file, maxWidth = 800, quality = 0.7) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.src = e.target.result;
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        let w = img.width, h = img.height;
+                        if (w > maxWidth) {
+                            h = Math.round((h * maxWidth) / w);
+                            w = maxWidth;
+                        }
+                        canvas.width = w;
+                        canvas.height = h;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, w, h);
+                        resolve(canvas.toDataURL('image/jpeg', quality));
+                    };
+                };
+            });
         }
 
         function closeModal(id) {
@@ -567,21 +583,21 @@
 
                 itemEl.innerHTML = `
                     <div class="timeline-left-date">
-                        <div class="timeline-date-year">${yearStr}</div>
-                        <div class="timeline-date-day">${dayStr}</div>
+                        <span class="timeline-date-year">${yearStr}</span>
+                        <span class="timeline-date-day">${dayStr}</span>
                     </div>
                     <div class="timeline-dot"></div>
                     <div class="timeline-right-card">
                         <div class="event-header">
                             <span class="event-tag">${getCategoryLabel(item.category)}</span>
                             <div>
-                                <button class="btn-action" onclick="openModalForEdit(${item.id})">✏️ 編輯</button>
-                                <button class="btn-action btn-delete" onclick="deleteEvent(${item.id})">🗑️ 刪除</button>
+                                <button class="btn-action" onclick="openModalForEdit(${item.id})">編輯</button>
+                                <button class="btn-action btn-delete" onclick="deleteEvent(${item.id})">刪除</button>
                             </div>
                         </div>
                         ${membersHtml}
                         <div class="event-title">${item.title}</div>
-                        <div class="event-content">${linkify(item.content || '')}</div>
+                        <div class="event-content">${linkify(item.content)}</div>
                         ${imgsHtml}
                     </div>
                 `;
@@ -591,14 +607,14 @@
 
         function openModalForAdd() {
             editingId = null;
-            currentUploadedImages = [];
             document.getElementById('modalTitle').innerText = '新增紀錄事件';
             document.getElementById('inputDate').value = new Date().toISOString().split('T')[0];
             document.getElementById('inputTitle').value = '';
+            document.getElementById('inputCategory').value = 'movie';
             document.getElementById('inputContent').value = '';
             document.querySelectorAll('.member-checkbox').forEach(cb => cb.checked = false);
             document.getElementById('previewThumbs').innerHTML = '';
-            document.getElementById('inputImages').value = '';
+            currentUploadedImages = [];
             document.getElementById('eventModal').style.display = 'flex';
         }
 
@@ -606,17 +622,15 @@
             const item = events.find(e => e.id === id);
             if (!item) return;
             editingId = id;
-            currentUploadedImages = item.images || [];
             document.getElementById('modalTitle').innerText = '編輯紀錄事件';
             document.getElementById('inputDate').value = item.date;
             document.getElementById('inputTitle').value = item.title;
             document.getElementById('inputCategory').value = item.category;
             document.getElementById('inputContent').value = item.content || '';
-
             document.querySelectorAll('.member-checkbox').forEach(cb => {
-                cb.checked = item.members && item.members.includes(cb.value);
+                cb.checked = item.members ? item.members.includes(cb.value) : false;
             });
-
+            currentUploadedImages = item.images || [];
             renderPreviewThumbs();
             document.getElementById('eventModal').style.display = 'flex';
         }
@@ -631,17 +645,17 @@
         }
 
         function renderPreviewThumbs() {
-            const div = document.getElementById('previewThumbs');
-            div.innerHTML = currentUploadedImages.map((src, idx) => `
-                <div style="position:relative; display:inline-block;">
-                    <img src="${src}" style="width:55px; height:55px; object-fit:cover; border-radius:6px;">
-                    <span onclick="removePreviewImg(${idx})" style="position:absolute; top:-5px; right:-5px; background:red; color:white; border-radius:50%; width:16px; height:16px; font-size:10px; display:flex; align-items:center; justify-content:center; cursor:pointer;">×</span>
+            const container = document.getElementById('previewThumbs');
+            container.innerHTML = currentUploadedImages.map((src, i) => `
+                <div style="position:relative;">
+                    <img src="${src}">
+                    <span onclick="removePreviewImg(${i})" style="position:absolute; top:-6px; right:-6px; background:red; color:white; border-radius:50%; width:16px; height:16px; text-align:center; line-height:16px; font-size:10px; cursor:pointer;">×</span>
                 </div>
             `).join('');
         }
 
-        function removePreviewImg(idx) {
-            currentUploadedImages.splice(idx, 1);
+        function removePreviewImg(i) {
+            currentUploadedImages.splice(i, 1);
             renderPreviewThumbs();
         }
 
@@ -649,19 +663,18 @@
             const date = document.getElementById('inputDate').value;
             const title = document.getElementById('inputTitle').value.trim();
             const category = document.getElementById('inputCategory').value;
-            const content = document.getElementById('inputContent').value.trim();
-
+            const content = document.getElementById('inputContent').value;
             const members = Array.from(document.querySelectorAll('.member-checkbox:checked')).map(cb => cb.value);
 
             if (!date || !title) {
-                alert('請填寫日期與標題！');
+                alert('請填寫日期與事件標題！');
                 return;
             }
 
             if (editingId) {
-                const idx = events.findIndex(e => e.id === editingId);
-                if (idx !== -1) {
-                    events[idx] = { id: editingId, date, title, category, content, members, images: currentUploadedImages };
+                const index = events.findIndex(e => e.id === editingId);
+                if (index !== -1) {
+                    events[index] = { ...events[index], date, title, category, content, members, images: currentUploadedImages };
                 }
             } else {
                 events.push({
@@ -676,66 +689,70 @@
         }
 
         async function deleteEvent(id) {
-            if (confirm('確定要刪除此事件嗎？')) {
+            if (confirm('確定要刪除這筆紀錄嗎？')) {
                 events = events.filter(e => e.id !== id);
                 renderTimeline();
                 await saveCloudData();
             }
         }
 
+        function openDetailModal(id) {
+            const item = events.find(e => e.id === id);
+            if (!item) return;
+            document.getElementById('detailTitle').innerText = item.title;
+            document.getElementById('detailDate').innerText = item.date;
+            document.getElementById('detailCategory').innerText = getCategoryLabel(item.category);
+            document.getElementById('detailMembers').innerHTML = item.members ? `<span class="member-badge" style="${getMembersStyle(item.members)}">${item.members.join(' & ')}</span>` : '';
+            document.getElementById('detailContent').innerHTML = linkify(item.content);
+
+            const imgContainer = document.getElementById('detailImages');
+            imgContainer.innerHTML = item.images ? item.images.map(src => `<img src="${src}">`).join('') : '';
+
+            document.getElementById('detailModal').style.display = 'flex';
+        }
+
         function renderCalendar() {
+            const yearSelect = document.getElementById('yearSelect');
+            const monthSelect = document.getElementById('monthSelect');
             const grid = document.getElementById('calendarGrid');
-            grid.innerHTML = '';
+
             const year = currentCalendarDate.getFullYear();
             const month = currentCalendarDate.getMonth();
 
-            updateCalendarSelects(year, month);
+            yearSelect.innerHTML = '';
+            for (let y = year - 5; y <= year + 5; y++) {
+                yearSelect.innerHTML += `<option value="${y}" ${y === year ? 'selected' : ''}>${y} 年</option>`;
+            }
+            monthSelect.innerHTML = '';
+            for (let m = 0; m < 12; m++) {
+                monthSelect.innerHTML += `<option value="${m}" ${m === month ? 'selected' : ''}>${m + 1} 月</option>`;
+            }
 
-            ['日', '一', '二', '三', '四', '五', '六'].forEach(day => {
-                const d = document.createElement('div');
-                d.className = 'day-header';
-                d.innerText = day;
-                grid.appendChild(d);
-            });
+            grid.innerHTML = ['日', '一', '二', '三', '四', '五', '六'].map(d => `<div class="day-header">${d}</div>`).join('');
 
             const firstDay = new Date(year, month, 1).getDay();
             const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-            for (let i = 0; i < firstDay; i++) grid.appendChild(document.createElement('div'));
+            for (let i = 0; i < firstDay; i++) {
+                grid.innerHTML += `<div class="calendar-day" style="background:#F7FAFC;"></div>`;
+            }
 
             for (let day = 1; day <= daysInMonth; day++) {
-                const cell = document.createElement('div');
-                cell.className = 'calendar-day';
                 const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                
-                cell.innerHTML = `<span class="day-num">${day}</span>`;
-
                 const dayEvents = events.filter(e => e.date === dateStr);
-                dayEvents.forEach(evt => {
-                    const dot = document.createElement('div');
-                    dot.className = 'calendar-event-dot';
-                    dot.style = getMembersStyle(evt.members);
-                    dot.innerText = evt.title;
-                    dot.onclick = () => openDetailModal(evt.id);
-                    cell.appendChild(dot);
-                });
 
-                grid.appendChild(cell);
-            }
-        }
+                let eventsHtml = dayEvents.map(e => `
+                    <div class="calendar-event-dot" style="${getMembersStyle(e.members)}" onclick="openDetailModal(${e.id})">
+                        ${e.title}
+                    </div>
+                `).join('');
 
-        function updateCalendarSelects(year, month) {
-            const ySelect = document.getElementById('yearSelect');
-            const mSelect = document.getElementById('monthSelect');
-
-            ySelect.innerHTML = '';
-            mSelect.innerHTML = '';
-
-            for (let y = year - 5; y <= year + 5; y++) {
-                ySelect.innerHTML += `<option value="${y}" ${y === year ? 'selected' : ''}>${y} 年</option>`;
-            }
-            for (let m = 0; m < 12; m++) {
-                mSelect.innerHTML += `<option value="${m}" ${m === month ? 'selected' : ''}>${m + 1} 月</option>`;
+                grid.innerHTML += `
+                    <div class="calendar-day">
+                        <span class="day-num">${day}</span>
+                        ${eventsHtml}
+                    </div>
+                `;
             }
         }
 
@@ -751,62 +768,31 @@
             renderCalendar();
         }
 
-        function openDetailModal(id) {
-            const evt = events.find(e => e.id === id);
-            if (!evt) return;
-
-            document.getElementById('detailTitle').innerText = evt.title;
-            document.getElementById('detailDate').innerText = `📅 ${evt.date}`;
-            document.getElementById('detailCategory').innerText = `類別：${getCategoryLabel(evt.category)}`;
-            document.getElementById('detailContent').innerHTML = linkify(evt.content || '無詳細說明');
-
-            const memDiv = document.getElementById('detailMembers');
-            if (evt.members && evt.members.length > 0) {
-                memDiv.innerHTML = `<span class="member-badge" style="${getMembersStyle(evt.members)}">${evt.members.join(' & ')}</span>`;
-            } else {
-                memDiv.innerHTML = '';
-            }
-
-            const imgDiv = document.getElementById('detailImages');
-            if (evt.images && evt.images.length > 0) {
-                imgDiv.innerHTML = evt.images.map(i => `<img src="${i}">`).join('');
-            } else {
-                imgDiv.innerHTML = '';
-            }
-
-            document.getElementById('detailModal').style.display = 'flex';
-        }
-
-        // 渲染資料頁籤（自動計算並顯示年齡）
         function renderProfiles() {
             const container = document.getElementById('profileContainer');
             container.innerHTML = '';
 
             Object.keys(profiles).forEach(key => {
                 const p = profiles[key];
+                const age = getAge(p.birthday);
+                const ageDisplay = age !== null ? ` (${age}歲)` : '';
+
                 const card = document.createElement('div');
                 card.className = 'profile-card';
-
-                const avatarSrc = p.avatar || 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24" fill="%23CBD5E0"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>';
-
-                const age = getAge(p.birthday);
-                const birthdayDisplay = p.birthday 
-                    ? (age !== null ? `${p.birthday} (${age} 歲)` : p.birthday)
-                    : '-';
-
                 card.innerHTML = `
-                    <button class="btn-action" style="position:absolute; top:12px; right:12px;" onclick="openProfileModal('${key}')">✏️ 編輯</button>
-                    <img src="${avatarSrc}" class="profile-avatar" style="border-color:${p.color || '#E2E8F0'}">
+                    <button class="btn-action" style="position:absolute; top:12px; right:12px;" onclick="openProfileModal('${key}')">編輯</button>
+                    <img class="profile-avatar" src="${p.avatar || 'https://via.placeholder.com/110'}" alt="${p.name}">
                     <div class="profile-fullname">${p.fullname || ''}</div>
-                    <div class="profile-name" style="color:${p.color || '#1A202C'}">${p.name}</div>
+                    <div class="profile-name" style="color:${p.color || '#1A202C'};">${p.name}</div>
                     <div class="profile-info">
                         <div class="info-row"><span class="info-label">暱稱</span><span>${p.nickname || '-'}</span></div>
-                        <div class="info-row"><span class="info-label">生日</span><span>${birthdayDisplay}</span></div>
+                        <div class="info-row"><span class="info-label">生日</span><span>${p.birthday || '-'}${ageDisplay}</span></div>
                         <div class="info-row"><span class="info-label">星座</span><span>${p.zodiac || '-'}</span></div>
+                        <div class="info-row"><span class="info-label">性別</span><span>${p.gender || '-'}</span></div>
                         <div class="info-row"><span class="info-label">身高 / 體重</span><span>${p.height || '-'} / ${p.weight || '-'}</span></div>
                         <div class="info-row"><span class="info-label">喜好</span><span>${p.hobby || '-'}</span></div>
                         <div class="info-row"><span class="info-label">寵物</span><span>${p.pet || '-'}</span></div>
-                        <div class="info-row"><span class="info-label">食物</span><span>${p.food || '-'}</span></div>
+                        <div class="info-row"><span class="info-label">喜歡的食物</span><span>${p.food || '-'}</span></div>
                     </div>
                 `;
                 container.appendChild(card);
@@ -816,9 +802,6 @@
         function openProfileModal(key) {
             editingProfileKey = key;
             const p = profiles[key];
-            currentSingleImage = p.avatar || '';
-
-            document.getElementById('profileModalTitle').innerText = `編輯 ${p.name} 的資料`;
             document.getElementById('profFullName').value = p.fullname || '';
             document.getElementById('profNickname').value = p.nickname || '';
             document.getElementById('profBirthday').value = p.birthday || '';
@@ -826,27 +809,28 @@
             document.getElementById('profGender').value = p.gender || '';
             document.getElementById('profHeight').value = p.height || '';
             document.getElementById('profWeight').value = p.weight || '';
-            document.getElementById('profColor').value = p.color || '#FF6B00';
+            document.getElementById('profColor').value = p.color || '#8A2BE2';
             document.getElementById('profHobby').value = p.hobby || '';
             document.getElementById('profPet').value = p.pet || '';
             document.getElementById('profFood').value = p.food || '';
 
-            const preview = document.getElementById('profImgPreview');
-            if (currentSingleImage) {
-                preview.src = currentSingleImage;
-                preview.style.display = 'block';
+            const imgPreview = document.getElementById('profImgPreview');
+            if (p.avatar) {
+                imgPreview.src = p.avatar;
+                imgPreview.style.display = 'block';
+                currentSingleImage = p.avatar;
             } else {
-                preview.style.display = 'none';
+                imgPreview.style.display = 'none';
+                currentSingleImage = '';
             }
-
             document.getElementById('profileModal').style.display = 'flex';
         }
 
-        async function previewSingleImage(e, imgElementId) {
+        async function previewSingleImage(e, imgId) {
             const file = e.target.files[0];
             if (file) {
                 currentSingleImage = await compressImage(file);
-                const img = document.getElementById(imgElementId);
+                const img = document.getElementById(imgId);
                 img.src = currentSingleImage;
                 img.style.display = 'block';
             }
@@ -867,9 +851,8 @@
                 hobby: document.getElementById('profHobby').value,
                 pet: document.getElementById('profPet').value,
                 food: document.getElementById('profFood').value,
-                avatar: currentSingleImage
+                avatar: currentSingleImage || profiles[editingProfileKey].avatar
             };
-
             closeModal('profileModal');
             renderProfiles();
             await saveCloudData();
@@ -878,23 +861,20 @@
         function renderAlbum() {
             const grid = document.getElementById('albumGrid');
             grid.innerHTML = '';
-
             if (albumPhotos.length === 0) {
-                grid.innerHTML = '<p style="grid-column:1/-1; text-align:center; color:var(--text-muted); padding:30px;">尚無照片收藏，點擊右上角新增吧！</p>';
+                grid.innerHTML = '<p style="grid-column: 1/-1; text-align:center; color:var(--text-muted); padding:30px 0;">目前沒有上傳相片。</p>';
                 return;
             }
-
-            albumPhotos.forEach((item, idx) => {
-                const card = document.createElement('div');
-                card.className = 'album-card';
-                card.innerHTML = `
-                    <img src="${item.url}" onclick="openImageLightBox('${item.url}')">
-                    <div class="album-card-info">
-                        <span class="member-badge" style="${getMembersStyle([item.member])}">${item.member}</span>
-                        <button class="btn-action btn-delete" onclick="deleteAlbumPhoto(${idx})">🗑️</button>
+            albumPhotos.forEach((item, index) => {
+                grid.innerHTML += `
+                    <div class="album-card">
+                        <img src="${item.src}" onclick="window.open('${item.src}')">
+                        <div class="album-card-info">
+                            <span class="member-badge" style="${getMembersStyle([item.member])}">${item.member}</span>
+                            <button class="btn-action btn-delete" onclick="deleteAlbumPhoto(${index})">刪除</button>
+                        </div>
                     </div>
                 `;
-                grid.appendChild(card);
             });
         }
 
@@ -905,28 +885,23 @@
         }
 
         async function saveAlbumPhoto() {
+            const member = document.getElementById('albumMember').value;
             if (!currentSingleImage) {
-                alert('請先選擇照片！');
+                alert('請選擇照片！');
                 return;
             }
-            const member = document.getElementById('albumMember').value;
-            albumPhotos.unshift({ url: currentSingleImage, member, id: Date.now() });
-
+            albumPhotos.unshift({ member, src: currentSingleImage, id: Date.now() });
             closeModal('albumModal');
             renderAlbum();
             await saveCloudData();
         }
 
-        async function deleteAlbumPhoto(idx) {
-            if (confirm('確定要刪除這張照片嗎？')) {
-                albumPhotos.splice(idx, 1);
+        async function deleteAlbumPhoto(index) {
+            if (confirm('確定要刪除這張相片嗎？')) {
+                albumPhotos.splice(index, 1);
                 renderAlbum();
                 await saveCloudData();
             }
-        }
-
-        function openImageLightBox(url) {
-            window.open(url, '_blank');
         }
 
         window.onload = () => {
