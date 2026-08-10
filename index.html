@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EmiBonnie 追星紀錄 (雲端同步版)</title>
+    <style>
+        :root {
+            --bg-color: #F8F9FA;
+            --card-bg: #FFFFFF;
+            --text-color: #2D3748;
+            --text-muted: #718096;
+            --border-color: #EDF2F7;
+            --danger-color: #E53E3E;
+            --primary-gradient: linear-gradient(135deg, #FF6B00 0%, #8A2BE2 100%);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-color); padding: 20px; max-width: 950px; margin: 0 auto; }
+
+        header { text-align: center; margin-bottom: 25px; padding: 25px; background: var(--card-bg); border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        .gradient-title { font-size: 2.6rem; font-weight: 900; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 6px; letter-spacing: 1px; }
+
+        .sync-status { font-size: 13px; font-weight: bold; margin-top: 8px; color: var(--text-muted); display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .status-dot { width: 10px; height: 10px; border-radius: 50%; background: #CBD5E0; display: inline-block; }
+        .status-online { background: #48BB78; }
+        .status-syncing { background: #ECC94B; }
+
+        .view-tabs { display: flex; justify-content: center; gap: 12px; margin-bottom: 25px; flex-wrap: wrap; }
+        .tab-btn { padding: 10px 22px; background: #E2E8F0; color: var(--text-color); border-radius: 25px; font-weight: bold; cursor: pointer; border: none; transition: all 0.3s ease; }
+        .tab-btn.active { background: var(--primary-gradient); color: white; box-shadow: 0 4px 12px rgba(138, 43, 226, 0.3); }
+
+        .controls { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 25px; background: var(--card-bg); padding: 16px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        input, select, button, textarea { padding: 10px 14px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 14px; outline: none; }
+        input[type="text"] { flex: 1; min-width: 180px; }
+        button.btn-primary { background: var(--primary-gradient); color: white; border: none; cursor: pointer; font-weight: bold; border-radius: 10px; }
+
+        /* 時間軸 */
+        .timeline { position: relative; padding: 10px 0; }
+        .timeline::before { content: ''; position: absolute; left: 120px; top: 0; bottom: 0; width: 4px; background: #E2E8F0; border-radius: 2px; }
+        .timeline-item { position: relative; display: flex; margin-bottom: 30px; }
+        .timeline-left-date { width: 100px; text-align: right; padding-right: 15px; flex-shrink: 0; }
+        .timeline-date-year { font-size: 12px; color: var(--text-muted); font-weight: bold; }
+        .timeline-date-day { font-size: 16px; font-weight: 800; color: #2D3748; }
+        .timeline-dot { position: absolute; left: 114px; top: 15px; width: 16px; height: 16px; border-radius: 50%; background: #8A2BE2; border: 3px solid white; box-shadow: 0 0 0 2px #CBD5E0; z-index: 2; }
+        .timeline-right-card { margin-left: 35px; flex: 1; background: var(--card-bg); border-radius: 16px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid var(--border-color); }
+
+        .event-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .event-tag { font-size: 12px; padding: 3px 10px; border-radius: 12px; font-weight: 600; background: #EDF2F7; color: #4A5568; }
+        .member-tags { margin-bottom: 8px; display: flex; gap: 6px; flex-wrap: wrap; }
+        .member-badge { font-size: 12px; font-weight: bold; padding: 3px 12px; border-radius: 12px; color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+        .btn-action { background: transparent; color: var(--text-muted); padding: 4px 8px; font-size: 12px; border-radius: 6px; border: none; cursor: pointer; }
+        .btn-action:hover { background: var(--border-color); }
+        .btn-delete:hover { background: #FED7D7; color: var(--danger-color); }
+        .event-title { font-size: 18px; font-weight: bold; margin-bottom: 6px; }
+        .event-content { font-size: 14px; color: #4A5568; line-height: 1.6; white-space: pre-line; margin-bottom: 12px; }
+        
+        .image-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 8px; margin-top: 10px; }
+        .image-grid img { width: 100%; height: 110px; object-fit: cover; border-radius: 8px; }
+
+        /* 行事曆 */
+        .calendar-container { display: none; background: var(--card-bg); border-radius: 16px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; text-align: center; }
+        .day-header { font-weight: bold; padding: 8px 0; color: var(--text-muted); }
+        .calendar-day { min-height: 90px; border: 1px solid var(--border-color); border-radius: 10px; padding: 6px; text-align: left; background: white; font-size: 12px; overflow: hidden; }
+        .calendar-day .day-num { font-weight: bold; margin-bottom: 4px; display: block; }
+        .calendar-event-dot { color: white; padding: 3px 6px; border-radius: 6px; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 11px; cursor: pointer; font-weight: bold; text-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+
+        /* 資料 */
+        .profile-container { display: none; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .profile-card { background: var(--card-bg); border-radius: 20px; padding: 22px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid var(--border-color); display: flex; flex-direction: column; align-items: center; position: relative; }
+        .profile-avatar { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; margin-bottom: 12px; border: 4px solid var(--border-color); background: #EDF2F7; }
+        .profile-fullname { font-size: 13px; color: var(--text-muted); margin-bottom: 2px; }
+        .profile-name { font-size: 22px; font-weight: 800; margin-bottom: 12px; }
+        .profile-info { width: 100%; font-size: 13px; display: flex; flex-direction: column; gap: 10px; }
+        .info-row { display: flex; justify-content: space-between; border-bottom: 1px dashed var(--border-color); padding-bottom: 4px; }
+        .info-label { color: var(--text-muted); font-weight: 600; }
+
+        /* 相簿 */
+        .album-container { display: none; }
+        .album-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; }
+        .album-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.03); border: 1px solid var(--border-color); }
+        .album-card img { width: 100%; height: 200px; object-fit: cover; }
+        .album-card-info { padding: 10px; font-size: 12px; }
+
+        /* Modal */
+        .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; padding: 20px; z-index: 100; }
+        .modal-content { background: white; padding: 24px; border-radius: 16px; width: 100%; max-width: 550px; display: flex; flex-direction: column; gap: 12px; max-height: 90vh; overflow-y: auto; }
+        .event-detail-layout { display: flex; gap: 20px; }
+        .detail-left-images { flex: 1; display: flex; flex-direction: column; gap: 10px; max-height: 350px; overflow-y: auto; }
+        .detail-left-images img { width: 100%; border-radius: 8px; }
+        .detail-right-info { flex: 1.2; display: flex; flex-direction: column; gap: 8px; }
+        .checkbox-group { display: flex; gap: 15px; }
+        .checkbox-label { display: flex; align-items: center; gap: 4px; font-weight: bold; cursor: pointer; }
+        .preview-thumbs { display: flex; gap: 8px; flex-wrap: wrap; }
+        .preview-thumbs img { width: 60px; height: 60px; object-fit: cover; border-radius: 6px; }
+
+        @media (max-width: 600px) {
+            .timeline::before { left: 20px; }
+            .timeline-item { flex-direction: column; }
+            .timeline-left-date { text-align: left; width: 100%; padding-left: 35px; margin-bottom: 5px; }
+            .timeline-dot { left: 12px; top: 2px; }
+            .timeline-right-card { margin-left: 35px; }
+            .event-detail-layout { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1 class="gradient-title">EmiBonnie</h1>
+        <p>跨裝置自動同步 · 專屬追星大事記</p>
+        <div class="sync-status">
+            <span class="status-dot" id="syncDot"></span>
+            <span id="syncText">正在連線雲端...</span>
+            <button class="btn-action" onclick="openSyncSettingModal()">⚙️ 設定金鑰</button>
+        </div>
+    </header>
+
+    <div class="view-tabs">
+        <button class="tab-btn active" id="tabTimeline" onclick="switchView('timeline')">⏳ 時間軸</button>
+        <button class="tab-btn" id="tabCalendar" onclick="switchView('calendar')">📅 行事曆</button>
+        <button class="tab-btn" id="tabProfile" onclick="switchView('profile')">🎴 資料</button>
+        <button class="tab-btn" id="tabAlbum" onclick="switchView('album')">🖼️ 美圖相簿</button>
+    </div>
+
+    <!-- 控制列 -->
+    <div class="controls" id="controlsBar">
+        <input type="text" id="searchInput" placeholder="搜尋事件名稱或內容..." oninput="renderTimeline()">
+        <select id="categoryFilter" onchange="renderTimeline()">
+            <option value="ALL">所有類別</option>
+            <option value="movie">🎬 影視</option>
+            <option value="music">🎵 音樂</option>
+            <option value="stage">🎪 舞台</option>
+            <option value="activity">🎉 活動</option>
+            <option value="show">📺 節目</option>
+            <option value="offline">🛍️ 線下</option>
+            <option value="honor">🏆 榮譽</option>
+            <option value="announcement">📢 公告</option>
+        </select>
+        <button class="btn-primary" onclick="openModalForAdd()">+ 新增事件/行程</button>
+    </div>
+
+    <!-- 1. 時間軸 -->
+    <div class="timeline" id="timelineContainer"></div>
+
+    <!-- 2. 行事曆 -->
+    <div class="calendar-container" id="calendarContainer">
+        <div class="calendar-header">
+            <div>
+                <button onclick="changeMonth(-1)">&lt; 上個月</button>
+                <button onclick="changeMonth(1)">下個月 &gt;</button>
+            </div>
+            <div style="display:flex; gap:8px;">
+                <select id="yearSelect" onchange="onSelectDateChange()"></select>
+                <select id="monthSelect" onchange="onSelectDateChange()"></select>
+            </div>
+        </div>
+        <div class="calendar-grid" id="calendarGrid"></div>
+    </div>
+
+    <!-- 3. 資料 -->
+    <div class="profile-container" id="profileContainer"></div>
+
+    <!-- 4. 美圖相簿 -->
+    <div class="album-container" id="albumContainer">
+        <div style="margin-bottom: 15px; display:flex; justify-content:space-between; align-items:center;">
+            <h3>美圖收藏庫</h3>
+            <button class="btn-primary" onclick="openAlbumModal()">+ 上傳美圖</button>
+        </div>
+        <div class="album-grid" id="albumGrid"></div>
+    </div>
+
+    <!-- 設定雲端金鑰 Modal -->
+    <div class="modal" id="syncModal">
+        <div class="modal-content">
+            <h3>⚙️ 雲端同步金鑰設定</h3>
+            <p style="font-size:12px; color:var(--text-muted);">只需設定一次，填入後任何裝置開啟此網頁皆可自動同步資料。</p>
+            <label>GitHub Gist ID：</label>
+            <input type="text" id="inputGistId" placeholder="例如：1234567890abcdef...">
+            <label>GitHub Token：</label>
+            <input type="text" id="inputGistToken" placeholder="例如：ghp_xxxxxxxxxxxx...">
+            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:10px;">
+                <button onclick="closeModal('syncModal')">取消</button>
+                <button class="btn-primary" onclick="saveSyncSettings()">儲存並同步</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 新增/編輯時間軸 Modal -->
+    <div class="modal" id="eventModal">
+        <div class="modal-content">
+            <h3 id="modalTitle">新增紀錄事件</h3>
+            <label>日期：</label>
+            <input type="date" id="inputDate">
+            <label>事件標題：</label>
+            <input type="text" id="inputTitle">
+            
+            <label>登場人物（可複選）：</label>
+            <div class="checkbox-group">
+                <label class="checkbox-label"><input type="checkbox" value="Emi" class="member-checkbox"> Emi</label>
+                <label class="checkbox-label"><input type="checkbox" value="Bonnie" class="member-checkbox"> Bonnie</label>
+                <label class="checkbox-label"><input type="checkbox" value="Any" class="member-checkbox"> Any</label>
+            </div>
+
+            <label>類別：</label>
+            <select id="inputCategory">
+                <option value="movie">🎬 影視</option>
+                <option value="music">🎵 音樂</option>
+                <option value="stage">🎪 舞台</option>
+                <option value="activity">🎉 活動</option>
+                <option value="show">📺 節目</option>
+                <option value="offline">🛍️ 線下</option>
+                <option value="honor">🏆 榮譽</option>
+                <option value="announcement">📢 公告</option>
+            </select>
+
+            <label>詳細記錄 / 心得：</label>
+            <textarea id="inputContent" rows="3"></textarea>
+            
+            <label>照片紀錄（可多選）：</label>
+            <input type="file" id="inputImages" accept="image/*" multiple onchange="previewMultipleImages(event)">
+            <div id="previewThumbs" class="preview-thumbs"></div>
+
+            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:10px;">
+                <button onclick="closeModal('eventModal')">取消</button>
+                <button class="btn-primary" onclick="saveEvent()">儲存</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 行事曆詳情 Modal -->
+    <div class="modal" id="detailModal">
+        <div class="modal-content" style="max-width: 650px;">
+            <h3 id="detailTitle">行程詳情</h3>
+            <div class="event-detail-layout">
+                <div class="detail-left-images" id="detailImages"></div>
+                <div class="detail-right-info">
+                    <div id="detailDate" style="font-weight:bold; color:var(--text-muted);"></div>
+                    <div id="detailCategory" style="font-size:12px; margin-bottom:5px;"></div>
+                    <div id="detailMembers"></div>
+                    <hr style="border:none; border-top:1px dashed #E2E8F0; margin:8px 0;">
+                    <div id="detailContent" style="white-space:pre-line; font-size:14px; color:#4A5568;"></div>
+                </div>
+            </div>
+            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:15px;">
+                <button class="btn-primary" onclick="closeModal('detailModal')">關閉</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 編輯資料 Modal -->
+    <div class="modal" id="profileModal">
+        <div class="modal-content">
+            <h3 id="profileModalTitle">編輯資料</h3>
+            <label>全名：</label>
+            <input type="text" id="profFullName">
+            <label>暱稱：</label>
+            <input type="text" id="profNickname">
+            <label>生日 (月.日)：</label>
+            <input type="text" id="profBirthday" placeholder="例如：05.20" onchange="autoCalcZodiac()">
+            <label>星座 (自動計算)：</label>
+            <input type="text" id="profZodiac" readonly style="background:#F7FAFC;">
+            <label>性別：</label>
+            <input type="text" id="profGender">
+            <label>身高：</label>
+            <input type="text" id="profHeight">
+            <label>體重：</label>
+            <input type="text" id="profWeight">
+            <label>應援色：</label>
+            <input type="color" id="profColor">
+            <label>喜好：</label>
+            <input type="text" id="profHobby">
+            <label>寵物：</label>
+            <input type="text" id="profPet">
+            <label>食物：</label>
+            <input type="text" id="profFood">
+            <label>大頭照：</label>
+            <input type="file" accept="image/*" onchange="previewSingleImage(event, 'profImgPreview')">
+            <img id="profImgPreview" style="max-height:100px; border-radius:8px; display:none; margin-top:5px;">
+
+            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:10px;">
+                <button onclick="closeModal('profileModal')">取消</button>
+                <button class="btn-primary" onclick="saveProfile()">儲存</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 上傳美圖 Modal -->
+    <div class="modal" id="albumModal">
+        <div class="modal-content">
+            <h3>上傳美圖</h3>
+            <label>人物：</label>
+            <select id="albumMember">
+                <option value="Emi">Emi</option>
+                <option value="Bonnie">Bonnie</option>
+                <option value="Any">Any</option>
+                <option value="Group">合照 / 全員</option>
+            </select>
+            <label>美圖相片：</label>
+            <input type="file" accept="image/*" onchange="previewSingleImage(event, 'albumImgPreview')">
+            <img id="albumImgPreview" style="max-height:150px; border-radius:8px; display:none; margin-top:5px;">
+            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:10px;">
+                <button onclick="closeModal('albumModal')">取消</button>
+                <button class="btn-primary" onclick="saveAlbumPhoto()">新增相片</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function getZodiacSign(month, day) {
+            const m = parseInt(month), d = parseInt(day);
+            if ((m == 3 && d >= 21) || (m == 4 && d <= 19)) return "牡羊座";
+            if ((m == 4 && d >= 20) || (m == 5 && d <= 20)) return "金牛座";
+            if ((m == 5 && d >= 21) || (m == 6 && d <= 21)) return "雙子座";
+            if ((m == 6 && d >= 22) || (m == 7 && d <= 22)) return "巨蟹座";
+            if ((m == 7 && d >= 23) || (m == 8 && d <= 22)) return "獅子座";
+            if ((m == 8 && d >= 23) || (m == 9 && d <= 22)) return "處女座";
+            if ((m == 9 && d >= 23) || (m == 10 && d <= 23)) return "天秤座";
+            if ((m == 10 && d >= 24) || (m == 11 && d <= 22)) return "天蠍座";
+            if ((m == 11 && d >= 23) || (m == 12 && d <= 21)) return "射手座";
+            if ((m == 12 && d >= 22) || (m == 1 && d <= 19)) return "摩羯座";
+            if ((m == 1 && d >= 20) || (m == 2 && d <= 18)) return "水瓶座";
+            if ((m == 2 && d >= 19) || (m == 3 && d <= 20)) return "雙魚座";
+            return "未知";
+        }
+
+        const defaultProfiles = {
+            'Emi': { name: 'Emi', fullname: 'Emi Thasorn Klinnim', nickname: '小E', birthday: '03.25', zodiac: '牡羊座', gender: '女', height: '165cm', weight: '45kg', color: '#FF6B00', hobby: '唱歌、跳舞', pet: '貓', food: '草莓', avatar: '' },
+            'Bonnie': { name: 'Bonnie', fullname: 'Bonnie Pattraphus Borattasuwan', nickname: '邦妮', birthday: '07.12', zodiac: '巨蟹座', gender: '女', height: '168cm', weight: '48kg', color: '#8A2BE2', hobby: '看電影', pet: '狗', food: '巧克力', avatar: '' },
+            'Any': { name: 'Any', fullname: 'Any KlinnimBorattasuwan', nickname: '小安', birthday: '11.05', zodiac: '天蠍座', gender: '女', height: '162cm', weight: '44kg', color: '#FFD700', hobby: '畫畫', pet: '兔子', food: '蛋糕', avatar: '' }
+        };
+
+        let profiles = defaultProfiles;
+        let events = [];
+        let albumPhotos = [];
+
+        let gistId = localStorage.getItem('emibonnie_gist_id') || '';
+        let gistToken = localStorage.getItem('emibonnie_gist_token') || '';
+
+        let editingId = null;
+        let editingProfileKey = null;
+        let currentUploadedImages = [];
+        let currentSingleImage = '';
+        let currentCalendarDate = new Date();
+
+        // 雲端同步邏輯
+        function updateSyncStatus(status, text) {
+            const dot = document.getElementById('syncDot');
+            const txt = document.getElementById('syncText');
+            txt.innerText = text;
+            dot.className = 'status-dot';
+            if (status === 'online') dot.classList.add('status-online');
+            if (status === 'syncing') dot.classList.add('status-syncing');
+        }
+
+        async function loadCloudData() {
+            if (!gistId || !gistToken) {
+                updateSyncStatus('offline', '尚未設定雲端金鑰 (離線模式)');
+                return;
+            }
+            updateSyncStatus('syncing', '正在載入雲端資料...');
+            try {
+                const res = await fetch(`https://api.github.com/gists/${gistId}`, {
+                    headers: { 'Authorization': `token ${gistToken}` }
+                });
+                if (!res.ok) throw new Error('API連線失敗');
+                const data = await res.json();
+                const content = JSON.parse(data.files["emibonnie_data.json"].content);
+                events = content.events || [];
+                profiles = content.profiles || defaultProfiles;
+                albumPhotos = content.albumPhotos || [];
+                updateSyncStatus('online', '已連線雲端 (即時同步中)');
+                renderTimeline();
+            } catch (e) {
+                console.error(e);
+                updateSyncStatus('offline', '雲端載入失敗，請檢查金鑰');
+            }
+        }
+
+        async function saveCloudData() {
+            if (!gistId || !gistToken) {
+                alert('請先設定 Gist ID 與 Token 才能進行跨裝置同步！');
+                openSyncSettingModal();
+                return;
+            }
+            updateSyncStatus('syncing', '正在同步至雲端...');
+            const payload = {
+                files: {
+                    "emibonnie_data.json": {
+                        content: JSON.stringify({ events, profiles, albumPhotos })
+                    }
+                }
+            };
+            try {
+                const res = await fetch(`https://api.github.com/gists/${gistId}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Authorization': `token ${gistToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+                if (res.ok) updateSyncStatus('online', '已連線雲端 (即時同步中)');
+                else throw new Error('儲存失敗');
+            } catch (e) {
+                alert('同步失敗，請檢查網路或金鑰權限！');
+                updateSyncStatus('offline', '雲端儲存失敗');
+            }
+        }
+
+        function openSyncSettingModal() {
+            document.getElementById('inputGistId').value = gistId;
+            document.getElementById('inputGistToken').value = gistToken;
+            document.getElementById('syncModal').style.display = 'flex';
+        }
+
+        function saveSyncSettings() {
+            gistId = document.getElementById('inputGistId').value.trim();
+            gistToken = document.getElementById('inputGistToken').value.trim();
+            localStorage.setItem('emibonnie_gist_id', gistId);
+            localStorage.setItem('emibonnie_gist_token', gistToken);
+            closeModal('syncModal');
+            loadCloudData();
+        }
+
+        function switchView(view) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`tab${view.charAt(0).toUpperCase() + view.slice(1)}`).classList.add('active');
+
+            document.getElementById('timelineContainer').style.display = view === 'timeline' ? 'block' : 'none';
+            document.getElementById('controlsBar').style.display = view === 'timeline' ? 'flex' : 'none';
+            document.getElementById('calendarContainer').style.display = view === 'calendar' ? 'block' : 'none';
+            document.getElementById('profileContainer').style.display = view === 'profile' ? 'grid' : 'none';
+            document.getElementById('albumContainer').style.display = view === 'album' ? 'block' : 'none';
+
+            if (view === 'timeline') renderTimeline();
+            if (view === 'calendar') renderCalendar();
+            if (view === 'profile') renderProfiles();
+            if (view === 'album') renderAlbum();
+        }
+
+        function getMembersStyle(members = []) {
+            if (!members || members.length === 0) return 'background: #9CA3AF;';
+            if (members.length >= 3) return 'background: #FF69B4;';
+            if (members.length === 1) {
+                const color = profiles[members[0]] ? profiles[members[0]].color : '#8A2BE2';
+                return `background: ${color};`;
+            }
+            if (members.length === 2) {
+                const c1 = profiles[members[0]] ? profiles[members[0]].color : '#FF6B00';
+                const c2 = profiles[members[1]] ? profiles[members[1]].color : '#8A2BE2';
+                return `background: linear-gradient(135deg, ${c1} 0%, ${c2} 100%);`;
+            }
+        }
+
+        function getCategoryLabel(cat) {
+            const map = { movie: '🎬 影視', music: '🎵 音樂', stage: '🎪 舞台', activity: '🎉 活動', show: '📺 節目', offline: '🛍️ 線下', honor: '🏆 榮譽', announcement: '📢 公告' };
+            return map[cat] || '其他';
+        }
+
+        function renderTimeline() {
+            const container = document.getElementById('timelineContainer');
+            const searchText = document.getElementById('searchInput').value.toLowerCase();
+            const categoryFilter = document.getElementById('categoryFilter').value;
+            container.innerHTML = '';
+
+            const filtered = events
+                .filter(e => {
+                    const matchSearch = e.title.toLowerCase().includes(searchText) || (e.content && e.content.toLowerCase().includes(searchText));
+                    const matchCat = categoryFilter === 'ALL' || e.category === categoryFilter;
+                    return matchSearch && matchCat;
+                })
+                .sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            if (filtered.length === 0) {
+                container.innerHTML = '<p style="text-align:center; color:var(--text-muted); padding:40px 0;">尚無紀錄，點擊上方按鈕新增吧！</p>';
+                return;
+            }
+
+            filtered.forEach(item => {
+                const itemEl = document.createElement('div');
+                itemEl.className = 'timeline-item';
+
+                const dateObj = new Date(item.date);
+                const yearStr = dateObj.getFullYear();
+                const dayStr = `${String(dateObj.getMonth() + 1).padStart(2, '0')}.${String(dateObj.getDate()).padStart(2, '0')}`;
+
+                let membersHtml = '';
+                if (item.members && item.members.length > 0) {
+                    membersHtml = `<div class="member-tags"><span class="member-badge" style="${getMembersStyle(item.members)}">${item.members.join(' & ')}</span></div>`;
+                }
+
+                let imgsHtml = '';
+                if (item.images && item.images.length > 0) {
+                    imgsHtml = `<div class="image-grid">${item.images.map(img => `<img src="${img}">`).join('')}</div>`;
+                }
+
+                itemEl.innerHTML = `
+                    <div class="timeline-left-date">
+                        <div class="timeline-date-year">${yearStr}</div>
+                        <div class="timeline-date-day">${dayStr}</div>
+                    </div>
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-right-card">
+                        <div class="event-header">
+                            <span class="event-tag">${getCategoryLabel(item.category)}</span>
+                            <div>
+                                <button class="btn-action" onclick="openModalForEdit(${item.id})">✏️ 編輯</button>
+                                <button class="btn-action btn-delete" onclick="deleteEvent(${item.id})">🗑️ 刪除</button>
+                            </div>
+                        </div>
+                        ${membersHtml}
+                        <div class="event-title">${item.title}</div>
+                        <div class="event-content">${item.content || ''}</div>
+                        ${imgsHtml}
+                    </div>
+                `;
+                container.appendChild(itemEl);
+            });
+        }
+
+        function renderCalendar() {
+            const grid = document.getElementById('calendarGrid');
+            grid.innerHTML = '';
+            const year = currentCalendarDate.getFullYear();
+            const month = currentCalendarDate.getMonth();
+
+            updateCalendarSelects(year, month);
+
+            ['日', '一', '二', '三', '四', '五', '六'].forEach(day => {
+                const d = document.createElement('div');
+                d.className = 'day-header';
+                d.innerText = day;
+                grid.appendChild(d);
+            });
+
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+            for (let i = 0; i < firstDay; i++) grid.appendChild(document.createElement('div'));
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const cell = document.createElement('div');
+                cell.className = 'calendar-day';
+                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                cell.innerHTML = `<span class="day-num">${day}</span>`;
+
+                const dayEvents = events.filter(e => e.date === dateStr);
+                dayEvents.forEach(e => {
+                    const dot = document.createElement('div');
+                    dot.className = 'calendar-event-dot';
+                    dot.innerText = e.title;
+                    dot.style = getMembersStyle(e.members);
+                    dot.onclick = () => openDetailModal(e);
+                    cell.appendChild(dot);
+                });
+
+                grid.appendChild(cell);
+            }
+        }
+
+        function openDetailModal(item) {
+            document.getElementById('detailTitle').innerText = item.title;
+            document.getElementById('detailDate').innerText = `📅 日期：${item.date}`;
+            document.getElementById('detailCategory').innerText = `類別：${getCategoryLabel(item.category)}`;
+            
+            const membersEl = document.getElementById('detailMembers');
+            if (item.members && item.members.length > 0) {
+                membersEl.innerHTML = `<span class="member-badge" style="${getMembersStyle(item.members)}">${item.members.join(' & ')}</span>`;
+            } else { membersEl.innerHTML = ''; }
+
+            document.getElementById('detailContent').innerText = item.content || '無詳細記錄。';
+
+            const imgsContainer = document.getElementById('detailImages');
+            imgsContainer.innerHTML = '';
+            if (item.images && item.images.length > 0) {
+                item.images.forEach(img => {
+                    const el = document.createElement('img');
+                    el.src = img;
+                    imgsContainer.appendChild(el);
+                });
+            } else {
+                imgsContainer.innerHTML = '<p style="color:var(--text-muted); font-size:12px;">此行程無附帶照片</p>';
+            }
+
+            document.getElementById('detailModal').style.display = 'flex';
+        }
+
+        function updateCalendarSelects(year, month) {
+            const ySelect = document.getElementById('yearSelect');
+            const mSelect = document.getElementById('monthSelect');
+            ySelect.innerHTML = ''; mSelect.innerHTML = '';
+
+            for (let y = year - 5; y <= year + 5; y++) {
+                const opt = document.createElement('option');
+                opt.value = y; opt.innerText = `${y} 年`;
+                if (y === year) opt.selected = true;
+                ySelect.appendChild(opt);
+            }
+            for (let m = 0; m < 12; m++) {
+                const opt = document.createElement('option');
+                opt.value = m; opt.innerText = `${m + 1} 月`;
+                if (m === month) opt.selected = true;
+                mSelect.appendChild(opt);
+            }
+        }
+
+        function onSelectDateChange() {
+            const y = parseInt(document.getElementById('yearSelect').value);
+            const m = parseInt(document.getElementById('monthSelect').value);
+            currentCalendarDate = new Date(y, m, 1);
+            renderCalendar();
+        }
+
+        function changeMonth(offset) {
+            currentCalendarDate.setMonth(currentCalendarDate.getMonth() + offset);
+            renderCalendar();
+        }
+
+        function renderProfiles() {
+            const container = document.getElementById('profileContainer');
+            container.innerHTML = '';
+
+            Object.keys(profiles).forEach(key => {
+                const p = profiles[key];
+                const card = document.createElement('div');
+                card.className = 'profile-card';
+
+                const avatarSrc = p.avatar || 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24" fill="%23ccc"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>';
+
+                card.innerHTML = `
+                    <button class="btn-action" style="position:absolute; top:15px; right:15px;" onclick="openProfileModal('${key}')">✏️ 編輯</button>
+                    <img src="${avatarSrc}" class="profile-avatar" style="border-color:${p.color};">
+                    <div class="profile-fullname">${p.fullname || ''}</div>
+                    <div class="profile-name" style="color:${p.color}">${p.name}</div>
+                    <div class="profile-info">
+                        <div class="info-row"><span class="info-label">暱稱</span><span>${p.nickname || '-'}</span></div>
+                        <div class="info-row"><span class="info-label">生日 / 星座</span><span>${p.birthday} (${p.zodiac || '-'})</span></div>
+                        <div class="info-row"><span class="info-label">性別</span><span>${p.gender}</span></div>
+                        <div class="info-row"><span class="info-label">身高 / 體重</span><span>${p.height} / ${p.weight}</span></div>
+                        <div class="info-row"><span class="info-label">應援色</span><span style="color:${p.color}; font-weight:bold;">${p.color}</span></div>
+                        <div class="info-row"><span class="info-label">喜好</span><span>${p.hobby}</span></div>
+                        <div class="info-row"><span class="info-label">寵物</span><span>${p.pet}</span></div>
+                        <div class="info-row"><span class="info-label">食物</span><span>${p.food}</span></div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function autoCalcZodiac() {
+            const b = document.getElementById('profBirthday').value;
+            if (b && b.includes('.')) {
+                const parts = b.split('.');
+                document.getElementById('profZodiac').value = getZodiacSign(parts[0], parts[1]);
+            }
+        }
+
+        function renderAlbum() {
+            const grid = document.getElementById('albumGrid');
+            grid.innerHTML = '';
+            if (albumPhotos.length === 0) {
+                grid.innerHTML = '<p style="color:var(--text-muted); grid-column: 1/-1;">目前還沒有美圖，點擊右上角上傳第一張吧！</p>';
+                return;
+            }
+            albumPhotos.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'album-card';
+                card.innerHTML = `
+                    <img src="${item.url}">
+                    <div class="album-card-info">
+                        <span class="member-badge" style="${getMembersStyle([item.member])}">${item.member}</span>
+                        <button class="btn-action btn-delete" style="float:right;" onclick="deleteAlbumPhoto(${index})">🗑️</button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function openAlbumModal() {
+            currentSingleImage = '';
+            document.getElementById('albumImgPreview').style.display = 'none';
+            document.getElementById('albumModal').style.display = 'flex';
+        }
+
+        function saveAlbumPhoto() {
+            if (!currentSingleImage) { alert('請上傳照片！'); return; }
+            const member = document.getElementById('albumMember').value;
+            albumPhotos.unshift({ url: currentSingleImage, member });
+            saveCloudData();
+            renderAlbum();
+            closeModal('albumModal');
+        }
+
+        function deleteAlbumPhoto(index) {
+            if (confirm('確定刪除這張美圖嗎？')) {
+                albumPhotos.splice(index, 1);
+                saveCloudData();
+                renderAlbum();
+            }
+        }
+
+        function previewMultipleImages(event) {
+            const files = event.target.files;
+            currentUploadedImages = [];
+            const thumbs = document.getElementById('previewThumbs');
+            thumbs.innerHTML = '';
+
+            Array.from(files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    currentUploadedImages.push(e.target.result);
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    thumbs.appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function previewSingleImage(event, previewId) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    currentSingleImage = e.target.result;
+                    const preview = document.getElementById(previewId);
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function openModalForAdd() {
+            editingId = null;
+            currentUploadedImages = [];
+            document.getElementById('modalTitle').innerText = '新增紀錄事件 / 行程';
+            document.getElementById('inputDate').valueAsDate = new Date();
+            document.getElementById('inputTitle').value = '';
+            document.getElementById('inputCategory').value = 'movie';
+            document.getElementById('inputContent').value = '';
+            document.getElementById('previewThumbs').innerHTML = '';
+            document.querySelectorAll('.member-checkbox').forEach(cb => cb.checked = false);
+            document.getElementById('eventModal').style.display = 'flex';
+        }
+
+        function openModalForEdit(id) {
+            const item = events.find(e => e.id === id);
+            if (!item) return;
+
+            editingId = id;
+            currentUploadedImages = item.images || [];
+            document.getElementById('modalTitle').innerText = '編輯紀錄';
+            document.getElementById('inputDate').value = item.date;
+            document.getElementById('inputTitle').value = item.title;
+            document.getElementById('inputCategory').value = item.category;
+            document.getElementById('inputContent').value = item.content || '';
+
+            document.querySelectorAll('.member-checkbox').forEach(cb => {
+                cb.checked = item.members && item.members.includes(cb.value);
+            });
+
+            const thumbs = document.getElementById('previewThumbs');
+            thumbs.innerHTML = '';
+            currentUploadedImages.forEach(url => {
+                const img = document.createElement('img');
+                img.src = url;
+                thumbs.appendChild(img);
+            });
+
+            document.getElementById('eventModal').style.display = 'flex';
+        }
+
+        function openProfileModal(key) {
+            editingProfileKey = key;
+            const p = profiles[key];
+            currentSingleImage = p.avatar || '';
+
+            document.getElementById('profFullName').value = p.fullname || '';
+            document.getElementById('profNickname').value = p.nickname || '';
+            document.getElementById('profBirthday').value = p.birthday || '';
+            document.getElementById('profZodiac').value = p.zodiac || '';
+            document.getElementById('profGender').value = p.gender || '';
+            document.getElementById('profHeight').value = p.height || '';
+            document.getElementById('profWeight').value = p.weight || '';
+            document.getElementById('profColor').value = p.color || '#8A2BE2';
+            document.getElementById('profHobby').value = p.hobby || '';
+            document.getElementById('profPet').value = p.pet || '';
+            document.getElementById('profFood').value = p.food || '';
+
+            const preview = document.getElementById('profImgPreview');
+            if (currentSingleImage) {
+                preview.src = currentSingleImage;
+                preview.style.display = 'block';
+            } else { preview.style.display = 'none'; }
+
+            document.getElementById('profileModal').style.display = 'flex';
+        }
+
+        function closeModal(modalId) { document.getElementById(modalId).style.display = 'none'; }
+
+        function saveEvent() {
+            const date = document.getElementById('inputDate').value;
+            const title = document.getElementById('inputTitle').value;
+            const category = document.getElementById('inputCategory').value;
+            const content = document.getElementById('inputContent').value;
+
+            const members = [];
+            document.querySelectorAll('.member-checkbox:checked').forEach(cb => members.push(cb.value));
+
+            if (!date || !title) { alert('請填寫日期與標題！'); return; }
+
+            if (editingId !== null) {
+                const item = events.find(e => e.id === editingId);
+                if (item) {
+                    item.date = date; item.title = title; item.category = category;
+                    item.content = content; item.members = members;
+                    item.images = currentUploadedImages;
+                }
+            } else {
+                events.push({
+                    id: Date.now(), date, title, category, content, members, images: currentUploadedImages
+                });
+            }
+
+            saveCloudData();
+            renderTimeline();
+            renderCalendar();
+            closeModal('eventModal');
+        }
+
+        function saveProfile() {
+            if (!editingProfileKey || !profiles[editingProfileKey]) return;
+
+            const p = profiles[editingProfileKey];
+            p.fullname = document.getElementById('profFullName').value;
+            p.nickname = document.getElementById('profNickname').value;
+            p.birthday = document.getElementById('profBirthday').value;
+            p.zodiac = document.getElementById('profZodiac').value;
+            p.gender = document.getElementById('profGender').value;
+            p.height = document.getElementById('profHeight').value;
+            p.weight = document.getElementById('profWeight').value;
+            p.color = document.getElementById('profColor').value;
+            p.hobby = document.getElementById('profHobby').value;
+            p.pet = document.getElementById('profPet').value;
+            p.food = document.getElementById('profFood').value;
+            p.avatar = currentSingleImage;
+
+            saveCloudData();
+            renderProfiles();
+            renderTimeline();
+            renderCalendar();
+            closeModal('profileModal');
+        }
+
+        function deleteEvent(id) {
+            if (confirm('確定刪除這筆紀錄嗎？')) {
+                events = events.filter(e => e.id !== id);
+                saveCloudData();
+                renderTimeline();
+                renderCalendar();
+            }
+        }
+
+        // 初始載入
+        loadCloudData();
+    </script>
+</body>
+</html>
