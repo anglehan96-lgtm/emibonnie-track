@@ -401,12 +401,35 @@
             if (status === 'syncing') dot.classList.add('status-syncing');
         }
 
+        // 載入本地快取備份（防止重新整理瞬間歸零）
+        function loadLocalBackup() {
+            try {
+                const localData = localStorage.getItem('emibonnie_local_backup');
+                if (localData) {
+                    const parsed = JSON.parse(localData);
+                    events = parsed.events || [];
+                    profiles = parsed.profiles || defaultProfiles;
+                    albumPhotos = parsed.albumPhotos || [];
+                    renderTimeline();
+                }
+            } catch(e) {}
+        }
+
+        // 儲存至本地快取備份
+        function saveLocalBackup() {
+            try {
+                localStorage.setItem('emibonnie_local_backup', JSON.stringify({ events, profiles, albumPhotos }));
+            } catch(e) {}
+        }
+
         async function loadCloudData() {
+            loadLocalBackup(); // 先把本地備份叫出來頂著，避免畫面空白
+
             if (!gistId || !gistToken) {
-                updateSyncStatus('offline', '尚未設定金鑰 (離線)');
+                updateSyncStatus('offline', '尚未設定金鑰 (離線備份模式)');
                 return;
             }
-            updateSyncStatus('syncing', '正在載入...');
+            updateSyncStatus('syncing', '正在載入雲端...');
             try {
                 const res = await fetch(`https://api.github.com/gists/${gistId}`, {
                     headers: { 'Authorization': `token ${gistToken}` }
@@ -423,30 +446,34 @@
                 if (foundFile && foundFile.content) {
                     try {
                         const content = JSON.parse(foundFile.content);
-                        events = content.events || [];
-                        profiles = content.profiles || defaultProfiles;
-                        albumPhotos = content.albumPhotos || [];
-                        updateSyncStatus('online', '已連線雲端 (即時同步)');
+                        if (content.events && content.events.length > 0) {
+                            events = content.events;
+                            profiles = content.profiles || defaultProfiles;
+                            albumPhotos = content.albumPhotos || [];
+                            saveLocalBackup(); // 更新本地備份
+                            updateSyncStatus('online', '已連線雲端 (雙重同步)');
+                        } else {
+                            updateSyncStatus('online', '雲端為空，沿用本地或準備同步');
+                        }
                     } catch(err) {
-                        updateSyncStatus('online', '雲端資料格式建立中');
+                        updateSyncStatus('online', '雲端資料解析中');
                     }
-                } else {
-                    updateSyncStatus('online', '雲端為空，準備建立新紀錄');
                 }
                 renderTimeline();
             } catch (e) {
                 console.error(e);
-                updateSyncStatus('offline', '載入失敗，請檢查金鑰或Gist ID');
+                updateSyncStatus('offline', '雲端載入失敗，已啟用本地快取');
             }
         }
 
         async function saveCloudData() {
+            saveLocalBackup(); // 每次存檔先寫入本地快取
+
             if (!gistId || !gistToken) {
-                alert('請先設定 Gist ID 與 Token！');
-                openSyncSettingModal();
+                updateSyncStatus('offline', '已存至本地快取 (未設定金鑰)');
                 return;
             }
-            updateSyncStatus('syncing', '同步中...');
+            updateSyncStatus('syncing', '雲端同步中...');
             const payload = {
                 files: {
                     "emibonnie_data.json": {
@@ -463,11 +490,10 @@
                     },
                     body: JSON.stringify(payload)
                 });
-                if (res.ok) updateSyncStatus('online', '已連線雲端 (即時同步)');
+                if (res.ok) updateSyncStatus('online', '已連線雲端 (雙重同步)');
                 else throw new Error('儲存失敗');
             } catch (e) {
-                alert('同步失敗，請檢查網路或金鑰！');
-                updateSyncStatus('offline', '同步失敗');
+                updateSyncStatus('offline', '雲端同步失敗，但本地已備份');
             }
         }
 
@@ -932,7 +958,6 @@
             }
 
             filteredPhotos.forEach((item) => {
-                // 找出原始陣列中的真實索引以便刪除
                 const originalIndex = albumPhotos.findIndex(p => p.id === item.id);
                 const memArr = parseMemberArray(item.member);
                 grid.innerHTML += `
