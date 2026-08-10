@@ -93,10 +93,19 @@
 
         /* 4. 照片相簿 */
         .album-container { display: none; }
+        .album-filter-bar { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; background: var(--card-bg); padding: 12px; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); }
+        .filter-chip { padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; background: #EDF2F7; color: var(--text-muted); border: 1px solid var(--border-color); cursor: pointer; transition: all 0.2s; }
+        .filter-chip.active { background: #8A2BE2; color: white; border-color: #8A2BE2; }
+
         .album-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
         .album-card { background: white; border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); }
         .album-card img { width: 100%; height: 180px; object-fit: cover; cursor: pointer; }
         .album-card-info { padding: 8px 10px; font-size: 12px; display: flex; justify-content: space-between; align-items: center; }
+
+        /* 燈箱放大檢視 */
+        .lightbox-modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); z-index: 2000; align-items: center; justify-content: center; padding: 20px; flex-direction: column; gap: 16px; }
+        .lightbox-modal img { max-width: 90vw; max-height: 75vh; object-fit: contain; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.5); }
+        .lightbox-actions { display: flex; gap: 12px; }
 
         /* Modal 視窗 */
         .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(3px); align-items: center; justify-content: center; padding: 16px; z-index: 1000; }
@@ -104,9 +113,9 @@
         .modal-content h3 { font-size: 18px; font-weight: 800; color: #2D3748; }
         .event-detail-layout { display: flex; gap: 16px; }
         .detail-left-images { flex: 1; display: flex; flex-direction: column; gap: 8px; max-height: 300px; overflow-y: auto; }
-        .detail-left-images img { width: 100%; border-radius: 8px; }
+        .detail-left-images img { width: 100%; border-radius: 8px; cursor: pointer; }
         .detail-right-info { flex: 1.2; display: flex; flex-direction: column; gap: 6px; }
-        .checkbox-group { display: flex; gap: 12px; }
+        .checkbox-group { display: flex; gap: 12px; flex-wrap: wrap; }
         .checkbox-label { display: flex; align-items: center; gap: 4px; font-weight: bold; cursor: pointer; font-size: 14px; }
         .preview-thumbs { display: flex; gap: 8px; flex-wrap: wrap; }
         .preview-thumbs img { width: 55px; height: 55px; object-fit: cover; border-radius: 6px; }
@@ -197,7 +206,29 @@
             <h3>照片收藏庫</h3>
             <button class="btn-primary" onclick="openAlbumModal()">+ 上傳照片</button>
         </div>
+        
+        <!-- 相簿快速篩選列 -->
+        <div class="album-filter-bar" id="albumFilterBar">
+            <span class="filter-chip active" onclick="setAlbumFilter('ALL', this)">全部</span>
+            <span class="filter-chip" onclick="setAlbumFilter('Emi', this)">Emi</span>
+            <span class="filter-chip" onclick="setAlbumFilter('Bonnie', this)">Bonnie</span>
+            <span class="filter-chip" onclick="setAlbumFilter('Any', this)">Any</span>
+            <span class="filter-chip" onclick="setAlbumFilter('EmiBonnie', this)">EmiBonnie</span>
+            <span class="filter-chip" onclick="setAlbumFilter('EmiAny', this)">EmiAny</span>
+            <span class="filter-chip" onclick="setAlbumFilter('BonnieAny', this)">BonnieAny</span>
+            <span class="filter-chip" onclick="setAlbumFilter('EmiBonnieAny', this)">EmiBonnieAny</span>
+        </div>
+
         <div class="album-grid" id="albumGrid"></div>
+    </div>
+
+    <!-- 圖片點擊放大燈箱 (Lightbox) -->
+    <div class="lightbox-modal" id="lightboxModal" onclick="closeLightbox(event)">
+        <img id="lightboxImg" src="">
+        <div class="lightbox-actions">
+            <button class="btn-primary" id="lightboxDownloadBtn" onclick="downloadCurrentLightboxImage(event)">📥 下載照片</button>
+            <button onclick="closeLightboxDirect()" style="padding:10px 18px; border-radius:12px; border:none; font-weight:bold;">關閉</button>
+        </div>
     </div>
 
     <!-- 設定雲端金鑰 Modal -->
@@ -319,12 +350,15 @@
     <div class="modal" id="albumModal">
         <div class="modal-content">
             <h3>上傳照片</h3>
-            <label style="font-size:13px; font-weight:bold;">人物：</label>
+            <label style="font-size:13px; font-weight:bold;">分類標籤：</label>
             <select id="albumMember">
                 <option value="Emi">Emi</option>
                 <option value="Bonnie">Bonnie</option>
                 <option value="Any">Any</option>
-                <option value="Group">合照 / 全員</option>
+                <option value="EmiBonnie">EmiBonnie</option>
+                <option value="EmiAny">EmiAny</option>
+                <option value="BonnieAny">BonnieAny</option>
+                <option value="EmiBonnieAny">EmiBonnieAny (全員)</option>
             </select>
             <label style="font-size:13px; font-weight:bold;">相片：</label>
             <input type="file" accept="image/*" onchange="previewSingleImage(event, 'albumImgPreview')">
@@ -355,6 +389,8 @@
         let currentUploadedImages = [];
         let currentSingleImage = '';
         let currentCalendarDate = new Date();
+        let currentAlbumFilter = 'ALL';
+        let currentLightboxUrl = '';
 
         function updateSyncStatus(status, text) {
             const dot = document.getElementById('syncDot');
@@ -481,7 +517,7 @@
             return text.replace(urlRegex, url => `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`);
         }
 
-        function compressImage(file, maxWidth = 800, quality = 0.7) {
+        function compressImage(file, maxWidth = 900, quality = 0.75) {
             return new Promise((resolve) => {
                 const reader = new FileReader();
                 reader.readAsDataURL(file);
@@ -527,16 +563,25 @@
 
         function getMembersStyle(members = []) {
             if (!members || members.length === 0) return 'background: #9CA3AF;';
-            if (members.length >= 3) return 'background: #FF69B4;';
+            if (members.length >= 3 || members.includes('EmiBonnieAny')) return 'background: #FF69B4;';
             if (members.length === 1) {
-                const color = profiles[members[0]] ? profiles[members[0]].color : '#8A2BE2';
-                return `background: ${color};`;
+                const m = members[0];
+                if (profiles[m] && profiles[m].color) return `background: ${profiles[m].color};`;
+                if (m === 'Emi') return 'background: #FF6B00;';
+                if (m === 'Bonnie') return 'background: #8A2BE2;';
+                if (m === 'Any') return 'background: #FFD700;';
+                return 'background: #8A2BE2;';
             }
-            if (members.length === 2) {
-                const c1 = profiles[members[0]] ? profiles[members[0]].color : '#FF6B00';
-                const c2 = profiles[members[1]] ? profiles[members[1]].color : '#8A2BE2';
-                return `background: linear-gradient(135deg, ${c1} 0%, ${c2} 100%);`;
+            if (members.length === 2 || members.includes('EmiBonnie') || members.includes('EmiAny') || members.includes('BonnieAny')) {
+                return 'background: linear-gradient(135deg, #FF6B00 0%, #8A2BE2 100%);';
             }
+            return 'background: #8A2BE2;';
+        }
+
+        function parseMemberArray(mStr) {
+            if (Array.isArray(mStr)) return mStr;
+            if (!mStr) return [];
+            return [mStr];
         }
 
         function getCategoryLabel(cat) {
@@ -572,13 +617,14 @@
                 const dayStr = `${String(dateObj.getMonth() + 1).padStart(2, '0')}.${String(dateObj.getDate()).padStart(2, '0')}`;
 
                 let membersHtml = '';
-                if (item.members && item.members.length > 0) {
-                    membersHtml = `<div class="member-tags"><span class="member-badge" style="${getMembersStyle(item.members)}">${item.members.join(' & ')}</span></div>`;
+                const memArr = parseMemberArray(item.members);
+                if (memArr.length > 0) {
+                    membersHtml = `<div class="member-tags"><span class="member-badge" style="${getMembersStyle(memArr)}">${memArr.join(' & ')}</span></div>`;
                 }
 
                 let imgsHtml = '';
                 if (item.images && item.images.length > 0) {
-                    imgsHtml = `<div class="image-grid">${item.images.map(img => `<img src="${img}" onclick="openDetailModal(${item.id})">`).join('')}</div>`;
+                    imgsHtml = `<div class="image-grid">${item.images.map(img => `<img src="${img}" onclick="openLightbox('${img}')">`).join('')}</div>`;
                 }
 
                 itemEl.innerHTML = `
@@ -627,8 +673,9 @@
             document.getElementById('inputTitle').value = item.title;
             document.getElementById('inputCategory').value = item.category;
             document.getElementById('inputContent').value = item.content || '';
+            const memArr = parseMemberArray(item.members);
             document.querySelectorAll('.member-checkbox').forEach(cb => {
-                cb.checked = item.members ? item.members.includes(cb.value) : false;
+                cb.checked = memArr.includes(cb.value);
             });
             currentUploadedImages = item.images || [];
             renderPreviewThumbs();
@@ -648,7 +695,7 @@
             const container = document.getElementById('previewThumbs');
             container.innerHTML = currentUploadedImages.map((src, i) => `
                 <div style="position:relative;">
-                    <img src="${src}">
+                    <img src="${src}" onclick="openLightbox('${src}')">
                     <span onclick="removePreviewImg(${i})" style="position:absolute; top:-6px; right:-6px; background:red; color:white; border-radius:50%; width:16px; height:16px; text-align:center; line-height:16px; font-size:10px; cursor:pointer;">×</span>
                 </div>
             `).join('');
@@ -702,11 +749,12 @@
             document.getElementById('detailTitle').innerText = item.title;
             document.getElementById('detailDate').innerText = item.date;
             document.getElementById('detailCategory').innerText = getCategoryLabel(item.category);
-            document.getElementById('detailMembers').innerHTML = item.members ? `<span class="member-badge" style="${getMembersStyle(item.members)}">${item.members.join(' & ')}</span>` : '';
+            const memArr = parseMemberArray(item.members);
+            document.getElementById('detailMembers').innerHTML = memArr.length > 0 ? `<span class="member-badge" style="${getMembersStyle(memArr)}">${memArr.join(' & ')}</span>` : '';
             document.getElementById('detailContent').innerHTML = linkify(item.content);
 
             const imgContainer = document.getElementById('detailImages');
-            imgContainer.innerHTML = item.images ? item.images.map(src => `<img src="${src}">`).join('') : '';
+            imgContainer.innerHTML = item.images ? item.images.map(src => `<img src="${src}" onclick="openLightbox('${src}')">`).join('') : '';
 
             document.getElementById('detailModal').style.display = 'flex';
         }
@@ -741,11 +789,14 @@
                 const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
                 const dayEvents = events.filter(e => e.date === dateStr);
 
-                let eventsHtml = dayEvents.map(e => `
-                    <div class="calendar-event-dot" style="${getMembersStyle(e.members)}" onclick="openDetailModal(${e.id})">
-                        ${e.title}
-                    </div>
-                `).join('');
+                let eventsHtml = dayEvents.map(e => {
+                    const memArr = parseMemberArray(e.members);
+                    return `
+                        <div class="calendar-event-dot" style="${getMembersStyle(memArr)}" onclick="openDetailModal(${e.id})">
+                            ${e.title}
+                        </div>
+                    `;
+                }).join('');
 
                 grid.innerHTML += `
                     <div class="calendar-day">
@@ -781,7 +832,7 @@
                 card.className = 'profile-card';
                 card.innerHTML = `
                     <button class="btn-action" style="position:absolute; top:12px; right:12px;" onclick="openProfileModal('${key}')">編輯</button>
-                    <img class="profile-avatar" src="${p.avatar || 'https://via.placeholder.com/110'}" alt="${p.name}">
+                    <img class="profile-avatar" src="${p.avatar || 'https://via.placeholder.com/110'}" alt="${p.name}" onclick="if('${p.avatar}') openLightbox('${p.avatar}')" style="cursor:pointer;">
                     <div class="profile-fullname">${p.fullname || ''}</div>
                     <div class="profile-name" style="color:${p.color || '#1A202C'};">${p.name}</div>
                     <div class="profile-info">
@@ -858,20 +909,38 @@
             await saveCloudData();
         }
 
+        /* 照片收藏庫與篩選 */
+        function setAlbumFilter(category, el) {
+            currentAlbumFilter = category;
+            document.querySelectorAll('.filter-chip').forEach(chip => chip.classList.remove('active'));
+            el.classList.add('active');
+            renderAlbum();
+        }
+
         function renderAlbum() {
             const grid = document.getElementById('albumGrid');
             grid.innerHTML = '';
-            if (albumPhotos.length === 0) {
-                grid.innerHTML = '<p style="grid-column: 1/-1; text-align:center; color:var(--text-muted); padding:30px 0;">目前沒有上傳相片。</p>';
+
+            const filteredPhotos = albumPhotos.filter(item => {
+                if (currentAlbumFilter === 'ALL') return true;
+                return item.member === currentAlbumFilter;
+            });
+
+            if (filteredPhotos.length === 0) {
+                grid.innerHTML = '<p style="grid-column: 1/-1; text-align:center; color:var(--text-muted); padding:30px 0;">目前沒有符合此分類的相片。</p>';
                 return;
             }
-            albumPhotos.forEach((item, index) => {
+
+            filteredPhotos.forEach((item) => {
+                // 找出原始陣列中的真實索引以便刪除
+                const originalIndex = albumPhotos.findIndex(p => p.id === item.id);
+                const memArr = parseMemberArray(item.member);
                 grid.innerHTML += `
                     <div class="album-card">
-                        <img src="${item.src}" onclick="window.open('${item.src}')">
+                        <img src="${item.src}" onclick="openLightbox('${item.src}')">
                         <div class="album-card-info">
-                            <span class="member-badge" style="${getMembersStyle([item.member])}">${item.member}</span>
-                            <button class="btn-action btn-delete" onclick="deleteAlbumPhoto(${index})">刪除</button>
+                            <span class="member-badge" style="${getMembersStyle(memArr)}">${item.member}</span>
+                            <button class="btn-action btn-delete" onclick="deleteAlbumPhoto(${originalIndex})">刪除</button>
                         </div>
                     </div>
                 `;
@@ -902,6 +971,34 @@
                 renderAlbum();
                 await saveCloudData();
             }
+        }
+
+        /* 燈箱放大與下載功能 */
+        function openLightbox(url) {
+            currentLightboxUrl = url;
+            document.getElementById('lightboxImg').src = url;
+            document.getElementById('lightboxModal').style.display = 'flex';
+        }
+
+        function closeLightbox(e) {
+            if (e.target.id === 'lightboxModal') {
+                closeLightboxDirect();
+            }
+        }
+
+        function closeLightboxDirect() {
+            document.getElementById('lightboxModal').style.display = 'none';
+        }
+
+        function downloadCurrentLightboxImage(e) {
+            e.stopPropagation();
+            if (!currentLightboxUrl) return;
+            const a = document.createElement('a');
+            a.href = currentLightboxUrl;
+            a.download = `EmiBonnie_Photo_${Date.now()}.jpg`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
         }
 
         window.onload = () => {
