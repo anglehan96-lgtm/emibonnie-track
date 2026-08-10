@@ -2,106 +2,134 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EmiBonnie 追星紀錄 (雲端同步版)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>EmiBonnie 追星紀錄</title>
     <style>
         :root {
-            --bg-color: #F8F9FA;
+            --bg-color: #F4F6F9;
             --card-bg: #FFFFFF;
-            --text-color: #2D3748;
+            --text-main: #1A202C;
             --text-muted: #718096;
-            --border-color: #EDF2F7;
+            --border-color: #E2E8F0;
             --danger-color: #E53E3E;
             --primary-gradient: linear-gradient(135deg, #FF6B00 0%, #8A2BE2 100%);
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+            --radius-lg: 18px;
+            --radius-md: 12px;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        body { background-color: var(--bg-color); color: var(--text-color); padding: 20px; max-width: 950px; margin: 0 auto; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background-color: var(--bg-color); color: var(--text-main); padding: 16px; max-width: 960px; margin: 0 auto; padding-bottom: calc(20px + env(safe-area-inset-bottom)); }
 
-        header { text-align: center; margin-bottom: 25px; padding: 25px; background: var(--card-bg); border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
-        .gradient-title { font-size: 2.6rem; font-weight: 900; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 6px; letter-spacing: 1px; }
+        /* Header 區域 */
+        header { text-align: center; margin-bottom: 20px; padding: 24px 16px; background: var(--card-bg); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); }
+        .gradient-title { font-size: 2.2rem; font-weight: 900; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 6px; letter-spacing: 0.5px; }
+        header p { font-size: 13px; color: var(--text-muted); font-weight: 500; }
 
-        .sync-status { font-size: 13px; font-weight: bold; margin-top: 8px; color: var(--text-muted); display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .status-dot { width: 10px; height: 10px; border-radius: 50%; background: #CBD5E0; display: inline-block; }
-        .status-online { background: #48BB78; }
+        /* 同步狀態條 */
+        .sync-status { font-size: 13px; font-weight: 600; margin-top: 12px; color: var(--text-muted); display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--bg-color); padding: 6px 14px; border-radius: 20px; }
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #A0AEC0; display: inline-block; }
+        .status-online { background: #48BB78; box-shadow: 0 0 8px rgba(72,187,120,0.5); }
         .status-syncing { background: #ECC94B; }
 
-        .view-tabs { display: flex; justify-content: center; gap: 12px; margin-bottom: 25px; flex-wrap: wrap; }
-        .tab-btn { padding: 10px 22px; background: #E2E8F0; color: var(--text-color); border-radius: 25px; font-weight: bold; cursor: pointer; border: none; transition: all 0.3s ease; }
-        .tab-btn.active { background: var(--primary-gradient); color: white; box-shadow: 0 4px 12px rgba(138, 43, 226, 0.3); }
+        /* 頁籤切換 */
+        .view-tabs { display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; background: #E2E8F0; padding: 5px; border-radius: 30px; }
+        .tab-btn { flex: 1; padding: 10px 0; background: transparent; color: var(--text-muted); border-radius: 25px; font-weight: 700; font-size: 14px; cursor: pointer; border: none; transition: all 0.25s ease; text-align: center; }
+        .tab-btn.active { background: var(--card-bg); color: #8A2BE2; box-shadow: var(--shadow-sm); }
 
-        .controls { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 25px; background: var(--card-bg); padding: 16px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
-        input, select, button, textarea { padding: 10px 14px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 14px; outline: none; }
-        input[type="text"] { flex: 1; min-width: 180px; }
-        button.btn-primary { background: var(--primary-gradient); color: white; border: none; cursor: pointer; font-weight: bold; border-radius: 10px; }
+        /* 工具列 */
+        .controls { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; background: var(--card-bg); padding: 14px; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); }
+        input, select, button, textarea { padding: 10px 14px; border: 1px solid var(--border-color); border-radius: var(--radius-md); font-size: 14px; outline: none; transition: border-color 0.2s; background: #FFF; }
+        input:focus, select:focus, textarea:focus { border-color: #8A2BE2; }
+        input[type="text"] { flex: 1; min-width: 160px; }
+        button { cursor: pointer; }
+        button.btn-primary { background: var(--primary-gradient); color: white; border: none; font-weight: bold; border-radius: var(--radius-md); padding: 10px 18px; box-shadow: 0 4px 12px rgba(138,43,226,0.25); }
+        button.btn-primary:active { transform: scale(0.98); }
 
-        /* 時間軸 */
+        /* 1. 時間軸 (RWD) */
         .timeline { position: relative; padding: 10px 0; }
-        .timeline::before { content: ''; position: absolute; left: 120px; top: 0; bottom: 0; width: 4px; background: #E2E8F0; border-radius: 2px; }
-        .timeline-item { position: relative; display: flex; margin-bottom: 30px; }
-        .timeline-left-date { width: 100px; text-align: right; padding-right: 15px; flex-shrink: 0; }
-        .timeline-date-year { font-size: 12px; color: var(--text-muted); font-weight: bold; }
-        .timeline-date-day { font-size: 16px; font-weight: 800; color: #2D3748; }
-        .timeline-dot { position: absolute; left: 114px; top: 15px; width: 16px; height: 16px; border-radius: 50%; background: #8A2BE2; border: 3px solid white; box-shadow: 0 0 0 2px #CBD5E0; z-index: 2; }
-        .timeline-right-card { margin-left: 35px; flex: 1; background: var(--card-bg); border-radius: 16px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid var(--border-color); }
+        .timeline::before { content: ''; position: absolute; left: 110px; top: 0; bottom: 0; width: 3px; background: #CBD5E0; border-radius: 2px; }
+        .timeline-item { position: relative; display: flex; margin-bottom: 24px; }
+        .timeline-left-date { width: 90px; text-align: right; padding-right: 20px; flex-shrink: 0; }
+        .timeline-date-year { font-size: 11px; color: var(--text-muted); font-weight: 700; }
+        .timeline-date-day { font-size: 16px; font-weight: 800; color: var(--text-main); }
+        .timeline-dot { position: absolute; left: 104px; top: 12px; width: 14px; height: 14px; border-radius: 50%; background: #8A2BE2; border: 3px solid white; box-shadow: 0 0 0 2px #CBD5E0; z-index: 2; }
+        .timeline-right-card { margin-left: 30px; flex: 1; background: var(--card-bg); border-radius: var(--radius-lg); padding: 18px; box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); transition: transform 0.2s, box-shadow 0.2s; }
+        .timeline-right-card:hover { box-shadow: var(--shadow-md); }
 
         .event-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-        .event-tag { font-size: 12px; padding: 3px 10px; border-radius: 12px; font-weight: 600; background: #EDF2F7; color: #4A5568; }
+        .event-tag { font-size: 11px; padding: 3px 10px; border-radius: 20px; font-weight: 700; background: #EDF2F7; color: #4A5568; }
         .member-tags { margin-bottom: 8px; display: flex; gap: 6px; flex-wrap: wrap; }
-        .member-badge { font-size: 12px; font-weight: bold; padding: 3px 12px; border-radius: 12px; color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.2); }
-        .btn-action { background: transparent; color: var(--text-muted); padding: 4px 8px; font-size: 12px; border-radius: 6px; border: none; cursor: pointer; }
+        .member-badge { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 12px; color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+        .btn-action { background: transparent; color: var(--text-muted); padding: 4px 8px; font-size: 12px; border-radius: 6px; border: none; }
         .btn-action:hover { background: var(--border-color); }
         .btn-delete:hover { background: #FED7D7; color: var(--danger-color); }
-        .event-title { font-size: 18px; font-weight: bold; margin-bottom: 6px; }
-        .event-content { font-size: 14px; color: #4A5568; line-height: 1.6; white-space: pre-line; margin-bottom: 12px; }
-        
-        .image-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 8px; margin-top: 10px; }
-        .image-grid img { width: 100%; height: 110px; object-fit: cover; border-radius: 8px; }
+        .event-title { font-size: 17px; font-weight: 800; margin-bottom: 6px; color: #2D3748; }
+        .event-content { font-size: 14px; color: #4A5568; line-height: 1.6; white-space: pre-line; margin-bottom: 10px; word-break: break-word; }
+        .event-content a { color: #8A2BE2; font-weight: bold; text-decoration: underline; }
 
-        /* 行事曆 */
-        .calendar-container { display: none; background: var(--card-bg); border-radius: 16px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        .image-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 8px; margin-top: 10px; }
+        .image-grid img { width: 100%; height: 100px; object-fit: cover; border-radius: 8px; }
+
+        /* 2. 行事曆 */
+        .calendar-container { display: none; background: var(--card-bg); border-radius: var(--radius-lg); padding: 18px; box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); }
         .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
-        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; text-align: center; }
-        .day-header { font-weight: bold; padding: 8px 0; color: var(--text-muted); }
-        .calendar-day { min-height: 90px; border: 1px solid var(--border-color); border-radius: 10px; padding: 6px; text-align: left; background: white; font-size: 12px; overflow: hidden; }
-        .calendar-day .day-num { font-weight: bold; margin-bottom: 4px; display: block; }
-        .calendar-event-dot { color: white; padding: 3px 6px; border-radius: 6px; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 11px; cursor: pointer; font-weight: bold; text-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; text-align: center; }
+        .day-header { font-weight: 700; padding: 6px 0; color: var(--text-muted); font-size: 13px; }
+        .calendar-day { min-height: 85px; border: 1px solid var(--border-color); border-radius: 8px; padding: 5px; text-align: left; background: #FAFAFA; font-size: 11px; overflow: hidden; }
+        .calendar-day .day-num { font-weight: 800; margin-bottom: 4px; display: block; color: #4A5568; }
+        .calendar-event-dot { color: white; padding: 2px 5px; border-radius: 4px; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 10px; cursor: pointer; font-weight: 700; text-shadow: 0 1px 2px rgba(0,0,0,0.2); }
 
-        /* 資料 */
-        .profile-container { display: none; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
-        .profile-card { background: var(--card-bg); border-radius: 20px; padding: 22px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid var(--border-color); display: flex; flex-direction: column; align-items: center; position: relative; }
-        .profile-avatar { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; margin-bottom: 12px; border: 4px solid var(--border-color); background: #EDF2F7; }
-        .profile-fullname { font-size: 13px; color: var(--text-muted); margin-bottom: 2px; }
-        .profile-name { font-size: 22px; font-weight: 800; margin-bottom: 12px; }
-        .profile-info { width: 100%; font-size: 13px; display: flex; flex-direction: column; gap: 10px; }
+        /* 3. 資料 */
+        .profile-container { display: none; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+        .profile-card { background: var(--card-bg); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); display: flex; flex-direction: column; align-items: center; position: relative; }
+        .profile-avatar { width: 110px; height: 110px; border-radius: 50%; object-fit: cover; margin-bottom: 12px; border: 4px solid var(--border-color); background: #EDF2F7; }
+        .profile-fullname { font-size: 12px; color: var(--text-muted); margin-bottom: 2px; }
+        .profile-name { font-size: 20px; font-weight: 900; margin-bottom: 12px; }
+        .profile-info { width: 100%; font-size: 13px; display: flex; flex-direction: column; gap: 8px; }
         .info-row { display: flex; justify-content: space-between; border-bottom: 1px dashed var(--border-color); padding-bottom: 4px; }
         .info-label { color: var(--text-muted); font-weight: 600; }
 
-        /* 相簿 */
+        /* 4. 照片相簿 */
         .album-container { display: none; }
-        .album-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; }
-        .album-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.03); border: 1px solid var(--border-color); }
-        .album-card img { width: 100%; height: 200px; object-fit: cover; }
-        .album-card-info { padding: 10px; font-size: 12px; }
+        .album-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+        .album-card { background: white; border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); }
+        .album-card img { width: 100%; height: 180px; object-fit: cover; }
+        .album-card-info { padding: 8px 10px; font-size: 12px; display: flex; justify-content: space-between; align-items: center; }
 
-        /* Modal */
-        .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; padding: 20px; z-index: 100; }
-        .modal-content { background: white; padding: 24px; border-radius: 16px; width: 100%; max-width: 550px; display: flex; flex-direction: column; gap: 12px; max-height: 90vh; overflow-y: auto; }
-        .event-detail-layout { display: flex; gap: 20px; }
-        .detail-left-images { flex: 1; display: flex; flex-direction: column; gap: 10px; max-height: 350px; overflow-y: auto; }
+        /* Modal 視窗 */
+        .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(3px); align-items: center; justify-content: center; padding: 16px; z-index: 1000; }
+        .modal-content { background: white; padding: 20px; border-radius: var(--radius-lg); width: 100%; max-width: 520px; display: flex; flex-direction: column; gap: 12px; max-height: 85vh; overflow-y: auto; box-shadow: var(--shadow-md); }
+        .modal-content h3 { font-size: 18px; font-weight: 800; color: #2D3748; }
+        .event-detail-layout { display: flex; gap: 16px; }
+        .detail-left-images { flex: 1; display: flex; flex-direction: column; gap: 8px; max-height: 300px; overflow-y: auto; }
         .detail-left-images img { width: 100%; border-radius: 8px; }
-        .detail-right-info { flex: 1.2; display: flex; flex-direction: column; gap: 8px; }
-        .checkbox-group { display: flex; gap: 15px; }
-        .checkbox-label { display: flex; align-items: center; gap: 4px; font-weight: bold; cursor: pointer; }
+        .detail-right-info { flex: 1.2; display: flex; flex-direction: column; gap: 6px; }
+        .checkbox-group { display: flex; gap: 12px; }
+        .checkbox-label { display: flex; align-items: center; gap: 4px; font-weight: bold; cursor: pointer; font-size: 14px; }
         .preview-thumbs { display: flex; gap: 8px; flex-wrap: wrap; }
-        .preview-thumbs img { width: 60px; height: 60px; object-fit: cover; border-radius: 6px; }
+        .preview-thumbs img { width: 55px; height: 55px; object-fit: cover; border-radius: 6px; }
 
-        @media (max-width: 600px) {
-            .timeline::before { left: 20px; }
+        /* 手機端專屬最適化 (RWD) */
+        @media (max-width: 640px) {
+            body { padding: 10px; }
+            header { padding: 18px 12px; margin-bottom: 14px; }
+            .gradient-title { font-size: 1.8rem; }
+            
+            .timeline::before { left: 16px; }
             .timeline-item { flex-direction: column; }
-            .timeline-left-date { text-align: left; width: 100%; padding-left: 35px; margin-bottom: 5px; }
-            .timeline-dot { left: 12px; top: 2px; }
-            .timeline-right-card { margin-left: 35px; }
+            .timeline-left-date { text-align: left; width: 100%; padding-left: 30px; margin-bottom: 4px; display: flex; gap: 6px; align-items: baseline; }
+            .timeline-dot { left: 10px; top: 4px; }
+            .timeline-right-card { margin-left: 30px; padding: 14px; }
+            
+            .controls { padding: 12px; }
+            .controls input, .controls select, .controls button { width: 100%; }
+            
+            .calendar-day { min-height: 65px; padding: 3px; font-size: 10px; }
+            .calendar-event-dot { font-size: 9px; padding: 1px 3px; }
+            .album-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+            .album-card img { height: 140px; }
             .event-detail-layout { flex-direction: column; }
         }
     </style>
@@ -114,7 +142,7 @@
         <div class="sync-status">
             <span class="status-dot" id="syncDot"></span>
             <span id="syncText">正在連線雲端...</span>
-            <button class="btn-action" onclick="openSyncSettingModal()">⚙️ 設定金鑰</button>
+            <button class="btn-action" onclick="openSyncSettingModal()">⚙️ 設定</button>
         </div>
     </header>
 
@@ -122,7 +150,7 @@
         <button class="tab-btn active" id="tabTimeline" onclick="switchView('timeline')">⏳ 時間軸</button>
         <button class="tab-btn" id="tabCalendar" onclick="switchView('calendar')">📅 行事曆</button>
         <button class="tab-btn" id="tabProfile" onclick="switchView('profile')">🎴 資料</button>
-        <button class="tab-btn" id="tabAlbum" onclick="switchView('album')">🖼️ 美圖相簿</button>
+        <button class="tab-btn" id="tabAlbum" onclick="switchView('album')">🖼️ 照片</button>
     </div>
 
     <!-- 控制列 -->
@@ -152,7 +180,7 @@
                 <button onclick="changeMonth(-1)">&lt; 上個月</button>
                 <button onclick="changeMonth(1)">下個月 &gt;</button>
             </div>
-            <div style="display:flex; gap:8px;">
+            <div style="display:flex; gap:6px;">
                 <select id="yearSelect" onchange="onSelectDateChange()"></select>
                 <select id="monthSelect" onchange="onSelectDateChange()"></select>
             </div>
@@ -163,11 +191,11 @@
     <!-- 3. 資料 -->
     <div class="profile-container" id="profileContainer"></div>
 
-    <!-- 4. 美圖相簿 -->
+    <!-- 4. 照片相簿 -->
     <div class="album-container" id="albumContainer">
-        <div style="margin-bottom: 15px; display:flex; justify-content:space-between; align-items:center;">
-            <h3>美圖收藏庫</h3>
-            <button class="btn-primary" onclick="openAlbumModal()">+ 上傳美圖</button>
+        <div style="margin-bottom: 12px; display:flex; justify-content:space-between; align-items:center;">
+            <h3>照片收藏庫</h3>
+            <button class="btn-primary" onclick="openAlbumModal()">+ 上傳照片</button>
         </div>
         <div class="album-grid" id="albumGrid"></div>
     </div>
@@ -177,11 +205,11 @@
         <div class="modal-content">
             <h3>⚙️ 雲端同步金鑰設定</h3>
             <p style="font-size:12px; color:var(--text-muted);">只需設定一次，填入後任何裝置開啟此網頁皆可自動同步資料。</p>
-            <label>GitHub Gist ID：</label>
-            <input type="text" id="inputGistId" placeholder="例如：1234567890abcdef...">
-            <label>GitHub Token：</label>
-            <input type="text" id="inputGistToken" placeholder="例如：ghp_xxxxxxxxxxxx...">
-            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:10px;">
+            <label style="font-size:13px; font-weight:bold;">GitHub Gist ID：</label>
+            <input type="text" id="inputGistId" placeholder="貼上 Gist ID...">
+            <label style="font-size:13px; font-weight:bold;">GitHub Token：</label>
+            <input type="text" id="inputGistToken" placeholder="貼上 ghp_ 開頭的金鑰...">
+            <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:8px;">
                 <button onclick="closeModal('syncModal')">取消</button>
                 <button class="btn-primary" onclick="saveSyncSettings()">儲存並同步</button>
             </div>
@@ -192,19 +220,19 @@
     <div class="modal" id="eventModal">
         <div class="modal-content">
             <h3 id="modalTitle">新增紀錄事件</h3>
-            <label>日期：</label>
+            <label style="font-size:13px; font-weight:bold;">日期：</label>
             <input type="date" id="inputDate">
-            <label>事件標題：</label>
+            <label style="font-size:13px; font-weight:bold;">事件標題：</label>
             <input type="text" id="inputTitle">
             
-            <label>登場人物（可複選）：</label>
+            <label style="font-size:13px; font-weight:bold;">登場人物（可複選）：</label>
             <div class="checkbox-group">
                 <label class="checkbox-label"><input type="checkbox" value="Emi" class="member-checkbox"> Emi</label>
                 <label class="checkbox-label"><input type="checkbox" value="Bonnie" class="member-checkbox"> Bonnie</label>
                 <label class="checkbox-label"><input type="checkbox" value="Any" class="member-checkbox"> Any</label>
             </div>
 
-            <label>類別：</label>
+            <label style="font-size:13px; font-weight:bold;">類別：</label>
             <select id="inputCategory">
                 <option value="movie">🎬 影視</option>
                 <option value="music">🎵 音樂</option>
@@ -216,14 +244,14 @@
                 <option value="announcement">📢 公告</option>
             </select>
 
-            <label>詳細記錄 / 心得：</label>
-            <textarea id="inputContent" rows="3"></textarea>
+            <label style="font-size:13px; font-weight:bold;">詳細記錄 / 心得（可貼上網址連結）：</label>
+            <textarea id="inputContent" rows="3" placeholder="可貼上影片或文章網址..."></textarea>
             
-            <label>照片紀錄（可多選）：</label>
+            <label style="font-size:13px; font-weight:bold;">照片紀錄（可多選）：</label>
             <input type="file" id="inputImages" accept="image/*" multiple onchange="previewMultipleImages(event)">
             <div id="previewThumbs" class="preview-thumbs"></div>
 
-            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:10px;">
+            <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:8px;">
                 <button onclick="closeModal('eventModal')">取消</button>
                 <button class="btn-primary" onclick="saveEvent()">儲存</button>
             </div>
@@ -232,19 +260,19 @@
 
     <!-- 行事曆詳情 Modal -->
     <div class="modal" id="detailModal">
-        <div class="modal-content" style="max-width: 650px;">
+        <div class="modal-content" style="max-width: 600px;">
             <h3 id="detailTitle">行程詳情</h3>
             <div class="event-detail-layout">
                 <div class="detail-left-images" id="detailImages"></div>
                 <div class="detail-right-info">
-                    <div id="detailDate" style="font-weight:bold; color:var(--text-muted);"></div>
-                    <div id="detailCategory" style="font-size:12px; margin-bottom:5px;"></div>
+                    <div id="detailDate" style="font-weight:bold; color:var(--text-muted); font-size:13px;"></div>
+                    <div id="detailCategory" style="font-size:12px; margin-bottom:4px;"></div>
                     <div id="detailMembers"></div>
-                    <hr style="border:none; border-top:1px dashed #E2E8F0; margin:8px 0;">
-                    <div id="detailContent" style="white-space:pre-line; font-size:14px; color:#4A5568;"></div>
+                    <hr style="border:none; border-top:1px dashed #E2E8F0; margin:6px 0;">
+                    <div id="detailContent" class="event-content" style="font-size:13px; color:#4A5568;"></div>
                 </div>
             </div>
-            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:15px;">
+            <div style="display:flex; justify-content:flex-end; margin-top:10px;">
                 <button class="btn-primary" onclick="closeModal('detailModal')">關閉</button>
             </div>
         </div>
@@ -254,54 +282,54 @@
     <div class="modal" id="profileModal">
         <div class="modal-content">
             <h3 id="profileModalTitle">編輯資料</h3>
-            <label>全名：</label>
+            <label style="font-size:12px; font-weight:bold;">全名：</label>
             <input type="text" id="profFullName">
-            <label>暱稱：</label>
+            <label style="font-size:12px; font-weight:bold;">暱稱：</label>
             <input type="text" id="profNickname">
-            <label>生日 (月.日)：</label>
-            <input type="text" id="profBirthday" placeholder="例如：05.20" onchange="autoCalcZodiac()">
-            <label>星座 (自動計算)：</label>
-            <input type="text" id="profZodiac" readonly style="background:#F7FAFC;">
-            <label>性別：</label>
+            <label style="font-size:12px; font-weight:bold;">生日 (月.日)：</label>
+            <input type="text" id="profBirthday" placeholder="例如：05.20">
+            <label style="font-size:12px; font-weight:bold;">星座：</label>
+            <input type="text" id="profZodiac" placeholder="例如：牡羊座">
+            <label style="font-size:12px; font-weight:bold;">性別：</label>
             <input type="text" id="profGender">
-            <label>身高：</label>
+            <label style="font-size:12px; font-weight:bold;">身高：</label>
             <input type="text" id="profHeight">
-            <label>體重：</label>
+            <label style="font-size:12px; font-weight:bold;">體重：</label>
             <input type="text" id="profWeight">
-            <label>應援色：</label>
+            <label style="font-size:12px; font-weight:bold;">應援色：</label>
             <input type="color" id="profColor">
-            <label>喜好：</label>
+            <label style="font-size:12px; font-weight:bold;">喜好：</label>
             <input type="text" id="profHobby">
-            <label>寵物：</label>
+            <label style="font-size:12px; font-weight:bold;">寵物：</label>
             <input type="text" id="profPet">
-            <label>食物：</label>
+            <label style="font-size:12px; font-weight:bold;">食物：</label>
             <input type="text" id="profFood">
-            <label>大頭照：</label>
+            <label style="font-size:12px; font-weight:bold;">大頭照：</label>
             <input type="file" accept="image/*" onchange="previewSingleImage(event, 'profImgPreview')">
-            <img id="profImgPreview" style="max-height:100px; border-radius:8px; display:none; margin-top:5px;">
+            <img id="profImgPreview" style="max-height:90px; border-radius:8px; display:none; margin-top:4px;">
 
-            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:10px;">
+            <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:8px;">
                 <button onclick="closeModal('profileModal')">取消</button>
                 <button class="btn-primary" onclick="saveProfile()">儲存</button>
             </div>
         </div>
     </div>
 
-    <!-- 上傳美圖 Modal -->
+    <!-- 上傳照片 Modal -->
     <div class="modal" id="albumModal">
         <div class="modal-content">
-            <h3>上傳美圖</h3>
-            <label>人物：</label>
+            <h3>上傳照片</h3>
+            <label style="font-size:13px; font-weight:bold;">人物：</label>
             <select id="albumMember">
                 <option value="Emi">Emi</option>
                 <option value="Bonnie">Bonnie</option>
                 <option value="Any">Any</option>
                 <option value="Group">合照 / 全員</option>
             </select>
-            <label>美圖相片：</label>
+            <label style="font-size:13px; font-weight:bold;">相片：</label>
             <input type="file" accept="image/*" onchange="previewSingleImage(event, 'albumImgPreview')">
-            <img id="albumImgPreview" style="max-height:150px; border-radius:8px; display:none; margin-top:5px;">
-            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:10px;">
+            <img id="albumImgPreview" style="max-height:140px; border-radius:8px; display:none; margin-top:4px;">
+            <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:8px;">
                 <button onclick="closeModal('albumModal')">取消</button>
                 <button class="btn-primary" onclick="saveAlbumPhoto()">新增相片</button>
             </div>
@@ -309,23 +337,6 @@
     </div>
 
     <script>
-        function getZodiacSign(month, day) {
-            const m = parseInt(month), d = parseInt(day);
-            if ((m == 3 && d >= 21) || (m == 4 && d <= 19)) return "牡羊座";
-            if ((m == 4 && d >= 20) || (m == 5 && d <= 20)) return "金牛座";
-            if ((m == 5 && d >= 21) || (m == 6 && d <= 21)) return "雙子座";
-            if ((m == 6 && d >= 22) || (m == 7 && d <= 22)) return "巨蟹座";
-            if ((m == 7 && d >= 23) || (m == 8 && d <= 22)) return "獅子座";
-            if ((m == 8 && d >= 23) || (m == 9 && d <= 22)) return "處女座";
-            if ((m == 9 && d >= 23) || (m == 10 && d <= 23)) return "天秤座";
-            if ((m == 10 && d >= 24) || (m == 11 && d <= 22)) return "天蠍座";
-            if ((m == 11 && d >= 23) || (m == 12 && d <= 21)) return "射手座";
-            if ((m == 12 && d >= 22) || (m == 1 && d <= 19)) return "摩羯座";
-            if ((m == 1 && d >= 20) || (m == 2 && d <= 18)) return "水瓶座";
-            if ((m == 2 && d >= 19) || (m == 3 && d <= 20)) return "雙魚座";
-            return "未知";
-        }
-
         const defaultProfiles = {
             'Emi': { name: 'Emi', fullname: 'Emi Thasorn Klinnim', nickname: '小E', birthday: '03.25', zodiac: '牡羊座', gender: '女', height: '165cm', weight: '45kg', color: '#FF6B00', hobby: '唱歌、跳舞', pet: '貓', food: '草莓', avatar: '' },
             'Bonnie': { name: 'Bonnie', fullname: 'Bonnie Pattraphus Borattasuwan', nickname: '邦妮', birthday: '07.12', zodiac: '巨蟹座', gender: '女', height: '168cm', weight: '48kg', color: '#8A2BE2', hobby: '看電影', pet: '狗', food: '巧克力', avatar: '' },
@@ -345,7 +356,12 @@
         let currentSingleImage = '';
         let currentCalendarDate = new Date();
 
-        // 雲端同步邏輯
+        function linkify(text) {
+            if (!text) return '';
+            const urlRegex = /(https?:\/\/[^\s]+)/g;
+            return text.replace(urlRegex, url => `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`);
+        }
+
         function updateSyncStatus(status, text) {
             const dot = document.getElementById('syncDot');
             const txt = document.getElementById('syncText');
@@ -357,10 +373,10 @@
 
         async function loadCloudData() {
             if (!gistId || !gistToken) {
-                updateSyncStatus('offline', '尚未設定雲端金鑰 (離線模式)');
+                updateSyncStatus('offline', '尚未設定金鑰 (離線)');
                 return;
             }
-            updateSyncStatus('syncing', '正在載入雲端資料...');
+            updateSyncStatus('syncing', '正在載入...');
             try {
                 const res = await fetch(`https://api.github.com/gists/${gistId}`, {
                     headers: { 'Authorization': `token ${gistToken}` }
@@ -371,21 +387,21 @@
                 events = content.events || [];
                 profiles = content.profiles || defaultProfiles;
                 albumPhotos = content.albumPhotos || [];
-                updateSyncStatus('online', '已連線雲端 (即時同步中)');
+                updateSyncStatus('online', '已連線雲端 (即時同步)');
                 renderTimeline();
             } catch (e) {
                 console.error(e);
-                updateSyncStatus('offline', '雲端載入失敗，請檢查金鑰');
+                updateSyncStatus('offline', '載入失敗，請檢查金鑰');
             }
         }
 
         async function saveCloudData() {
             if (!gistId || !gistToken) {
-                alert('請先設定 Gist ID 與 Token 才能進行跨裝置同步！');
+                alert('請先設定 Gist ID 與 Token！');
                 openSyncSettingModal();
                 return;
             }
-            updateSyncStatus('syncing', '正在同步至雲端...');
+            updateSyncStatus('syncing', '同步中...');
             const payload = {
                 files: {
                     "emibonnie_data.json": {
@@ -402,11 +418,11 @@
                     },
                     body: JSON.stringify(payload)
                 });
-                if (res.ok) updateSyncStatus('online', '已連線雲端 (即時同步中)');
+                if (res.ok) updateSyncStatus('online', '已連線雲端 (即時同步)');
                 else throw new Error('儲存失敗');
             } catch (e) {
-                alert('同步失敗，請檢查網路或金鑰權限！');
-                updateSyncStatus('offline', '雲端儲存失敗');
+                alert('同步失敗，請檢查網路或金鑰！');
+                updateSyncStatus('offline', '同步失敗');
             }
         }
 
@@ -513,7 +529,7 @@
                         </div>
                         ${membersHtml}
                         <div class="event-title">${item.title}</div>
-                        <div class="event-content">${item.content || ''}</div>
+                        <div class="event-content">${linkify(item.content || '')}</div>
                         ${imgsHtml}
                     </div>
                 `;
@@ -571,7 +587,7 @@
                 membersEl.innerHTML = `<span class="member-badge" style="${getMembersStyle(item.members)}">${item.members.join(' & ')}</span>`;
             } else { membersEl.innerHTML = ''; }
 
-            document.getElementById('detailContent').innerText = item.content || '無詳細記錄。';
+            document.getElementById('detailContent').innerHTML = linkify(item.content || '無詳細記錄。');
 
             const imgsContainer = document.getElementById('detailImages');
             imgsContainer.innerHTML = '';
@@ -631,7 +647,7 @@
                 const avatarSrc = p.avatar || 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24" fill="%23ccc"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>';
 
                 card.innerHTML = `
-                    <button class="btn-action" style="position:absolute; top:15px; right:15px;" onclick="openProfileModal('${key}')">✏️ 編輯</button>
+                    <button class="btn-action" style="position:absolute; top:12px; right:12px;" onclick="openProfileModal('${key}')">✏️ 編輯</button>
                     <img src="${avatarSrc}" class="profile-avatar" style="border-color:${p.color};">
                     <div class="profile-fullname">${p.fullname || ''}</div>
                     <div class="profile-name" style="color:${p.color}">${p.name}</div>
@@ -650,19 +666,11 @@
             });
         }
 
-        function autoCalcZodiac() {
-            const b = document.getElementById('profBirthday').value;
-            if (b && b.includes('.')) {
-                const parts = b.split('.');
-                document.getElementById('profZodiac').value = getZodiacSign(parts[0], parts[1]);
-            }
-        }
-
         function renderAlbum() {
             const grid = document.getElementById('albumGrid');
             grid.innerHTML = '';
             if (albumPhotos.length === 0) {
-                grid.innerHTML = '<p style="color:var(--text-muted); grid-column: 1/-1;">目前還沒有美圖，點擊右上角上傳第一張吧！</p>';
+                grid.innerHTML = '<p style="color:var(--text-muted); grid-column: 1/-1; text-align:center;">目前還沒有照片，點擊右上角上傳吧！</p>';
                 return;
             }
             albumPhotos.forEach((item, index) => {
@@ -672,7 +680,7 @@
                     <img src="${item.url}">
                     <div class="album-card-info">
                         <span class="member-badge" style="${getMembersStyle([item.member])}">${item.member}</span>
-                        <button class="btn-action btn-delete" style="float:right;" onclick="deleteAlbumPhoto(${index})">🗑️</button>
+                        <button class="btn-action btn-delete" onclick="deleteAlbumPhoto(${index})">🗑️</button>
                     </div>
                 `;
                 grid.appendChild(card);
@@ -695,7 +703,7 @@
         }
 
         function deleteAlbumPhoto(index) {
-            if (confirm('確定刪除這張美圖嗎？')) {
+            if (confirm('確定刪除這張照片嗎？')) {
                 albumPhotos.splice(index, 1);
                 saveCloudData();
                 renderAlbum();
@@ -865,7 +873,6 @@
             }
         }
 
-        // 初始載入
         loadCloudData();
     </script>
 </body>
