@@ -17,31 +17,31 @@
             background-color: var(--bg-color);
             color: var(--text-main);
             margin: 0;
-            padding: 15px;
+            padding: 20px;
             display: flex;
             justify-content: center;
         }
-        .container { width: 100%; max-width: 480px; }
+        .container { width: 100%; max-width: 650px; }
         
-        /* 頂部標題卡片 */
+        /* 頂部標題 */
         .header-card {
-            background: var(--card-bg); padding: 20px; border-radius: 20px;
-            text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 15px;
+            background: var(--card-bg); padding: 25px; border-radius: 20px;
+            text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px;
         }
         .header-card h1 {
             margin: 0 0 5px 0; background: var(--primary-gradient);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 1.8rem;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 2.2rem;
         }
-        .header-card p { margin: 0 0 15px 0; color: var(--text-sub); font-size: 0.9rem; }
+        .header-card p { margin: 0; color: var(--text-sub); font-size: 1rem; }
 
         /* 導覽頁籤按鈕 */
         .nav-tabs {
             display: flex; background: #e4e9f0; padding: 6px;
-            border-radius: 20px; gap: 5px; margin-bottom: 20px;
+            border-radius: 20px; gap: 5px; margin-bottom: 25px;
         }
         .nav-btn {
-            flex: 1; border: none; background: transparent; padding: 10px 0;
-            border-radius: 15px; font-size: 0.85rem; font-weight: bold;
+            flex: 1; border: none; background: transparent; padding: 12px 0;
+            border-radius: 15px; font-size: 0.95rem; font-weight: bold;
             color: var(--text-sub); cursor: pointer; transition: all 0.3s;
         }
         .nav-btn.active { background: var(--card-bg); color: var(--text-main); box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
@@ -49,25 +49,116 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
-        /* 通用卡片與排版 */
+        /* 卡片與時間軸樣式 (強化互動感：陰影與滑鼠懸停上浮) */
         .card {
-            background: var(--card-bg); padding: 20px; border-radius: 16px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.04); margin-bottom: 15px;
+            background: var(--card-bg); padding: 25px; border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04); margin-bottom: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(255, 65, 108, 0.12);
         }
         .badge-duo {
             background: linear-gradient(135deg, #ff416c, #845ec2); color: white;
-            padding: 4px 12px; border-radius: 12px; font-size: 0.75rem;
-            font-weight: bold; display: inline-block; margin-bottom: 8px;
+            padding: 5px 14px; border-radius: 12px; font-size: 0.8rem;
+            font-weight: bold; display: inline-block; margin-bottom: 10px;
         }
-        .timeline-date { font-size: 0.85rem; color: var(--text-sub); font-weight: bold; margin-bottom: 5px; }
 
-        /* 多媒體樣式 (照片、影片、連結) */
-        img, iframe { width: 100%; border-radius: 10px; margin-top: 10px; object-fit: cover; }
-        iframe { height: 220px; border: none; }
+        /* ⌛ 以年為單位的時間軸群組與互動動畫 */
+        .year-section { margin-bottom: 30px; }
+        .year-title {
+            font-size: 1.4rem; font-weight: bold; color: #ff416c;
+            border-bottom: 2px solid #ff416c; padding-bottom: 5px; margin-bottom: 15px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .timeline-item {
+            position: relative; padding-left: 25px; border-left: 3px solid #ff416c; margin-bottom: 20px;
+            animation: fadeInUp 0.5s ease-out forwards;
+        }
+        .timeline-date { font-size: 0.9rem; color: #666; font-weight: bold; margin-bottom: 8px; }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 個人資料頭貼與排版 */
+        .profile-avatar {
+            width: 110px; height: 110px; border-radius: 50%;
+            object-fit: cover; margin: 0 auto 12px auto; display: block;
+            border: 3px solid #ff416c; cursor: pointer; transition: transform 0.3s;
+        }
+        .profile-avatar:hover { transform: scale(1.08) rotate(2deg); }
+        .profile-info { text-align: center; margin-bottom: 15px; }
+        .info-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed #eee; font-size: 0.95rem; }
+
+        /* 多媒體樣式與互動放大效果 */
+        img, iframe {
+            width: 100%; border-radius: 12px; margin-top: 12px; object-fit: cover;
+            cursor: pointer; transition: opacity 0.2s, transform 0.3s;
+        }
+        img:hover { opacity: 0.95; transform: scale(1.01); }
+        iframe { height: 320px; border: none; cursor: default; }
+        iframe:hover { transform: none; }
         a { color: #ff416c; font-weight: bold; text-decoration: none; }
         a:hover { text-decoration: underline; }
         
-        .gallery-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        /* 照片牆網格 */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 12px;
+        }
+        .gallery-grid img { height: 150px; margin-top: 0; }
+
+        /* 📅 動態月曆樣式 */
+        .calendar-header {
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;
+            flex-wrap: wrap; gap: 10px;
+        }
+        .calendar-nav-group { display: flex; align-items: center; gap: 5px; }
+        .calendar-header button {
+            background: #e4e9f0; border: none; padding: 8px 12px; border-radius: 10px;
+            font-weight: bold; cursor: pointer; color: var(--text-main); font-size: 0.85rem;
+            transition: background 0.2s;
+        }
+        .calendar-header button:hover { background: #d0d7de; }
+        .calendar-grid {
+            display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; text-align: center;
+        }
+        .calendar-weekdays {
+            font-weight: bold; color: var(--text-sub); font-size: 0.85rem; padding-bottom: 8px;
+        }
+        .calendar-day {
+            background: #f8f9fa; min-height: 75px; border-radius: 10px; padding: 6px;
+            display: flex; flex-direction: column; align-items: flex-start; font-size: 0.85rem;
+            position: relative; border: 1px solid #eee; box-sizing: border-box;
+            transition: background 0.2s;
+        }
+        .calendar-day:hover { background: #fff0f3; }
+        .calendar-day.empty { background: transparent; border: none; }
+        .day-number { font-weight: bold; color: #444; margin-bottom: 4px; }
+        .calendar-event-tag {
+            background: linear-gradient(135deg, #ff416c, #845ec2); color: white;
+            font-size: 0.65rem; padding: 2px 4px; border-radius: 4px; margin-top: 2px;
+            width: 100%; text-align: left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+        }
+
+        /* 全螢幕圖片互動彈跳視窗 */
+        #imageModal {
+            display: none; position: fixed; z-index: 1000;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.85);
+            justify-content: center; align-items: center; padding: 20px; box-sizing: border-box;
+            animation: fadeIn 0.3s ease;
+        }
+        #modalImage { max-width: 100%; max-height: 85vh; border-radius: 10px; box-shadow: 0 5px 25px rgba(0,0,0,0.5); }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
     </style>
 </head>
 <body>
@@ -87,74 +178,241 @@
         <button class="nav-btn" onclick="switchTab('gallery')">🖼️ 照片</button>
     </div>
 
-    <!-- 1. ⌛ 時間軸分頁 (活動、心得、影片、連結都在這) -->
+    <!-- 1. ⌛ 時間軸分頁 (越新在越上面，具備互動浮現動畫) -->
     <div id="timeline" class="tab-content active">
-        
-        <!-- ▼ 活動卡片範例 1：包含文字、超連結、YouTube影片、照片 ▼ -->
-        <div class="timeline-date">2026.08.10</div>
-        <div class="card">
-            <span class="badge-duo">Emi & Bonnie</span>
-            <h3 style="margin: 5px 0;">Red Kiss 新歌發布</h3>
-            <p style="font-size: 0.9rem; color: #555;">啊好好聽！！！GMMtv我會一直著裝（一歌兩用既是ost也是第二首單曲....）</p>
-            
-            <!-- 🔗 外部網站超連結 -->
-            <p style="font-size: 0.9rem;">🔗 相關連結：<a href="https://www.gmm-tv.com" target="_blank">GMMTV 官方網站</a></p>
-            
-            <!-- 📺 YouTube 嵌入影片 -->
-            <iframe src="https://www.youtube.com/embed/您的影片代碼" title="YouTube video"></iframe>
-            
-            <!-- 🖼️ Google 雲端照片直連 -->
-            <img src="https://lh3.googleusercontent.com/d/您的Google雲端照片ID" alt="活動照片">
+        <div id="timeline-container">
+            <!-- 程式會自動將最新活動排在最上面 -->
         </div>
-
-        <!-- ▼ 活動卡片範例 2 (您可以直接複製整個卡片區塊貼在下方新增) ▼ -->
-        <div class="timeline-date" style="margin-top: 20px;">2023.08.03</div>
-        <div class="card">
-            <span class="badge-duo">Emi & Bonnie</span>
-            <h3 style="margin: 5px 0;">初見面</h3>
-            <p style="font-size: 0.9rem; color: #555;">簽約GMM、拍公式照，命運的齒輪開始轉動。</p>
-            <img src="https://lh3.googleusercontent.com/d/您的Google雲端照片ID" alt="初見面">
-        </div>
-
     </div>
 
     <!-- 2. 📅 行事曆分頁 -->
     <div id="calendar" class="tab-content">
-        <div class="card" style="text-align: center; padding: 30px;">
-            <h3>📅 預定行程與活動</h3>
-            <p style="color: var(--text-sub);">未來行程與紀念日紀錄區</p>
+        <div class="card">
+            <div class="calendar-header">
+                <div class="calendar-nav-group">
+                    <button onclick="changeYear(-1)">◀ 去年</button>
+                    <button onclick="changeMonth(-1)">❮ 上月</button>
+                </div>
+                <h3 id="calendar-month-year" style="margin:0; font-size: 1.1rem;">2026 年 8 月</h3>
+                <div class="calendar-nav-group">
+                    <button onclick="changeMonth(1)">下月 ❯</button>
+                    <button onclick="changeYear(1)">明年 ▶</button>
+                </div>
+            </div>
+            <div class="calendar-grid calendar-weekdays">
+                <div>日</div><div>一</div><div>二</div><div>三</div><div>四</div><div>五</div><div>六</div>
+            </div>
+            <div id="calendar-days" class="calendar-grid">
+                <!-- 動態月曆格子 -->
+            </div>
         </div>
     </div>
 
     <!-- 3. 📁 資料分頁 -->
     <div id="profile" class="tab-content">
         <div class="card">
-            <h3 style="text-align: center; margin-top: 0;">人物基本資料</h3>
-            <p><strong>Emi 星座：</strong>金牛座 <span style="font-size: 0.8rem; color: #999;">(直接在此改字)</span></p>
-            <p><strong>Bonnie 星座：</strong>水瓶座 <span style="font-size: 0.8rem; color: #999;">(直接在此改字)</span></p>
+            <img src="https://lh3.googleusercontent.com/d/Emi的照片ID" alt="Emi 頭貼" class="profile-avatar" onclick="openModal(this.src)">
+            <div class="profile-info">
+                <h3 style="margin: 5px 0 2px 0; color: #ff416c;">Emi</h3>
+                <span style="font-size: 0.85rem; color: #777;">Emi Thasorn Klinnim</span>
+            </div>
+            <div class="info-row"><span>星座</span><strong>金牛座</strong></div>
+            <div class="info-row"><span>生日</span><strong>1998.04.25</strong></div>
+            <div class="info-row"><span>喜好</span><strong>追劇、看演唱會</strong></div>
+        </div>
+
+        <div class="card">
+            <img src="https://lh3.googleusercontent.com/d/Bonnie的照片ID" alt="Bonnie 頭貼" class="profile-avatar" onclick="openModal(this.src)">
+            <div class="profile-info">
+                <h3 style="margin: 5px 0 2px 0; color: #ff416c;">Bonnie</h3>
+                <span style="font-size: 0.85rem; color: #777;">Bonnie Pattraphus</span>
+            </div>
+            <div class="info-row"><span>星座</span><strong>水瓶座</strong></div>
+            <div class="info-row"><span>生日</span><strong>2004.01.27</strong></div>
+            <div class="info-row"><span>喜好</span><strong>動漫、遊戲、吉他</strong></div>
         </div>
     </div>
 
     <!-- 4. 🖼️ 照片牆分頁 -->
     <div id="gallery" class="tab-content">
         <div class="card">
-            <h3 style="margin-top: 0;">🖼️ 照片收藏庫</h3>
+            <h3 style="margin-top: 0; margin-bottom: 15px;">🖼️ 照片收藏庫</h3>
             <div class="gallery-grid">
-                <img src="https://lh3.googleusercontent.com/d/您的Google雲端照片ID" alt="照片牆" style="margin-top:0; height: 130px;">
-                <img src="https://lh3.googleusercontent.com/d/您的Google雲端照片ID" alt="照片牆" style="margin-top:0; height: 130px;">
+                <img src="https://lh3.googleusercontent.com/d/您的Google雲端照片ID" alt="照片牆" onclick="openModal(this.src)">
+                <img src="https://lh3.googleusercontent.com/d/您的Google雲端照片ID" alt="照片牆" onclick="openModal(this.src)">
             </div>
         </div>
     </div>
 
 </div>
 
+<!-- 全螢幕圖片互動彈跳視窗 -->
+<div id="imageModal" onclick="closeModal()">
+    <img id="modalImage" src="" alt="放大檢視">
+</div>
+
 <script>
-    // 頁籤切換核心功能
+    // ==========================================
+    // 【活動資料庫】：在此自由新增活動，越新的日期會自動排在最上面！
+    // ==========================================
+    const eventsData = [
+        {
+            date: "2026-08-10",
+            title: "Red Kiss 新歌發布",
+            content: "啊好好聽！！！GMMtv我會一直著裝...",
+            link: "https://www.gmm-tv.com",
+            linkText: "GMMTV 官方網站",
+            youtube: "https://www.youtube.com/embed/您的影片代碼",
+            photo: "https://lh3.googleusercontent.com/d/您的Google雲端照片ID"
+        },
+        {
+            date: "2025-05-20",
+            title: "品牌活動出席",
+            content: "去年的美好回憶紀錄...",
+            link: "",
+            linkText: "",
+            youtube: "",
+            photo: "https://lh3.googleusercontent.com/d/您的Google雲端照片ID"
+        },
+        {
+            date: "2023-08-03",
+            title: "初見面",
+            content: "簽約GMM、拍公式照，命運的齒輪開始轉動。",
+            link: "",
+            linkText: "",
+            youtube: "",
+            photo: "https://lh3.googleusercontent.com/d/您的Google雲端照片ID"
+        }
+    ];
+
+    let currentYear = 2026;
+    let currentMonth = 7; // 7 代表 8 月
+
+    window.onload = function() {
+        renderTimeline();
+        renderCalendar();
+    };
+
+    // ⌛ 渲染時間軸 (嚴格確保：最新日期在最上面、年份也是最新的在最上面)
+    function renderTimeline() {
+        const container = document.getElementById('timeline-container');
+        container.innerHTML = "";
+
+        // 1. 確保活動資料由「新到舊」排序
+        eventsData.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        // 2. 依照年份群組（利用 Map 確保年份也是由新到舊排列）
+        const groupedByYear = {};
+        eventsData.forEach(ev => {
+            const year = ev.date.split('-')[0];
+            if (!groupedByYear[year]) {
+                groupedByYear[year] = [];
+            }
+            groupedByYear[year].push(ev);
+        });
+
+        // 取得所有年份並由大到小排序 (例如 2026 -> 2025 -> 2023)
+        const sortedYears = Object.keys(groupedByYear).sort((a, b) => b - a);
+
+        sortedYears.forEach(year => {
+            let yearSectionHtml = `
+                <div class="year-section">
+                    <div class="year-title">📅 ${year} 年</div>
+            `;
+
+            groupedByYear[year].forEach(ev => {
+                let linkHtml = ev.link ? `<p style="font-size: 0.95rem;">🔗 相關連結：<a href="${ev.link}" target="_blank">${ev.linkText}</a></p>` : '';
+                let ytHtml = ev.youtube ? `<iframe src="${ev.youtube}" title="YouTube video"></iframe>` : '';
+                let imgHtml = ev.photo ? `<img src="${ev.photo}" alt="活動照片" onclick="openModal(this.src)">` : '';
+
+                yearSectionHtml += `
+                    <div class="timeline-item">
+                        <div class="timeline-date">${ev.date.replace(/-/g, '.')}</div>
+                        <div class="card" style="margin-bottom: 0;">
+                            <span class="badge-duo">Emi & Bonnie</span>
+                            <h3 style="margin: 5px 0 10px 0;">${ev.title}</h3>
+                            <p style="font-size: 0.95rem; color: #555; line-height: 1.5;">${ev.content}</p>
+                            ${linkHtml}
+                            ${ytHtml}
+                            ${imgHtml}
+                        </div>
+                    </div>
+                `;
+            });
+
+            yearSectionHtml += `</div>`;
+            container.innerHTML += yearSectionHtml;
+        });
+    }
+
+    // 📅 渲染動態月曆
+    function renderCalendar() {
+        const monthYearEl = document.getElementById('calendar-month-year');
+        const daysContainer = document.getElementById('calendar-days');
+        daysContainer.innerHTML = "";
+
+        monthYearEl.innerText = `${currentYear} 年 ${currentMonth + 1} 月`;
+
+        const firstDayIndex = new Date(currentYear, currentMonth, 1).getDay();
+        const totalDays = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+        for (let i = 0; i < firstDayIndex; i++) {
+            daysContainer.innerHTML += `<div class="calendar-day empty"></div>`;
+        }
+
+        for (let day = 1; day <= totalDays; day++) {
+            const mm = String(currentMonth + 1).padStart(2, '0');
+            const dd = String(day).padStart(2, '0');
+            const dateStr = `${currentYear}-${mm}-${dd}`;
+
+            let matchedEvents = eventsData.filter(ev => ev.date === dateStr);
+            let eventTagsHtml = '';
+            matchedEvents.forEach(ev => {
+                eventTagsHtml += `<div class="calendar-event-tag" title="${ev.title}">${ev.title}</div>`;
+            });
+
+            daysContainer.innerHTML += `
+                <div class="calendar-day">
+                    <span class="day-number">${day}</span>
+                    ${eventTagsHtml}
+                </div>
+            `;
+        }
+    }
+
+    function changeMonth(direction) {
+        currentMonth += direction;
+        if (currentMonth > 11) {
+            currentMonth = 0;
+            currentYear++;
+        } else if (currentMonth < 0) {
+            currentMonth = 11;
+            currentYear--;
+        }
+        renderCalendar();
+    }
+
+    function changeYear(direction) {
+        currentYear += direction;
+        renderCalendar();
+    }
+
     function switchTab(tabId) {
         document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
         document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
         document.getElementById(tabId).classList.add('active');
         event.currentTarget.classList.add('active');
+    }
+
+    function openModal(imgSrc) {
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('modalImage');
+        modal.style.display = 'flex';
+        modalImg.src = imgSrc;
+    }
+
+    function closeModal() {
+        document.getElementById('imageModal').style.display = 'none';
     }
 </script>
 
