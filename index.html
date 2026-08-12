@@ -404,7 +404,7 @@
             box-shadow: 0 10px 25px rgba(255, 117, 140, 0.25);
         }
 
-        /* 重新設計的行事曆切換按鈕排版 */
+        /* 重新設計的行事曆切換按鈕排版（上方年份、下方月份） */
         .calendar-header {
             display: flex;
             flex-direction: column;
@@ -662,16 +662,16 @@
     <div id="calendar" class="tab-content">
         <div class="card">
             <div class="calendar-header">
-                <!-- 上方：月份切換與年月標題 -->
+                <!-- 上方：年份切換 -->
+                <div class="calendar-nav-row">
+                    <button onclick="changeYear(-1)">◀ 去年</button>
+                    <button onclick="changeYear(1)">明年 ▶</button>
+                </div>
+                <!-- 下方：月份切換與年月標題 -->
                 <div class="calendar-nav-row">
                     <button onclick="changeMonth(-1)">❮ 上月</button>
                     <h3 id="calendar-month-year" style="margin:0; font-size: 1.1rem; color: var(--text-main);">2026 年 8 月</h3>
                     <button onclick="changeMonth(1)">下月 ❯</button>
-                </div>
-                <!-- 下方：年份切換 -->
-                <div class="calendar-nav-row">
-                    <button onclick="changeYear(-1)">◀ 去年</button>
-                    <button onclick="changeYear(1)">明年 ▶</button>
                 </div>
             </div>
             <div class="calendar-grid calendar-weekdays">
