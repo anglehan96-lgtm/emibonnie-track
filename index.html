@@ -3,189 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EmiBonnie 個人應援記事與歷程紀錄</title>
+    <meta name="theme-color" content="#ff416c">
+    <title>EmiBonnie 官宣記得吱我一聲</title>
     <style>
         :root {
             --primary-gradient: linear-gradient(135deg, #ff416c, #ff4b2b, #845ec2);
-            --bg-color: #f4f6fa;
+            --bg-color: #f8f9fa;
             --card-bg: #ffffff;
-            --text-main: #333333;
-            --text-sub: #666666;
+            --text-main: #2d3748;
+            --text-sub: #718096;
+            --accent-color: #ff416c;
         }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-        }
-        .container { width: 100%; max-width: 650px; }
-        
-        /* 頂部標題 */
-        .header-card {
-            background: var(--card-bg); padding: 25px; border-radius: 20px;
-            text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px;
-        }
-        .header-card h1 {
-            margin: 0 0 5px 0; background: var(--primary-gradient);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 2.2rem;
-        }
-        .header-card p { margin: 0; color: var(--text-sub); font-size: 1rem; }
-
-        /* 導覽頁籤按鈕 */
-        .nav-tabs {
-            display: flex; background: #e4e9f0; padding: 6px;
-            border-radius: 20px; gap: 5px; margin-bottom: 25px;
-        }
-        .nav-btn {
-            flex: 1; border: none; background: transparent; padding: 12px 0;
-            border-radius: 15px; font-size: 0.95rem; font-weight: bold;
-            color: var(--text-sub); cursor: pointer; transition: all 0.3s;
-        }
-        .nav-btn.active { background: var(--card-bg); color: var(--text-main); box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
-
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg-color); color: var(--text-main); margin: 0; padding: 20px; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 700px; }
+        .header-card { background: var(--card-bg); padding: 30px; border-radius: 24px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.04); margin-bottom: 25px; }
+        .header-card h1 { margin: 0 0 8px 0; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 2.4rem; }
+        .header-card p { margin: 0; color: var(--text-sub); font-size: 1.05rem; }
+        .nav-tabs { display: flex; background: #e4e9f0; padding: 6px; border-radius: 20px; gap: 6px; margin-bottom: 30px; }
+        .nav-btn { flex: 1; border: none; background: transparent; padding: 12px 0; border-radius: 15px; font-size: 0.95rem; font-weight: bold; color: var(--text-sub); cursor: pointer; transition: all 0.3s; }
+        .nav-btn.active { background: var(--card-bg); color: var(--text-main); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
-
-        /* 卡片與時間軸樣式 (強化互動感：陰影與滑鼠懸停上浮) */
-        .card {
-            background: var(--card-bg); padding: 25px; border-radius: 16px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.04); margin-bottom: 20px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(255, 65, 108, 0.12);
-        }
-        .badge-duo {
-            background: linear-gradient(135deg, #ff416c, #845ec2); color: white;
-            padding: 5px 14px; border-radius: 12px; font-size: 0.8rem;
-            font-weight: bold; display: inline-block; margin-bottom: 10px;
-        }
-
-        /* ⌛ 以年為單位的時間軸群組與互動動畫 */
-        .year-section { margin-bottom: 30px; }
-        .year-title {
-            font-size: 1.4rem; font-weight: bold; color: #ff416c;
-            border-bottom: 2px solid #ff416c; padding-bottom: 5px; margin-bottom: 15px;
-            display: flex; align-items: center; gap: 8px;
-        }
-        .timeline-item {
-            position: relative; padding-left: 25px; border-left: 3px solid #ff416c; margin-bottom: 20px;
-            animation: fadeInUp 0.5s ease-out forwards;
-        }
-        .timeline-date { font-size: 0.9rem; color: #666; font-weight: bold; margin-bottom: 8px; }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* 個人資料頭貼與排版 */
-        .profile-avatar {
-            width: 110px; height: 110px; border-radius: 50%;
-            object-fit: cover; margin: 0 auto 12px auto; display: block;
-            border: 3px solid #ff416c; cursor: pointer; transition: transform 0.3s;
-        }
+        .year-filter-bar { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 15px; margin-bottom: 25px; justify-content: center; }
+        .year-filter-btn { background: #ffffff; border: 1px solid #e2e8f0; padding: 8px 18px; border-radius: 25px; font-size: 0.9rem; font-weight: bold; color: var(--text-sub); cursor: pointer; white-space: nowrap; transition: all 0.25s ease; box-shadow: 0 2px 6px rgba(0,0,0,0.02); }
+        .year-filter-btn:hover { background: #fff0f3; border-color: var(--accent-color); color: var(--accent-color); }
+        .year-filter-btn.active { background: var(--primary-gradient); color: white; border: none; box-shadow: 0 4px 15px rgba(255, 65, 108, 0.35); }
+        .timeline-container { position: relative; padding: 20px 0; }
+        .timeline-container::before { content: ''; position: absolute; top: 0; bottom: 0; left: 24px; width: 4px; background: linear-gradient(to bottom, #ff416c, #845ec2, #e2e8f0); border-radius: 4px; }
+        @media (min-width: 600px) { .timeline-container::before { left: 50%; transform: translateX(-50%); } }
+        .year-section { margin-bottom: 35px; }
+        .year-title { font-size: 1.3rem; font-weight: bold; color: #fff; background: var(--primary-gradient); padding: 8px 20px; border-radius: 20px; display: inline-block; margin-bottom: 25px; box-shadow: 0 4px 12px rgba(255, 65, 108, 0.25); position: relative; left: 45px; }
+        @media (min-width: 600px) { .year-title { left: 50%; transform: translateX(-50%); display: table; } }
+        .timeline-item { position: relative; margin-bottom: 30px; padding-left: 55px; }
+        @media (min-width: 600px) { .timeline-item { padding-left: 0; width: 46%; margin-left: 4%; } .timeline-item:nth-child(odd) { margin-left: 54%; } }
+        .timeline-item::after { content: ''; position: absolute; left: 17px; top: 15px; width: 16px; height: 16px; background: #ffffff; border: 4px solid var(--accent-color); border-radius: 50%; box-shadow: 0 0 0 4px rgba(255, 65, 108, 0.15); z-index: 2; }
+        @media (min-width: 600px) { .timeline-item:nth-child(odd)::after { left: -31.5px; } .timeline-item:nth-child(even)::after { left: auto; right: -31.5px; } }
+        .timeline-date { font-size: 0.85rem; color: var(--accent-color); font-weight: bold; margin-bottom: 6px; letter-spacing: 0.5px; }
+        .card { background: var(--card-bg); padding: 24px; border-radius: 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.05); margin-bottom: 0; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease; border: 1px solid rgba(0,0,0,0.02); }
+        .card:hover { transform: translateY(-6px); box-shadow: 0 12px 35px rgba(255, 65, 108, 0.15); }
+        .badge-duo { background: var(--primary-gradient); color: white; padding: 4px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; display: inline-block; margin-bottom: 10px; }
+        .profile-avatar { width: 110px; height: 110px; border-radius: 50%; object-fit: cover; margin: 0 auto 12px auto; display: block; border: 3px solid var(--accent-color); cursor: pointer; transition: transform 0.3s; }
         .profile-avatar:hover { transform: scale(1.08) rotate(2deg); }
         .profile-info { text-align: center; margin-bottom: 15px; }
         .info-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed #eee; font-size: 0.95rem; }
-
-        /* 多媒體樣式與互動放大效果 */
-        img, iframe {
-            width: 100%; border-radius: 12px; margin-top: 12px; object-fit: cover;
-            cursor: pointer; transition: opacity 0.2s, transform 0.3s;
-        }
-        img:hover { opacity: 0.95; transform: scale(1.01); }
-        iframe { height: 320px; border: none; cursor: default; }
-        iframe:hover { transform: none; }
-        a { color: #ff416c; font-weight: bold; text-decoration: none; }
+        .photo-carousel { position: relative; width: 100%; border-radius: 14px; overflow: hidden; margin-top: 14px; background: #111; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .carousel-img { width: 100%; height: 240px; object-fit: cover; display: none; cursor: pointer; transition: transform 0.3s; }
+        .carousel-img:hover { transform: scale(1.02); }
+        .carousel-img.active { display: block; }
+        .carousel-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0, 0, 0, 0.6); color: white; border: none; width: 36px; height: 36px; cursor: pointer; font-size: 1rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: background 0.2s; z-index: 10; }
+        .carousel-btn:hover { background: rgba(255, 65, 108, 0.8); }
+        .carousel-prev { left: 10px; }
+        .carousel-next { right: 10px; }
+        .carousel-indicators { position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; background: rgba(0,0,0,0.3); padding: 4px 8px; border-radius: 10px; }
+        .indicator-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.5); cursor: pointer; }
+        .indicator-dot.active { background: white; width: 18px; border-radius: 4px; }
+        a { color: var(--accent-color); font-weight: bold; text-decoration: none; }
         a:hover { text-decoration: underline; }
-        
-        /* 照片牆網格 */
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 12px;
-        }
-        .gallery-grid img { height: 150px; margin-top: 0; }
-
-        /* 📅 動態月曆樣式 */
-        .calendar-header {
-            display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;
-            flex-wrap: wrap; gap: 10px;
-        }
-        .calendar-nav-group { display: flex; align-items: center; gap: 5px; }
-        .calendar-header button {
-            background: #e4e9f0; border: none; padding: 8px 12px; border-radius: 10px;
-            font-weight: bold; cursor: pointer; color: var(--text-main); font-size: 0.85rem;
-            transition: background 0.2s;
-        }
+        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+        .gallery-grid img { height: 150px; margin-top: 0; border-radius: 14px; object-fit: cover; cursor: pointer; transition: transform 0.2s; }
+        .gallery-grid img:hover { transform: scale(1.03); }
+        .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
+        .calendar-nav-group { display: flex; align-items: center; gap: 6px; }
+        .calendar-header button { background: #e4e9f0; border: none; padding: 8px 14px; border-radius: 12px; font-weight: bold; cursor: pointer; color: var(--text-main); font-size: 0.85rem; transition: background 0.2s; }
         .calendar-header button:hover { background: #d0d7de; }
-        .calendar-grid {
-            display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; text-align: center;
-        }
-        .calendar-weekdays {
-            font-weight: bold; color: var(--text-sub); font-size: 0.85rem; padding-bottom: 8px;
-        }
-        .calendar-day {
-            background: #f8f9fa; min-height: 75px; border-radius: 10px; padding: 6px;
-            display: flex; flex-direction: column; align-items: flex-start; font-size: 0.85rem;
-            position: relative; border: 1px solid #eee; box-sizing: border-box;
-            transition: background 0.2s;
-        }
-        .calendar-day:hover { background: #fff0f3; }
-        .calendar-day.empty { background: transparent; border: none; }
-        .day-number { font-weight: bold; color: #444; margin-bottom: 4px; }
-        .calendar-event-tag {
-            background: linear-gradient(135deg, #ff416c, #845ec2); color: white;
-            font-size: 0.65rem; padding: 2px 4px; border-radius: 4px; margin-top: 2px;
-            width: 100%; text-align: left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-        }
-
-        /* 全螢幕圖片互動彈跳視窗 */
-        #imageModal {
-            display: none; position: fixed; z-index: 1000;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(0,0,0,0.85);
-            justify-content: center; align-items: center; padding: 20px; box-sizing: border-box;
-            animation: fadeIn 0.3s ease;
-        }
-        #modalImage { max-width: 100%; max-height: 85vh; border-radius: 10px; box-shadow: 0 5px 25px rgba(0,0,0,0.5); }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; text-align: center; }
+        .calendar-weekdays { font-weight: bold; color: var(--text-sub); font-size: 0.85rem; padding-bottom: 8px; }
+        .calendar-day { background: #f8f9fa; min-height: 80px; border-radius: 12px; padding: 6px; display: flex; flex-direction: column; align-items: flex-start; font-size: 0.85rem; position: relative; border: 1px solid #edf2f7; box-sizing: border-box; cursor: pointer; transition: all 0.2s; }
+        .calendar-day:hover { background: #fff0f3; border-color: #ffb6c1; transform: translateY(-2px); }
+        .calendar-day.empty { background: transparent; border: none; cursor: default; transform: none; }
+        .day-number { font-weight: bold; color: #4a5568; margin-bottom: 4px; }
+        .calendar-event-tag { background: var(--primary-gradient); color: white; font-size: 0.65rem; padding: 2px 6px; border-radius: 6px; margin-top: 2px; width: 100%; text-align: left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        #imageModal { display: none; position: fixed; z-index: 2000; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; backdrop-filter: blur(5px); }
+        #modalImage { max-width: 85%; max-height: 80vh; object-fit: contain; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); background: #111; }
+        #eventModal { display: none; position: fixed; z-index: 1500; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); justify-content: center; align-items: center; padding: 15px; box-sizing: border-box; backdrop-filter: blur(4px); }
+        .event-modal-content { background: white; width: 100%; max-width: 680px; border-radius: 24px; overflow: hidden; box-shadow: 0 15px 40px rgba(0,0,0,0.25); display: flex; flex-direction: column; position: relative; animation: fadeInUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .event-modal-body { display: flex; flex-direction: row; gap: 20px; padding: 30px; align-items: center; }
+        @media (max-width: 600px) { .event-modal-body { flex-direction: column; padding: 20px; } }
+        .event-modal-left { flex: 1; width: 100%; }
+        .event-modal-right { flex: 1; width: 100%; display: flex; flex-direction: column; justify-content: center; }
+        .event-modal-close { position: absolute; top: 15px; right: 18px; background: #edf2f7; border: none; width: 32px; height: 32px; border-radius: 50%; font-weight: bold; cursor: pointer; z-index: 10; display: flex; align-items: center; justify-content: center; color: #4a5568; transition: background 0.2s; }
+        .event-modal-close:hover { background: #e2e8f0; }
+        .event-modal-nav { display: flex; justify-content: space-between; align-items: center; background: #f8f9fa; padding: 14px 24px; border-top: 1px solid #eee; }
+        .event-modal-nav button { background: var(--primary-gradient); color: white; border: none; padding: 8px 16px; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 0.85rem; box-shadow: 0 4px 12px rgba(255, 65, 108, 0.2); transition: transform 0.2s; }
+        .event-modal-nav button:hover { transform: scale(1.05); }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
-
 <div class="container">
-    <!-- 頂部標題 -->
     <div class="header-card">
         <h1>EmiBonnie</h1>
-        <p>個人應援記事與歷程紀錄</p>
+        <p>官宣記得吱我一聲</p>
     </div>
-
-    <!-- 導覽頁籤按鈕 -->
     <div class="nav-tabs">
         <button class="nav-btn active" onclick="switchTab('timeline')">⌛ 時間軸</button>
         <button class="nav-btn" onclick="switchTab('calendar')">📅 行事曆</button>
         <button class="nav-btn" onclick="switchTab('profile')">📁 資料</button>
         <button class="nav-btn" onclick="switchTab('gallery')">🖼️ 照片</button>
     </div>
-
-    <!-- 1. ⌛ 時間軸分頁 (越新在越上面，具備互動浮現動畫) -->
     <div id="timeline" class="tab-content active">
-        <div id="timeline-container">
-            <!-- 程式會自動將最新活動排在最上面 -->
-        </div>
+        <div id="year-filter-container" class="year-filter-bar"></div>
+        <div id="timeline-container" class="timeline-container"></div>
     </div>
-
-    <!-- 2. 📅 行事曆分頁 -->
     <div id="calendar" class="tab-content">
         <div class="card">
             <div class="calendar-header">
@@ -202,219 +121,227 @@
             <div class="calendar-grid calendar-weekdays">
                 <div>日</div><div>一</div><div>二</div><div>三</div><div>四</div><div>五</div><div>六</div>
             </div>
-            <div id="calendar-days" class="calendar-grid">
-                <!-- 動態月曆格子 -->
-            </div>
+            <div id="calendar-days" class="calendar-grid"></div>
         </div>
     </div>
-
-    <!-- 3. 📁 資料分頁 -->
     <div id="profile" class="tab-content">
+        <!-- Emi 資料卡 -->
         <div class="card">
-            <img src="https://lh3.googleusercontent.com/d/Emi的照片ID" alt="Emi 頭貼" class="profile-avatar" onclick="openModal(this.src)">
+            <img src="https://lh3.googleusercontent.com/d/1Rk3UdpY0ncXMjsNxUuSpvkSP9n4z9Yos" alt="Emi 頭貼" class="profile-avatar" onclick="openModal(this.src)">
             <div class="profile-info">
-                <h3 style="margin: 5px 0 2px 0; color: #ff416c;">Emi</h3>
+                <h3 style="margin: 5px 0 2px 0; color: var(--accent-color);">Emi</h3>
                 <span style="font-size: 0.85rem; color: #777;">Emi Thasorn Klinnim</span>
             </div>
+            <div class="info-row"><span>暱稱</span><strong>p'mi、mimi、papa</strong></div>
+            <div class="info-row"><span>生日</span><strong>1998.04.25 (28歲)</strong></div>
             <div class="info-row"><span>星座</span><strong>金牛座</strong></div>
-            <div class="info-row"><span>生日</span><strong>1998.04.25</strong></div>
-            <div class="info-row"><span>喜好</span><strong>追劇、看演唱會</strong></div>
+            <div class="info-row"><span>身高 / 體重</span><strong>165cm / 48kg</strong></div>
+            <div class="info-row"><span>喜好</span><strong>追劇、看演唱會、拖鞋</strong></div>
+            <div class="info-row"><span>寵物</span><strong>博美犬（醬油）</strong></div>
+            <div class="info-row"><span>喜歡的食物</span><strong>生醃鮭魚、抹茶拿鐵（不喜歡 辣的、香菜、香蕉）</strong></div>
         </div>
 
-        <div class="card">
-            <img src="https://lh3.googleusercontent.com/d/Bonnie的照片ID" alt="Bonnie 頭貼" class="profile-avatar" onclick="openModal(this.src)">
+        <!-- Bonnie 資料卡 -->
+        <div class="card" style="margin-top: 20px;">
+            <img src="https://lh3.googleusercontent.com/d/1xwYt2bJspTLGFzxb4Bhm_tdfyGxQP9Py" alt="Bonnie 頭貼" class="profile-avatar" onclick="openModal(this.src)">
             <div class="profile-info">
-                <h3 style="margin: 5px 0 2px 0; color: #ff416c;">Bonnie</h3>
-                <span style="font-size: 0.85rem; color: #777;">Bonnie Pattraphus</span>
+                <h3 style="margin: 5px 0 2px 0; color: var(--accent-color);">Bonnie</h3>
+                <span style="font-size: 0.85rem; color: #777;">Bonnie Pattraphus Borattasuwan</span>
             </div>
+            <div class="info-row"><span>暱稱</span><strong>nini、bonbon</strong></div>
+            <div class="info-row"><span>生日</span><strong>2004.01.27 (22歲)</strong></div>
             <div class="info-row"><span>星座</span><strong>水瓶座</strong></div>
-            <div class="info-row"><span>生日</span><strong>2004.01.27</strong></div>
-            <div class="info-row"><span>喜好</span><strong>動漫、遊戲、吉他</strong></div>
+            <div class="info-row"><span>身高 / 體重</span><strong>164cm / 47kg</strong></div>
+            <div class="info-row"><span>喜好</span><strong>動漫、遊戲、畫畫、吉他</strong></div>
+            <div class="info-row"><span>寵物</span><strong>馬爾濟斯 (muju)</strong></div>
+            <div class="info-row"><span>喜歡的食物</span><strong>草莓... (過敏 牛肉、牛奶)</strong></div>
+        </div>
+
+        <!-- Any 資料卡 -->
+        <div class="card" style="margin-top: 20px;">
+            <img src="https://lh3.googleusercontent.com/d/17fD21DSfvEadGqyd_Vvqvx-nkcgnPFf5" alt="Any 頭貼" class="profile-avatar" onclick="openModal(this.src)">
+            <div class="profile-info">
+                <h3 style="margin: 5px 0 2px 0; color: var(--accent-color);">Any</h3>
+                <span style="font-size: 0.85rem; color: #777;">Any Klinnimborattasuwan</span>
+            </div>
+            <div class="info-row"><span>暱稱</span><strong>any</strong></div>
+            <div class="info-row"><span>生日</span><strong>2025.03.14 (1歲)</strong></div>
+            <div class="info-row"><span>星座</span><strong>-</strong></div>
+            <div class="info-row"><span>性別</span><strong>女</strong></div>
+            <div class="info-row"><span>身高 / 體重</span><strong>- / -</strong></div>
+            <div class="info-row"><span>喜好</span><strong>唱歌、yellow</strong></div>
+            <div class="info-row"><span>寵物</span><strong>-</strong></div>
+            <div class="info-row"><span>喜歡的食物</span><strong>雞翅、omakase</strong></div>
         </div>
     </div>
-
-    <!-- 4. 🖼️ 照片牆分頁 -->
     <div id="gallery" class="tab-content">
         <div class="card">
-            <h3 style="margin-top: 0; margin-bottom: 15px;">🖼️ 照片收藏庫</h3>
-            <div class="gallery-grid">
-                <img src="https://lh3.googleusercontent.com/d/您的Google雲端照片ID" alt="照片牆" onclick="openModal(this.src)">
-                <img src="https://lh3.googleusercontent.com/d/您的Google雲端照片ID" alt="照片牆" onclick="openModal(this.src)">
-            </div>
+            <h3 style="margin-top: 0; margin-bottom: 20px;">🖼️ 照片收藏庫</h3>
+            <div class="gallery-grid" id="gallery-container"></div>
         </div>
     </div>
-
 </div>
-
-<!-- 全螢幕圖片互動彈跳視窗 -->
 <div id="imageModal" onclick="closeModal()">
-    <img id="modalImage" src="" alt="放大檢視">
+    <img id="modalImage" src="" alt="完整照片">
 </div>
-
+<div id="eventModal">
+    <div class="event-modal-content">
+        <button class="event-modal-close" onclick="closeEventModal()">✕</button>
+        <div class="event-modal-body" id="event-modal-body"></div>
+        <div class="event-modal-nav" id="event-modal-nav" style="display: none;">
+            <button onclick="changeModalEvent(-1)">◀ 上一個事件</button>
+            <span id="event-counter" style="font-size: 0.85rem; font-weight: bold; color: #666;">1 / 1</span>
+            <button onclick="changeModalEvent(1)">下一個事件 ▶</button>
+        </div>
+    </div>
+</div>
 <script>
-    // ==========================================
-    // 【活動資料庫】：在此自由新增活動，越新的日期會自動排在最上面！
-    // ==========================================
     const eventsData = [
-        {
-            date: "2026-08-10",
-            title: "Red Kiss 新歌發布",
-            content: "啊好好聽！！！GMMtv我會一直著裝...",
-            link: "https://www.gmm-tv.com",
-            linkText: "GMMTV 官方網站",
-            youtube: "https://www.youtube.com/embed/您的影片代碼",
-            photo: "https://lh3.googleusercontent.com/d/您的Google雲端照片ID"
+        { date: "2026-08-10", title: "Red Kiss 新歌發布", content: "啊好好聽！！！GMMtv一首歌兩用我不接受", link: "https://www.gmm-tv.com", linkText: "GMMTV 官方網站", videoLink: "https://www.youtube.com/watch?v=jad-V_nyvaY", videoText: "📺 Red Kiss - EMIBONNIE [ OFFICIAL MV ]", photo: ["https://lh3.googleusercontent.com/d/139IMGslcvRQerOjhzyyzhaLgF-wTZddN", "https://lh3.googleusercontent.com/d/1eu3gKii3jiEXxUi-JjeZ8zfwfalYvS0b", "https://lh3.googleusercontent.com/d/1PnRRFU5kEK2i1rjE8uPiHZLvslWjp8fm", "https://lh3.googleusercontent.com/d/1j4XYWt3WnHFiTGNv84p_1m9lLEPCRej-"] },
+        { date: "2023-08-03", title: "初見面", content: "和GMM簽約，並拍攝個人公式照。命運的齒輪開始轉動。註：後續採訪中兩人聊起初次見面，Emi主動搭話協助Bonnie拍照時調整姿勢。", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2026-08-12", title: "Moonshadow ep.1 首映", content: "終於等來了", link: "", linkText: "", videoLink: "", videoText: "", photo: ["https://lh3.googleusercontent.com/d/1qoQAZCXnUx7dWiR4bPy36P4DBi1YeYR9"] },
+        { date: "2024-10-13", title: "Us開拍", content: "", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2025-06-28", title: "Blush Blossom Fan Fest", content: "第一次演唱會", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2025-09-05", title: "404 Not Found 寫真書簽名會", content: "", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2025-09-07", title: "Mint Awards 2025", content: "", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2025-09-13", title: "Infinity Medical Clinic", content: "於TayNew的節目中提到是Emi邀請Bonnie一起去清邁拜拜，同行者還有Bonnie媽媽", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2025-09-23", title: "Y Entertain Awards 2025", content: "兩人合唱More Than Words(Jazz ver.)。Bonnie終於收到Emi的個人品牌IMM ANOTHER衣服。媒體聯訪重點節錄：Bonnie提到喜歡看粉絲剪的Emi迷因影片並按讚；被問到招商會嘴巴閉很緊，Bonnie想當酷女孩被姐姐追，Emi想當開朗又嗆辣的角色；Bonnie說Emi很愛買食物分享但是自己只吃一兩口，所以最後是她空盤。", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2025-09-27", title: "香港FM", content: "", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2025-10-01", title: "Emiamily in Paris: 出席YSL女裝秀", content: "Bonnie作為刷趨勢大隊長，非常認真的幫Emi刷數據", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2025-11-06", title: "Emi亂入賣卡直播間", content: "", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2025-11-23", title: "越南市區逛逛", content: "兩人在越南結束Fanday行程後，隔天一起去逛胡志明市區，逛街時互相幫對方拍照。吃Pho的時候，Bonnie上傳了限時動態，是自己又弄到褲子上，Emi認真幫她擦的片段。", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2025-11-29", title: "下意識的照顧", content: "兩人搭機穿同款勃肯鞋。接機人潮過多，Emi在移動途中不時關注Bonnie的狀態，搭肩、拉手、注意尖角會不會撞到", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2025-11-30", title: "BBFanFest 澳門場", content: "工作人員上傳兩人在後台的影片&照片，Bonnie坐在Emi腿上。花絮採訪的接力問答，June問Emi有沒有哄好Bonnie(前情提要：June發佈了Emi靠在她身上撒嬌的照片）Emi回答問題的時候Bonnie在旁邊一邊吃蛋塔一邊吃醋生氣說那就去找她阿", link: "", linkText: "", videoLink: "", videoText: "", photo: ["https://lh3.googleusercontent.com/d/1OvppU5kp6GGI76_u1FA80Ildvyh_mSDj"] },
+        { date: "2025-12-01", title: "旅途中的依靠", content: "Love發佈限時動態，為機上Bonnie靠在Emi身上睡的很熟。Emi轉發留言「沒有枕頭比我的懷裡更安心」", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2025-12-07", title: "Seoul Medical Clinic 活動", content: "後台拍照Emi疑似坐在Bonnie腿上。活動結束後，Bonnie和Emi與Emi的朋友們一起去動物園。Bonnie發了限時動態是Emi假裝喂兔子的影片。Emi的朋友(Nurse)在X上轉發Emi泰站表示在旁邊看EB二人很像在看真人版Nick和Judy", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2025-12-09", title: "CPS x IRADA 品牌活動", content: "Emi在活動後的After Party和美女貼身熱舞。Bonnie在粉絲分享的影片下面評論「讓她去過自己的生活吧」。Emi則是到處在Bonnie的推文下留言，疑似求和", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2025-12-09", title: "Kamart 直播帶貨", content: "兩人各有一小時的單人直播。Emi直播時Bonnie在旁邊看，被問到faen的時候，Emi表示「單身，但有一個孩子」。接著是Bonnie首次單人帶貨直播，Bonnie很緊張拉著Emi不放，但是Emi有下一個行程所以要先離開，最後依依不捨摸頭鼓勵Bonnie再離開。Bonnie直播時表示「單身，但有一個faen」。", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2025-12-10", title: "Cute Press 直播帶貨", content: "Bonnie在直播中火力全開，強力回擊昨日Emi的 「單身論」和貼貼熱舞，表示兩人只是partner、 phi-nong、 coworker的關係，為什麼要被哄， 並且逼問Emi為什麼不對她說我愛你。 Emi整場直播瘋狂貼貼，在被說為什麼不說我愛你的時候，長達五分鐘都在拖拖拉拉不好意思，說不是不願意說但是直播太多人了（3500人），一開始先說了日語版，接著說了中文版，最後才看Bonnie氣到要放棄的時候趕快耍帥講了泰語版。", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2025-12-11", title: "Zootopia 2 觀影活動", content: "首次一家人單獨的觀影活動。Emi出場下樓梯絆到，Bonnie立刻上前摟住。Bonnie 直接喊Emi而不是P'Mi。Emi面交了上次在TikTok直播間搶到的小卡", link: "", linkText: "", videoLink: "", videoText: "", photo: ["https://lh3.googleusercontent.com/d/1H6vCMFjsUZpAQJvakC09qZ1r5Gan2FfH"] },
+        { date: "2025-12-12", title: "TikTok影片", content: "Emi發佈LINEMAN相關影片，Bonnie喂她吃起司蛋糕還幫忙用手擦嘴。 Bonnie隨後在TikTok直播表示因為Emi最近吃很少，食慾不佳所以要用這樣的方法餵她吃", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2025-12-20", title: "GMMTV Starlympics 2025", content: "開場花車巡迴時，Bonnie被發現在偷看Emi，Emi大方轉身讓她看個夠。 在台下看比賽時，兩人大部分時間都黏在一起、 互相撒嬌，Emi幫Bonnie開水瓶後直接喝同一瓶，Bonnie想玩打鼓就帶她去還拍下來。 接力比賽前，Emi蹲下來幫Bonnie繫鞋帶（兩人穿的是Emi推廣的品牌情侶款，Emi特地從家裡帶的），頒獎也要抱著出場，無時無刻都在牽手摟腰，拿到獎牌還要親獎牌再貼貼。 前一天彩排時，Emi送給Bonnie自己品牌新出的牛仔褲（第一個收到的人）隔天兩人都穿上去運動會現場。", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2025-12-25", title: "聖誕禮物", content: "Bonnie和朋友一起去製作手工薑餅屋，薑餅屋上有一家人的元素，包含手繪的Any、 Emi和Bonnie的名字。 製作完後Bonnie拍了拍立得，和薑餅屋一起送去給Emi作為聖誕禮物，並且傳訊息表示自己要送Emi房子。 粉絲在X上詢問為什麼要送自己的拍立得，Bonnie表示直接給Emi一張獨一無二的，這樣就不用去TikTok買她的拍立得。 ", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2025-12-26", title: "Emi的新手機螢幕保護畫面", content: "Emi發佈限時動態為新手機的互動式螢幕保護畫面，裡面有🐻🐶❤️。 Any看到說： 🦋 (自己)在哪裡？Emi立刻把❤️改成👻。 Bonnie看到也評論：有米米熊(泰文的熊是mhee)、Choyu(Emi的狗)、 Any，那她呢？Emi回覆：在那裡啊，吐著舌頭睜著大眼睛呢(指明🐶不是指Choyu而是Bonnie)", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2025-12-29", title: "Emi的TikTok直播", content: "Emi聽了Bonnie晚上剛發的自彈自唱影片，一邊聽一邊微笑並說這是她很喜歡的歌。炫耀自己錢包裡面放著兩人的拍立得。2026的願望：想和Bonnie唱更多雙人歌曲、想去迪士尼。Bonnie在直播裡一直送禮物和留言：強調Plub(Me And Thee的角色)是單身；說Emi的IG粉絲達到100萬她才要去洗澡。", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2026-01-04", title: "Me And Thee EP8", content: "一整天不見蹤影的Emi 一出現就發了當天Bonnie在《Me And Thee》中的哭戲片段並附上🫳🏻🫳🏻🫳🏻🫳🏻emoji。Bonnie表示：來我家安慰我。Emi回了運動會跑步的影片，表示自己要準備出發了。PS. Emi的More Than Words MV也在同時間破千萬觀看數，但她沒有立刻發感謝推文，而是隔天才發。", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2026-01-08", title: "Emi 驚喜現身 Me And Thee After Party", content: "當日Emi在孔敬府有站台活動，一早就搭飛機出發並發了一張搭機照，身穿西裝，Bonnie評論想吃恐龍馬卡龍(只有在孔敬才有的限定款)。Me And Thee After Party一開始Bonnie就一直被其他人調侃希望某人能來，Bonnie表示Emi很愛給驚喜，但可能是不來的那種驚喜。在最後感言階段，Phuwin說提詞機上寫著：「Bonnie，Emi來了！」Bonnie連說三次不相信，結果Emi真的活動一結束就趕飛機回首爾出現了，並帶著Bonnie想要的馬卡龍，站起來大喊：「N’Chonlee，Phi來了」（此為Bonnie很喜歡的電視劇台詞）。最後一首歌表演時，Bonnie在自己唱的時候走到了Emi面前牽起手親了一口並對著Emi唱，Emi笑的非常開心。散場時，兩人一起回後台，P’Bear的影片上Emi直接跪下來幫Bonnie脫高跟鞋並幫她提著，回休息室也幫忙拆頭上的髮夾。", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2026-01-27", title: "Bonnie生日", content: "0點時Any準時發布單曲祝福Nini生日快樂，Emi評論Any是不是把她趕去睡覺才能是第一個祝福的人。Bonnie評論問Emi「Bie*什麼時候祝我生日快樂」，Emi表示自己在挑照片中，最後發了一個抱抱影片。簽售會點名環節，EMI準備一束玫瑰，Any指導單膝下跪，Bonnie表示自己還沒畢業。這次Bonnie鍛鍊後輕鬆把Emi抱起來，並且嘟嘴疑似索吻，多次抱抱牽手，Bonnie甚至Emi靠近時隔著頭髮親了一口，且說如果不是頭髮擋住就親下去了。", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2026-01-29", title: "Me and Thee 隱藏卡", content: "粉絲在Coach的站台活動現場把Bonnie的隱藏卡送給Emi，Emi高興收下並親了一口。註：週二書展點名時，粉絲也拿了一張隱藏卡給Bonnie看，Bonnie回覆「給P'mi吧」。", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2026-02-01", title: "Bonnie生日會", content: "Emi帶著馬卡龍蛋糕和吉他來參加Bonnie生日會，Bonnie感動到爆哭，沒有想到會收到一把吉他作為生日禮物.Emi表示自己找了很多家才找到，並且吐槽公司把Love Session拍攝花絮裡Bonnie提到很想要吉他的願望剪進去全世界都知道了，怕有其他人也會送一樣的禮物(callback之前Bonnie說想要Switch結果被粉絲搶先送了主機)。Emi當天穿了一件字樣為「Number One Girl」的T-shit。*後續粉絲在活動問這件衣服，Emi 承認Bonnie是她的Number One Girl", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2026-02-11", title: "Louis Vuitton 活動", content: "Emi在路透影片中非常乖巧，沒有和其他人貼身熱舞。*粉絲在隔日的FENDI站台活動問Emi為什麼沒有跳舞，Emi表示衣服很厚太熱了，但表情耐人尋味。*Bonnie點贊了粉絲的推文，推文內容是調侃Emi沒有摟著其他女人的脖子跳舞了很乖。", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2026-03-07", title: "EmiBonnie Love Session", content: "第一次雙人演唱會", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2026-03-20", title: "Fall For You MV 幕後花絮", content: "工作人員要Emi表現的酷一點，結果一看到Bonnie就露出超大笑容。Emi明明就站在前面而已，Bonnie沒看到就喊「P’Mi在哪裡」，工作人員表示就在你前面。Bonnie調侃MV劇情裡Emi飾演的吉他店老闆給了一張集點卡分明是想要賺更多錢，Emi說是自己寫的上面還有xoxo(親親) 買十送一，Bonnie問送什麼，Emi：「送老闆」。吉他店裡的沙發很大但Bonnie直接坐在Emi的大腿上，Emi一邊幫Bonnie壓裙擺防走光手還是時不時抓Bonnie手，兩人維持這個姿勢閒聊很久，Bonnie說想要紅包，各種撒嬌，Emi：「瘋了嗎小孩才要紅包，情侶誰給」並表示送的吉他還在分期付款剩三期。兩人在天台打鬧，Emi說Duo，結果兩人突然開始說是真情侶？（語境不明）。", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2026-04-06", title: "深夜遛狗", content: "兩人深夜穿著輕便，帶著Emi家的小狗Choyu去遛狗被P’Nurse拍了下來。Bonnie接著上傳Emi把Choyu塞到她手上的影片，原本兇兇的Choyu沒有亂咬人，乖乖地被Bonnie抱著。Emi也轉發朋友限時動態，她抱著Choyu讓他聞Bonnie氣味。", link: "", linkText: "", videoLink: "", videoText: "", photo: ["https://lh3.googleusercontent.com/d/1A5r7UX5Nhv2q7mqncBDq5qcCYDFatlsA"] },
+        { date: "2026-05-14", title: "Bonnie下廚", content: "Emi發佈TikTok，為Bonnie下廚煎蛋和炒蝦給她吃的Vlog.本日是ANY可以說話的日子", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2026-05-16", title: "BBFF練舞", content: "Emi發佈BBFF練舞照片，配文：不太好但我沒事，BGM也是很苦的音樂.粉絲表示是不是因為缺「受」來補充能量，Bonnie評論：我們都待在一起了怎麼可能沒有補充到，Emi接著發了練舞影片，Bonnie在影片裡開心吃飯。", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { 
+            date: "2026-06-16", 
+            title: "GMMTV Outing 2026", 
+            content: "", 
+            link: "", 
+            linkText: "", 
+            videoLink: "", 
+            videoText: "", 
+            photo: [
+                "https://lh3.googleusercontent.com/d/1z-TobiHRtduMOmRdnXs6slS2gLucrBCY",
+                "https://lh3.googleusercontent.com/d/1UM715QP98upzxIdiuiOJPGjMFttGesG4",
+                "https://lh3.googleusercontent.com/d/15iDFsWOKSuqpPyqjcf7QNrinP4aT6iAa",
+                "https://lh3.googleusercontent.com/d/15J8a0o6RpLjXDPOFyd6AZY1JujebQxBo",
+                "https://lh3.googleusercontent.com/d/1_jAiNTIPDHoi6PD49S1xqcbz8cDiIy3O",
+                "https://lh3.googleusercontent.com/d/1ExbsgJEIXzF9n93ikTprJ3CPhyjktFs-"
+            ] 
         },
-        {
-            date: "2025-05-20",
-            title: "品牌活動出席",
-            content: "去年的美好回憶紀錄...",
-            link: "",
-            linkText: "",
-            youtube: "",
-            photo: "https://lh3.googleusercontent.com/d/您的Google雲端照片ID"
-        },
-        {
-            date: "2023-08-03",
-            title: "初見面",
-            content: "簽約GMM、拍公式照，命運的齒輪開始轉動。",
-            link: "",
-            linkText: "",
-            youtube: "",
-            photo: "https://lh3.googleusercontent.com/d/您的Google雲端照片ID"
-        }
+        { date: "2026-07-23", title: "Artist DJ 電台", content: "", link: "", linkText: "", videoLink: "", videoText: "", photo: ["https://lh3.googleusercontent.com/d/1pkZjLW9GQI2dmvvN94_ngdgtGp9V1UXY"] },
+        { date: "2026-07-23", title: "EFM LIVE FANDOM LIVE", content: "", link: "", linkText: "", videoLink: "", videoText: "", photo: ["https://lh3.googleusercontent.com/d/1-BL1N5-fMnl7KdxEeqPvFN4VOxfNiMNV", "https://lh3.googleusercontent.com/d/1sbne2wp4Dnuk_I9SoyK5pzPM479e3-oV", "https://lh3.googleusercontent.com/d/1hOW5xa2TKX80g7cW8M8siUq80lvrw-n1", "https://lh3.googleusercontent.com/d/1EgIxRIRvvwmdkt4LlenymflC2_RNDoaf"] },
+        { date: "2026-07-26", title: "書展", content: "", link: "", linkText: "", videoLink: "", videoText: "", photo: ["https://lh3.googleusercontent.com/d/1VxDmOsH1Z68ZMxYVQva5iULbC8Mwnkly", "https://lh3.googleusercontent.com/d/1vj2oqgIHfq541c_liNUJoAvpyoZlv9uI"] }
     ];
 
-    let currentYear = 2026;
-    let currentMonth = 7; // 7 代表 8 月
+    let currentYear = 2026; let currentMonth = 7; let selectedYearFilter = 'all'; let currentModalEvents = []; let currentModalIndex = 0;
 
-    window.onload = function() {
-        renderTimeline();
-        renderCalendar();
-    };
+    window.onload = function() { renderTimeline(); renderCalendar(); renderGallery(); };
 
-    // ⌛ 渲染時間軸 (嚴格確保：最新日期在最上面、年份也是最新的在最上面)
+    function createCarouselHtml(photos, carouselId) {
+        if (!photos || photos.length === 0) return '';
+        if (photos.length === 1) return `<img src="${photos[0]}" alt="照片" style="width:100%; height:240px; object-fit:cover; border-radius:14px; cursor:pointer;" onclick="openModal('${photos[0]}')">`;
+        let imgsHtml = '', dotsHtml = '';
+        photos.forEach((p, idx) => { imgsHtml += `<img src="${p}" class="carousel-img ${idx === 0 ? 'active' : ''}" onclick="openModal('${p}')">`; dotsHtml += `<div class="indicator-dot ${idx === 0 ? 'active' : ''}" onclick="event.stopPropagation(); setCarouselSlide('${carouselId}', ${idx})"></div>`; });
+        return `<div class="photo-carousel" id="${carouselId}">${imgsHtml}<button class="carousel-btn carousel-prev" onclick="event.stopPropagation(); moveCarousel('${carouselId}', -1)">❮</button><button class="carousel-btn carousel-next" onclick="event.stopPropagation(); moveCarousel('${carouselId}', 1)">❯</button><div class="carousel-indicators">${dotsHtml}</div></div>`;
+    }
+
+    function moveCarousel(carouselId, direction) {
+        const container = document.getElementById(carouselId); const imgs = container.querySelectorAll('.carousel-img'); const dots = container.querySelectorAll('.indicator-dot');
+        let activeIdx = Array.from(imgs).findIndex(img => img.classList.contains('active'));
+        imgs[activeIdx].classList.remove('active'); dots[activeIdx].classList.remove('active');
+        activeIdx = (activeIdx + direction + imgs.length) % imgs.length;
+        imgs[activeIdx].classList.add('active'); dots[activeIdx].classList.add('active');
+    }
+
+    function setCarouselSlide(carouselId, index) {
+        const container = document.getElementById(carouselId); const imgs = container.querySelectorAll('.carousel-img'); const dots = container.querySelectorAll('.indicator-dot');
+        imgs.forEach(img => img.classList.remove('active')); dots.forEach(dot => dot.classList.remove('active'));
+        imgs[index].classList.add('active'); dots[index].classList.add('active');
+    }
+
     function renderTimeline() {
-        const container = document.getElementById('timeline-container');
-        container.innerHTML = "";
-
-        // 1. 確保活動資料由「新到舊」排序
+        const filterContainer = document.getElementById('year-filter-container'), container = document.getElementById('timeline-container');
         eventsData.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-        // 2. 依照年份群組（利用 Map 確保年份也是由新到舊排列）
-        const groupedByYear = {};
-        eventsData.forEach(ev => {
-            const year = ev.date.split('-')[0];
-            if (!groupedByYear[year]) {
-                groupedByYear[year] = [];
-            }
-            groupedByYear[year].push(ev);
-        });
-
-        // 取得所有年份並由大到小排序 (例如 2026 -> 2025 -> 2023)
-        const sortedYears = Object.keys(groupedByYear).sort((a, b) => b - a);
-
-        sortedYears.forEach(year => {
-            let yearSectionHtml = `
-                <div class="year-section">
-                    <div class="year-title">📅 ${year} 年</div>
-            `;
-
+        const yearsSet = new Set(); eventsData.forEach(ev => yearsSet.add(ev.date.split('-')[0]));
+        const sortedYears = Array.from(yearsSet).sort((a, b) => b - a);
+        let filterHtml = `<button class="year-filter-btn ${selectedYearFilter === 'all' ? 'active' : ''}" onclick="filterByYear('all')">全部</button>`;
+        sortedYears.forEach(year => { filterHtml += `<button class="year-filter-btn ${selectedYearFilter === year ? 'active' : ''}" onclick="filterByYear('${year}')">${year}年</button>`; });
+        filterContainer.innerHTML = filterHtml;
+        let filteredEvents = selectedYearFilter === 'all' ? eventsData : eventsData.filter(ev => ev.date.startsWith(selectedYearFilter));
+        container.innerHTML = ""; const groupedByYear = {};
+        filteredEvents.forEach(ev => { const year = ev.date.split('-')[0]; if (!groupedByYear[year]) groupedByYear[year] = []; groupedByYear[year].push(ev); });
+        const activeYears = Object.keys(groupedByYear).sort((a, b) => b - a);
+        let carouselCounter = 0;
+        activeYears.forEach(year => {
+            let yearSectionHtml = `<div class="year-section"><div class="year-title">📅 ${year} 年</div>`;
             groupedByYear[year].forEach(ev => {
-                let linkHtml = ev.link ? `<p style="font-size: 0.95rem;">🔗 相關連結：<a href="${ev.link}" target="_blank">${ev.linkText}</a></p>` : '';
-                let ytHtml = ev.youtube ? `<iframe src="${ev.youtube}" title="YouTube video"></iframe>` : '';
-                let imgHtml = ev.photo ? `<img src="${ev.photo}" alt="活動照片" onclick="openModal(this.src)">` : '';
-
-                yearSectionHtml += `
-                    <div class="timeline-item">
-                        <div class="timeline-date">${ev.date.replace(/-/g, '.')}</div>
-                        <div class="card" style="margin-bottom: 0;">
-                            <span class="badge-duo">Emi & Bonnie</span>
-                            <h3 style="margin: 5px 0 10px 0;">${ev.title}</h3>
-                            <p style="font-size: 0.95rem; color: #555; line-height: 1.5;">${ev.content}</p>
-                            ${linkHtml}
-                            ${ytHtml}
-                            ${imgHtml}
-                        </div>
-                    </div>
-                `;
+                carouselCounter++; let cId = `timeline-carousel-${carouselCounter}`;
+                let linkHtml = ev.link ? `<p style="font-size: 0.95rem; margin: 8px 0;">🔗 <a href="${ev.link}" target="_blank">${ev.linkText}</a></p>` : '';
+                let videoHtml = ev.videoLink ? `<p style="font-size: 0.95rem; margin: 8px 0;"><a href="${ev.videoLink}" target="_blank">${ev.videoText}</a></p>` : '';
+                let photoHtml = createCarouselHtml(ev.photo, cId);
+                yearSectionHtml += `<div class="timeline-item"><div class="timeline-date">${ev.date.replace(/-/g, '.')}</div><div class="card"><span class="badge-duo">Emi & Bonnie</span><h3 style="margin: 5px 0 10px 0; font-size: 1.15rem;">${ev.title}</h3><p style="font-size: 0.95rem; color: #4a5568; line-height: 1.6; margin: 0 0 10px 0;">${ev.content}</p>${linkHtml}${videoHtml}${photoHtml}</div></div>`;
             });
-
-            yearSectionHtml += `</div>`;
-            container.innerHTML += yearSectionHtml;
+            container.innerHTML += yearSectionHtml + `</div>`;
         });
     }
 
-    // 📅 渲染動態月曆
+    function filterByYear(year) { selectedYearFilter = year; renderTimeline(); }
+
     function renderCalendar() {
-        const monthYearEl = document.getElementById('calendar-month-year');
-        const daysContainer = document.getElementById('calendar-days');
-        daysContainer.innerHTML = "";
-
+        const monthYearEl = document.getElementById('calendar-month-year'), daysContainer = document.getElementById('calendar-days'); daysContainer.innerHTML = "";
         monthYearEl.innerText = `${currentYear} 年 ${currentMonth + 1} 月`;
-
-        const firstDayIndex = new Date(currentYear, currentMonth, 1).getDay();
-        const totalDays = new Date(currentYear, currentMonth + 1, 0).getDate();
-
-        for (let i = 0; i < firstDayIndex; i++) {
-            daysContainer.innerHTML += `<div class="calendar-day empty"></div>`;
-        }
-
+        const firstDayIndex = new Date(currentYear, currentMonth, 1).getDay(), totalDays = new Date(currentYear, currentMonth + 1, 0).getDate();
+        for (let i = 0; i < firstDayIndex; i++) daysContainer.innerHTML += `<div class="calendar-day empty"></div>`;
         for (let day = 1; day <= totalDays; day++) {
-            const mm = String(currentMonth + 1).padStart(2, '0');
-            const dd = String(day).padStart(2, '0');
-            const dateStr = `${currentYear}-${mm}-${dd}`;
-
-            let matchedEvents = eventsData.filter(ev => ev.date === dateStr);
-            let eventTagsHtml = '';
-            matchedEvents.forEach(ev => {
-                eventTagsHtml += `<div class="calendar-event-tag" title="${ev.title}">${ev.title}</div>`;
-            });
-
-            daysContainer.innerHTML += `
-                <div class="calendar-day">
-                    <span class="day-number">${day}</span>
-                    ${eventTagsHtml}
-                </div>
-            `;
+            const mm = String(currentMonth + 1).padStart(2, '0'), dd = String(day).padStart(2, '0'), dateStr = `${currentYear}-${mm}-${dd}`;
+            let matchedEvents = eventsData.filter(ev => ev.date === dateStr), eventTagsHtml = '';
+            matchedEvents.forEach(ev => eventTagsHtml += `<div class="calendar-event-tag" title="${ev.title}">${ev.title}</div>`);
+            let clickAction = matchedEvents.length > 0 ? `onclick="openEventModal('${dateStr}')"` : '';
+            daysContainer.innerHTML += `<div class="calendar-day" ${clickAction}><span class="day-number">${day}</span>${eventTagsHtml}</div>`;
         }
     }
 
-    function changeMonth(direction) {
-        currentMonth += direction;
-        if (currentMonth > 11) {
-            currentMonth = 0;
-            currentYear++;
-        } else if (currentMonth < 0) {
-            currentMonth = 11;
-            currentYear--;
-        }
-        renderCalendar();
+    function renderGallery() { const galleryContainer = document.getElementById('gallery-container'); galleryContainer.innerHTML = ""; eventsData.forEach(ev => { if (ev.photo && ev.photo.length > 0) ev.photo.forEach(p => galleryContainer.innerHTML += `<img src="${p}" alt="照片牆" onclick="openModal('${p}')">`); }); }
+
+    function openEventModal(dateStr) { currentModalEvents = eventsData.filter(ev => ev.date === dateStr); if (currentModalEvents.length === 0) return; currentModalIndex = 0; updateEventModalContent(); document.getElementById('eventModal').style.display = 'flex'; }
+
+    function updateEventModalContent() {
+        const ev = currentModalEvents[currentModalIndex], bodyContainer = document.getElementById('event-modal-body'), navContainer = document.getElementById('event-modal-nav'), counterEl = document.getElementById('event-counter');
+        let linkHtml = ev.link ? `<p style="font-size: 0.95rem; margin: 8px 0;">🔗 <a href="${ev.link}" target="_blank">${ev.linkText}</a></p>` : '', videoHtml = ev.videoLink ? `<p style="font-size: 0.95rem; margin: 8px 0;"><a href="${ev.videoLink}" target="_blank">${ev.videoText}</a></p>` : '', photoHtml = createCarouselHtml(ev.photo, 'modal-carousel');
+        bodyContainer.innerHTML = `<div class="event-modal-left">${photoHtml}</div><div class="event-modal-right"><span class="badge-duo">📅 ${ev.date}</span><h2 style="margin: 5px 0 10px 0; color: var(--text-main); font-size: 1.3rem;">${ev.title}</h2><p style="font-size: 0.95rem; color: #4a5568; line-height: 1.6; margin: 0 0 10px 0;">${ev.content}</p>${linkHtml}${videoHtml}</div>`;
+        if (currentModalEvents.length > 1) { navContainer.style.display = 'flex'; counterEl.innerText = `${currentModalIndex + 1} / ${currentModalEvents.length}`; } else { navContainer.style.display = 'none'; }
     }
 
-    function changeYear(direction) {
-        currentYear += direction;
-        renderCalendar();
-    }
-
-    function switchTab(tabId) {
-        document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-        document.getElementById(tabId).classList.add('active');
-        event.currentTarget.classList.add('active');
-    }
-
-    function openModal(imgSrc) {
-        const modal = document.getElementById('imageModal');
-        const modalImg = document.getElementById('modalImage');
-        modal.style.display = 'flex';
-        modalImg.src = imgSrc;
-    }
-
-    function closeModal() {
-        document.getElementById('imageModal').style.display = 'none';
-    }
+    function changeModalEvent(direction) { currentModalIndex = (currentModalIndex + direction + currentModalEvents.length) % currentModalEvents.length; updateEventModalContent(); }
+    function closeEventModal() { document.getElementById('eventModal').style.display = 'none'; }
+    function changeMonth(direction) { currentMonth += direction; if (currentMonth > 11) { currentMonth = 0; currentYear++; } else if (currentMonth < 0) { currentMonth = 11; currentYear--; } renderCalendar(); }
+    function changeYear(direction) { currentYear += direction; renderCalendar(); }
+    function switchTab(tabId) { document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active')); document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active')); document.getElementById(tabId).classList.add('active'); event.currentTarget.classList.add('active'); }
+    function openModal(imgSrc) { const modal = document.getElementById('imageModal'); document.getElementById('modalImage').src = imgSrc; modal.style.display = 'flex'; }
+    function closeModal() { document.getElementById('imageModal').style.display = 'none'; }
 </script>
-
 </body>
 </html>
