@@ -2,19 +2,18 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#fff0f3">
     <title>EmiBonnie 官宣記得吱我一聲</title>
     <!-- 引入 Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* 柔和粉嫩色系 */
             --primary-gradient: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
             --accent-pink: #ff758c;
             --accent-purple: #a18cd1;
             --bg-color: #fcf6f7;
-            --card-bg: rgba(255, 255, 255, 0.92);
+            --card-bg: rgba(255, 255, 255, 0.94);
             --text-main: #4a4044;
             --text-sub: #8c7d84;
             --border-color: #f3e5e8;
@@ -29,10 +28,11 @@
                 radial-gradient(circle at 90% 80%, rgba(220, 214, 247, 0.4) 0%, transparent 40%);
             color: var(--text-main);
             margin: 0;
-            padding: 20px;
+            padding: 15px;
             display: flex;
             justify-content: center;
             min-height: 100vh;
+            box-sizing: border-box;
         }
 
         .container {
@@ -46,15 +46,14 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* 標頭卡片：玻璃擬態 */
         .header-card {
             background: var(--card-bg);
             backdrop-filter: blur(12px);
-            padding: 35px 20px;
+            padding: 30px 20px;
             border-radius: 28px;
             text-align: center;
             box-shadow: var(--shadow);
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             border: 1px solid rgba(255, 255, 255, 0.8);
             position: relative;
             overflow: hidden;
@@ -72,76 +71,55 @@
             background: linear-gradient(135deg, #ff758c, #a18cd1);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            font-size: 2.6rem;
+            font-size: 2.4rem;
             font-family: 'Quicksand', sans-serif;
             font-weight: 700;
-            letter-spacing: 1px;
         }
 
         .header-card p {
             margin: 0;
             color: var(--text-sub);
-            font-size: 1rem;
-            letter-spacing: 0.5px;
+            font-size: 0.95rem;
         }
 
-        /* 導覽列 */
         .nav-tabs {
             display: flex;
             background: rgba(240, 235, 238, 0.6);
             backdrop-filter: blur(10px);
-            padding: 8px;
-            border-radius: 22px;
+            padding: 6px;
+            border-radius: 20px;
             gap: 6px;
-            margin-bottom: 25px;
-            box-shadow: inset 0 2px 6px rgba(0,0,0,0.02);
+            margin-bottom: 20px;
         }
 
         .nav-btn {
             flex: 1;
             border: none;
             background: transparent;
-            padding: 12px 0;
-            border-radius: 16px;
-            font-size: 0.95rem;
+            padding: 10px 0;
+            border-radius: 14px;
+            font-size: 0.9rem;
             font-weight: 700;
             color: var(--text-sub);
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .nav-btn:hover {
-            color: var(--accent-pink);
+            transition: all 0.3s;
         }
 
         .nav-btn.active {
             background: #ffffff;
             color: var(--accent-pink);
-            box-shadow: 0 6px 20px rgba(255, 117, 140, 0.18);
-            transform: scale(1.02);
+            box-shadow: 0 4px 15px rgba(255, 117, 140, 0.18);
         }
 
-        .tab-content {
-            display: none;
-            animation: fadeInTab 0.4s ease;
-        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
 
-        .tab-content.active {
-            display: block;
-        }
-
-        @keyframes fadeInTab {
-            from { opacity: 0; transform: scale(0.98); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        /* 年份篩選列 */
         .year-filter-bar {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             overflow-x: auto;
-            padding-bottom: 12px;
-            margin-bottom: 25px;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
             justify-content: center;
             scrollbar-width: none;
         }
@@ -150,40 +128,27 @@
         .year-filter-btn {
             background: rgba(255, 255, 255, 0.8);
             border: 1px solid var(--border-color);
-            padding: 8px 20px;
-            border-radius: 25px;
-            font-size: 0.9rem;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
             font-weight: 700;
             color: var(--text-sub);
             cursor: pointer;
             white-space: nowrap;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
-        }
-
-        .year-filter-btn:hover {
-            background: #fff0f3;
-            border-color: #ffb6c1;
-            color: var(--accent-pink);
         }
 
         .year-filter-btn.active {
             background: var(--primary-gradient);
             color: white;
             border: none;
-            box-shadow: 0 6px 18px rgba(255, 117, 140, 0.3);
+            box-shadow: 0 4px 12px rgba(255, 117, 140, 0.3);
         }
 
-        /* 時間軸美化 */
-        .timeline-container {
-            position: relative;
-            padding: 20px 0;
-        }
-
+        .timeline-container { position: relative; padding: 10px 0; }
         .timeline-container::before {
             content: '';
             position: absolute;
-            top: 0; bottom: 0; left: 24px;
+            top: 0; bottom: 0; left: 20px;
             width: 3px;
             background: linear-gradient(to bottom, #ff9a9e, #a18cd1, #f0ebf0);
             border-radius: 4px;
@@ -193,21 +158,18 @@
             .timeline-container::before { left: 50%; transform: translateX(-50%); }
         }
 
-        .year-section { margin-bottom: 40px; }
-
+        .year-section { margin-bottom: 30px; }
         .year-title {
-            font-size: 1.15rem;
+            font-size: 1.1rem;
             font-weight: 700;
             color: #fff;
             background: linear-gradient(135deg, #ff9a9e, #a18cd1);
-            padding: 8px 22px;
-            border-radius: 20px;
+            padding: 6px 18px;
+            border-radius: 16px;
             display: inline-block;
-            margin-bottom: 25px;
-            box-shadow: 0 6px 15px rgba(161, 140, 209, 0.25);
+            margin-bottom: 20px;
             position: relative;
-            left: 48px;
-            letter-spacing: 0.5px;
+            left: 40px;
         }
 
         @media (min-width: 600px) {
@@ -216,8 +178,8 @@
 
         .timeline-item {
             position: relative;
-            margin-bottom: 35px;
-            padding-left: 55px;
+            margin-bottom: 25px;
+            padding-left: 45px;
         }
 
         @media (min-width: 600px) {
@@ -228,437 +190,260 @@
         .timeline-item::after {
             content: '';
             position: absolute;
-            left: 17px; top: 18px;
-            width: 14px; height: 14px;
+            left: 14.5px; top: 15px;
+            width: 12px; height: 12px;
             background: #ffffff;
-            border: 4px solid var(--accent-pink);
+            border: 3.5px solid var(--accent-pink);
             border-radius: 50%;
-            box-shadow: 0 0 0 5px rgba(255, 117, 140, 0.15);
             z-index: 2;
-            transition: transform 0.3s;
-        }
-
-        .timeline-item:hover::after {
-            transform: scale(1.2);
-            background: var(--accent-pink);
         }
 
         @media (min-width: 600px) {
-            .timeline-item:nth-child(odd)::after { left: -31.5px; }
-            .timeline-item:nth-child(even)::after { left: auto; right: -31.5px; }
+            .timeline-item:nth-child(odd)::after { left: -29.5px; }
+            .timeline-item:nth-child(even)::after { left: auto; right: -29.5px; }
         }
 
-        .timeline-date {
-            font-size: 0.85rem;
-            color: var(--accent-pink);
-            font-weight: 700;
-            margin-bottom: 6px;
-            letter-spacing: 0.5px;
-        }
+        .timeline-date { font-size: 0.8rem; color: var(--accent-pink); font-weight: 700; margin-bottom: 4px; }
 
-        /* 通用卡片 */
         .card {
             background: var(--card-bg);
             backdrop-filter: blur(10px);
-            padding: 26px;
-            border-radius: 24px;
+            padding: 20px;
+            border-radius: 20px;
             box-shadow: var(--shadow);
-            margin-bottom: 0;
-            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
             border: 1px solid rgba(255, 255, 255, 0.8);
-            position: relative;
-        }
-
-        .card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 16px 40px rgba(255, 117, 140, 0.16);
-            border-color: rgba(255, 117, 140, 0.3);
+            margin-bottom: 0;
         }
 
         .badge-duo {
             background: var(--primary-gradient);
             color: white;
-            padding: 5px 14px;
-            border-radius: 14px;
-            font-size: 0.75rem;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.7rem;
             font-weight: 700;
             display: inline-block;
-            margin-bottom: 12px;
-            box-shadow: 0 4px 12px rgba(255, 117, 140, 0.2);
+            margin-bottom: 10px;
         }
 
-        /* 個人資料卡 */
         .profile-avatar {
-            width: 120px;
-            height: 120px;
+            width: 100px; height: 100px;
             border-radius: 50%;
             object-fit: cover;
-            margin: 0 auto 15px auto;
+            margin: 0 auto 12px auto;
             display: block;
-            border: 4px solid #fff;
-            box-shadow: 0 8px 25px rgba(255, 117, 140, 0.2);
+            border: 3px solid #fff;
+            box-shadow: 0 6px 20px rgba(255, 117, 140, 0.2);
             cursor: pointer;
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        .profile-avatar:hover {
-            transform: scale(1.08) rotate(3deg);
-        }
-
-        .profile-info { text-align: center; margin-bottom: 18px; }
-        
+        .profile-info { text-align: center; margin-bottom: 15px; }
         .info-row {
             display: flex;
             justify-content: space-between;
-            padding: 10px 0;
+            padding: 8px 0;
             border-bottom: 1px dashed rgba(140, 125, 132, 0.2);
-            font-size: 0.95rem;
+            font-size: 0.9rem;
         }
         .info-row span { color: var(--text-sub); }
         .info-row strong { color: var(--text-main); }
 
-        /* 照片輪播器升級 */
         .photo-carousel {
             position: relative;
             width: 100%;
-            border-radius: 18px;
+            border-radius: 14px;
             overflow: hidden;
-            margin-top: 16px;
-            background: #1a1a1a;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            margin-top: 12px;
+            background: #111;
         }
 
         .carousel-img {
-            width: 100%;
-            height: 250px;
+            width: 100%; height: 220px;
             object-fit: cover;
             display: none;
             cursor: pointer;
-            transition: transform 0.4s ease;
         }
-
-        .carousel-img:hover { transform: scale(1.03); }
-        .carousel-img.active { display: block; animation: fadeIn 0.4s ease; }
+        .carousel-img.active { display: block; }
 
         .carousel-btn {
             position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(255, 255, 255, 0.75);
-            backdrop-filter: blur(4px);
+            top: 50%; transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.8);
             color: var(--text-main);
             border: none;
-            width: 38px; height: 38px;
+            width: 32px; height: 32px;
             cursor: pointer;
-            font-size: 1rem;
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
+            display: flex; align-items: center; justify-content: center;
             z-index: 10;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
-
-        .carousel-btn:hover {
-            background: #ffffff;
-            color: var(--accent-pink);
-            transform: translateY(-50%) scale(1.1);
-        }
-
-        .carousel-prev { left: 12px; }
-        .carousel-next { right: 12px; }
+        .carousel-prev { left: 8px; }
+        .carousel-next { right: 8px; }
 
         .carousel-indicators {
-            position: absolute;
-            bottom: 12px;
-            left: 50%;
+            position: absolute; bottom: 10px; left: 50%;
             transform: translateX(-50%);
-            display: flex;
-            gap: 6px;
-            background: rgba(0, 0, 0, 0.35);
-            backdrop-filter: blur(4px);
-            padding: 5px 10px;
-            border-radius: 12px;
+            display: flex; gap: 5px;
+            background: rgba(0,0,0,0.4);
+            padding: 4px 8px; border-radius: 10px;
         }
+        .indicator-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.5); cursor: pointer; }
+        .indicator-dot.active { background: white; width: 16px; border-radius: 4px; }
 
-        .indicator-dot {
-            width: 7px; height: 7px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.5);
-            cursor: pointer;
-            transition: all 0.3s;
-        }
+        a { color: var(--accent-pink); font-weight: 700; text-decoration: none; }
+        a:hover { text-decoration: underline; }
 
-        .indicator-dot.active {
-            background: white;
-            width: 20px;
-            border-radius: 4px;
-        }
-
-        a { color: var(--accent-pink); font-weight: 700; text-decoration: none; transition: opacity 0.2s; }
-        a:hover { opacity: 0.8; text-decoration: underline; }
-
-        /* 照片牆 */
         .gallery-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 14px;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 10px;
         }
-
         .gallery-grid img {
-            height: 160px;
-            width: 100%;
-            margin-top: 0;
-            border-radius: 16px;
+            height: 140px; width: 100%;
+            border-radius: 14px;
             object-fit: cover;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
         }
 
-        .gallery-grid img:hover {
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 10px 25px rgba(255, 117, 140, 0.25);
-        }
-
-        /* 行事曆美化 */
+        /* ------------------------------------------------ */
+        /* 手機完美適配的行事曆排版修正 */
+        /* ------------------------------------------------ */
         .calendar-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 22px;
+            margin-bottom: 15px;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 8px;
         }
-
-        .calendar-nav-group { display: flex; align-items: center; gap: 8px; }
-
+        .calendar-nav-group { display: flex; align-items: center; gap: 5px; }
         .calendar-header button {
             background: #fff;
             border: 1px solid var(--border-color);
-            padding: 8px 16px;
-            border-radius: 14px;
+            padding: 6px 12px;
+            border-radius: 10px;
             font-weight: 700;
             cursor: pointer;
             color: var(--text-main);
-            font-size: 0.85rem;
-            transition: all 0.2s;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
-        }
-
-        .calendar-header button:hover {
-            background: #fff0f3;
-            border-color: #ffb6c1;
-            color: var(--accent-pink);
+            font-size: 0.8rem;
         }
 
         .calendar-grid {
             display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 8px;
+            grid-template-columns: repeat(7, minmax(0, 1fr)); /* 強制均分 7 等分，防止超出邊界 */
+            gap: 4px;
             text-align: center;
+            width: 100%;
         }
 
         .calendar-weekdays {
             font-weight: 700;
             color: var(--text-sub);
-            font-size: 0.85rem;
-            padding-bottom: 6px;
+            font-size: 0.75rem;
+            padding-bottom: 4px;
         }
 
         .calendar-day {
             background: #ffffff;
-            min-height: 85px;
-            border-radius: 16px;
-            padding: 6px;
+            min-height: 70px; /* 適度調整手機上的最小高度 */
+            border-radius: 10px;
+            padding: 4px 2px;
             display: flex;
             flex-direction: column;
-            align-items: flex-start;
-            font-size: 0.85rem;
+            align-items: center; /* 手機上置中對齊，排版更整齊不亂飄 */
+            font-size: 0.75rem;
             position: relative;
             border: 1px solid var(--border-color);
             box-sizing: border-box;
             cursor: pointer;
-            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .calendar-day:hover {
-            background: #fff5f7;
-            border-color: #ffb6c1;
-            transform: translateY(-3px);
-            box-shadow: 0 6px 15px rgba(255, 117, 140, 0.1);
+            overflow: hidden;
         }
 
         .calendar-day.empty {
             background: transparent;
             border: none;
             cursor: default;
-            transform: none;
-            box-shadow: none;
         }
 
         .day-number {
             font-weight: 700;
             color: var(--text-main);
-            margin-bottom: 4px;
-            font-size: 0.9rem;
+            margin-bottom: 2px;
+            font-size: 0.8rem;
         }
 
         .calendar-event-tag {
             background: var(--primary-gradient);
             color: white;
-            font-size: 0.65rem;
-            padding: 2px 6px;
-            border-radius: 8px;
-            margin-top: 2px;
+            font-size: 0.55rem;
+            padding: 1px 3px;
+            border-radius: 4px;
+            margin-top: 1px;
             width: 100%;
-            text-align: left;
+            text-align: center;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-            box-shadow: 0 2px 5px rgba(255, 117, 140, 0.2);
         }
 
-        /* 手機響應式排版優化 */
-        @media (max-width: 600px) {
-            body { padding: 10px; }
-            .header-card { padding: 25px 15px; border-radius: 20px; }
-            .header-card h1 { font-size: 2.1rem; }
-            .card { padding: 18px; border-radius: 18px; }
-            .calendar-header { flex-direction: column; gap: 8px; }
+        @media (max-width: 480px) {
             .calendar-day {
-                min-height: 60px;
-                padding: 4px;
-                font-size: 0.7rem;
-                border-radius: 10px;
+                min-height: 58px;
+                padding: 3px 1px;
             }
-            .day-number { font-size: 0.8rem; }
-            .calendar-event-tag { font-size: 0.5rem; padding: 1px 3px; }
+            .day-number { font-size: 0.75rem; }
+            .calendar-event-tag { font-size: 0.5rem; }
         }
 
-        /* 互動式燈箱與彈窗特效 */
+        /* 燈箱與彈窗 */
         #imageModal {
-            display: none;
-            position: fixed;
-            z-index: 2000;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
+            display: none; position: fixed; z-index: 2000;
+            top: 0; left: 0; width: 100%; height: 100%;
             background-color: rgba(45, 35, 40, 0.85);
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            box-sizing: border-box;
+            justify-content: center; align-items: center;
+            padding: 15px; box-sizing: border-box;
             backdrop-filter: blur(8px);
-            animation: fadeIn 0.3s ease;
         }
-
         #modalImage {
-            max-width: 90%;
-            max-height: 85vh;
-            object-fit: contain;
-            border-radius: 16px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.4);
-            background: #111;
-            animation: zoomIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        @keyframes zoomIn {
-            from { transform: scale(0.9); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
+            max-width: 92%; max-height: 80vh;
+            object-fit: contain; border-radius: 14px; background: #111;
         }
 
         #eventModal {
-            display: none;
-            position: fixed;
-            z-index: 1500;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
+            display: none; position: fixed; z-index: 1500;
+            top: 0; left: 0; width: 100%; height: 100%;
             background-color: rgba(45, 35, 40, 0.6);
-            justify-content: center;
-            align-items: center;
-            padding: 15px;
-            box-sizing: border-box;
+            justify-content: center; align-items: center;
+            padding: 12px; box-sizing: border-box;
             backdrop-filter: blur(6px);
-            animation: fadeIn 0.3s ease;
         }
-
         .event-modal-content {
-            background: #ffffff;
-            width: 100%;
-            max-width: 680px;
-            border-radius: 28px;
-            overflow: hidden;
+            background: #ffffff; width: 100%; max-width: 650px;
+            border-radius: 24px; overflow: hidden;
             box-shadow: 0 20px 50px rgba(0,0,0,0.2);
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            animation: zoomIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex; flex-direction: column; position: relative;
         }
-
         .event-modal-body {
-            display: flex;
-            flex-direction: row;
-            gap: 24px;
-            padding: 30px;
-            align-items: center;
+            display: flex; flex-direction: row; gap: 20px; padding: 25px; align-items: center;
         }
-
         @media (max-width: 600px) {
-            .event-modal-body { flex-direction: column; padding: 20px; gap: 15px; }
+            .event-modal-body { flex-direction: column; padding: 15px; gap: 12px; }
         }
-
         .event-modal-left { flex: 1; width: 100%; }
         .event-modal-right { flex: 1; width: 100%; display: flex; flex-direction: column; justify-content: center; }
-
         .event-modal-close {
-            position: absolute;
-            top: 18px; right: 20px;
-            background: #f0ebf0;
-            border: none;
-            width: 36px; height: 36px;
-            border-radius: 50%;
-            font-weight: 700;
-            cursor: pointer;
-            z-index: 10;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-sub);
-            transition: all 0.2s;
+            position: absolute; top: 14px; right: 16px;
+            background: #f0ebf0; border: none; width: 32px; height: 32px;
+            border-radius: 50%; font-weight: 700; cursor: pointer; z-index: 10;
+            display: flex; align-items: center; justify-content: center; color: var(--text-sub);
         }
-
-        .event-modal-close:hover {
-            background: var(--accent-pink);
-            color: white;
-            transform: scale(1.1);
-        }
-
         .event-modal-nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #faf6f8;
-            padding: 16px 24px;
-            border-top: 1px solid var(--border-color);
+            display: flex; justify-content: space-between; align-items: center;
+            background: #faf6f8; padding: 12px 20px; border-top: 1px solid var(--border-color);
         }
-
         .event-modal-nav button {
-            background: var(--primary-gradient);
-            color: white;
-            border: none;
-            padding: 8px 18px;
-            border-radius: 14px;
-            font-weight: 700;
-            cursor: pointer;
-            font-size: 0.85rem;
-            box-shadow: 0 4px 12px rgba(255, 117, 140, 0.25);
-            transition: all 0.2s;
-        }
-
-        .event-modal-nav button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 16px rgba(255, 117, 140, 0.35);
+            background: var(--primary-gradient); color: white; border: none;
+            padding: 6px 14px; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 0.8rem;
         }
     </style>
 </head>
@@ -685,7 +470,7 @@
                     <button onclick="changeYear(-1)">◀ 去年</button>
                     <button onclick="changeMonth(-1)">❮ 上月</button>
                 </div>
-                <h3 id="calendar-month-year" style="margin:0; font-size: 1.1rem; color: var(--text-main);">2026 年 8 月</h3>
+                <h3 id="calendar-month-year" style="margin:0; font-size: 1rem; color: var(--text-main);">2026 年 8 月</h3>
                 <div class="calendar-nav-group">
                     <button onclick="changeMonth(1)">下月 ❯</button>
                     <button onclick="changeYear(1)">明年 ▶</button>
@@ -716,7 +501,7 @@
         </div>
 
         <!-- Bonnie 資料卡 -->
-        <div class="card" style="margin-top: 20px;">
+        <div class="card" style="margin-top: 15px;">
             <img src="https://lh3.googleusercontent.com/d/1xwYt2bJspTLGFzxb4Bhm_tdfyGxQP9Py" alt="Bonnie 頭貼" class="profile-avatar" onclick="openModal(this.src)">
             <div class="profile-info">
                 <h3 style="margin: 5px 0 2px 0; color: var(--accent-pink);">Bonnie</h3>
@@ -733,7 +518,7 @@
         </div>
 
         <!-- Any 資料卡 -->
-        <div class="card" style="margin-top: 20px;">
+        <div class="card" style="margin-top: 15px;">
             <img src="https://lh3.googleusercontent.com/d/17fD21DSfvEadGqyd_Vvqvx-nkcgnPFf5" alt="Any 頭貼" class="profile-avatar" onclick="openModal(this.src)">
             <div class="profile-info">
                 <h3 style="margin: 5px 0 2px 0; color: var(--accent-pink);">Any</h3>
@@ -751,7 +536,7 @@
     </div>
     <div id="gallery" class="tab-content">
         <div class="card">
-            <h3 style="margin-top: 0; margin-bottom: 20px; color: var(--text-main);">🖼️ 照片收藏庫</h3>
+            <h3 style="margin-top: 0; margin-bottom: 15px; color: var(--text-main);">🖼️ 照片收藏庫</h3>
             <div class="gallery-grid" id="gallery-container"></div>
         </div>
     </div>
@@ -765,7 +550,7 @@
         <div class="event-modal-body" id="event-modal-body"></div>
         <div class="event-modal-nav" id="event-modal-nav" style="display: none;">
             <button onclick="changeModalEvent(-1)">◀ 上一個事件</button>
-            <span id="event-counter" style="font-size: 0.85rem; font-weight: 700; color: var(--text-sub);">1 / 1</span>
+            <span id="event-counter" style="font-size: 0.8rem; font-weight: 700; color: var(--text-sub);">1 / 1</span>
             <button onclick="changeModalEvent(1)">下一個事件 ▶</button>
         </div>
     </div>
@@ -837,7 +622,7 @@
 
     function createCarouselHtml(photos, carouselId) {
         if (!photos || photos.length === 0) return '';
-        if (photos.length === 1) return `<img src="${photos[0]}" alt="照片" style="width:100%; height:250px; object-fit:cover; border-radius:14px; cursor:pointer;" onclick="openModal('${photos[0]}')">`;
+        if (photos.length === 1) return `<img src="${photos[0]}" alt="照片" style="width:100%; height:220px; object-fit:cover; border-radius:12px; cursor:pointer;" onclick="openModal('${photos[0]}')">`;
         let imgsHtml = '', dotsHtml = '';
         photos.forEach((p, idx) => { imgsHtml += `<img src="${p}" class="carousel-img ${idx === 0 ? 'active' : ''}" onclick="openModal('${p}')">`; dotsHtml += `<div class="indicator-dot ${idx === 0 ? 'active' : ''}" onclick="event.stopPropagation(); setCarouselSlide('${carouselId}', ${idx})"></div>`; });
         return `<div class="photo-carousel" id="${carouselId}">${imgsHtml}<button class="carousel-btn carousel-prev" onclick="event.stopPropagation(); moveCarousel('${carouselId}', -1)">❮</button><button class="carousel-btn carousel-next" onclick="event.stopPropagation(); moveCarousel('${carouselId}', 1)">❯</button><div class="carousel-indicators">${dotsHtml}</div></div>`;
@@ -874,10 +659,10 @@
             let yearSectionHtml = `<div class="year-section"><div class="year-title">📅 ${year} 年</div>`;
             groupedByYear[year].forEach(ev => {
                 carouselCounter++; let cId = `timeline-carousel-${carouselCounter}`;
-                let linkHtml = ev.link ? `<p style="font-size: 0.95rem; margin: 10px 0 5px 0;">🔗 <a href="${ev.link}" target="_blank">${ev.linkText}</a></p>` : '';
-                let videoHtml = ev.videoLink ? `<p style="font-size: 0.95rem; margin: 5px 0;"><a href="${ev.videoLink}" target="_blank">${ev.videoText}</a></p>` : '';
+                let linkHtml = ev.link ? `<p style="font-size: 0.9rem; margin: 8px 0 4px 0;">🔗 <a href="${ev.link}" target="_blank">${ev.linkText}</a></p>` : '';
+                let videoHtml = ev.videoLink ? `<p style="font-size: 0.9rem; margin: 4px 0;"><a href="${ev.videoLink}" target="_blank">${ev.videoText}</a></p>` : '';
                 let photoHtml = createCarouselHtml(ev.photo, cId);
-                yearSectionHtml += `<div class="timeline-item"><div class="timeline-date">${ev.date.replace(/-/g, '.')}</div><div class="card"><span class="badge-duo">Emi & Bonnie</span><h3 style="margin: 5px 0 10px 0; font-size: 1.15rem; color: var(--text-main);">${ev.title}</h3><p style="font-size: 0.95rem; color: var(--text-sub); line-height: 1.6; margin: 0 0 10px 0;">${ev.content}</p>${linkHtml}${videoHtml}${photoHtml}</div></div>`;
+                yearSectionHtml += `<div class="timeline-item"><div class="timeline-date">${ev.date.replace(/-/g, '.')}</div><div class="card"><span class="badge-duo">Emi & Bonnie</span><h3 style="margin: 4px 0 8px 0; font-size: 1.1rem; color: var(--text-main);">${ev.title}</h3><p style="font-size: 0.9rem; color: var(--text-sub); line-height: 1.5; margin: 0 0 8px 0;">${ev.content}</p>${linkHtml}${videoHtml}${photoHtml}</div></div>`;
             });
             container.innerHTML += yearSectionHtml + `</div>`;
         });
@@ -905,8 +690,8 @@
 
     function updateEventModalContent() {
         const ev = currentModalEvents[currentModalIndex], bodyContainer = document.getElementById('event-modal-body'), navContainer = document.getElementById('event-modal-nav'), counterEl = document.getElementById('event-counter');
-        let linkHtml = ev.link ? `<p style="font-size: 0.95rem; margin: 10px 0 5px 0;">🔗 <a href="${ev.link}" target="_blank">${ev.linkText}</a></p>` : '', videoHtml = ev.videoLink ? `<p style="font-size: 0.95rem; margin: 5px 0;"><a href="${ev.videoLink}" target="_blank">${ev.videoText}</a></p>` : '', photoHtml = createCarouselHtml(ev.photo, 'modal-carousel');
-        bodyContainer.innerHTML = `<div class="event-modal-left">${photoHtml}</div><div class="event-modal-right"><span class="badge-duo">📅 ${ev.date}</span><h2 style="margin: 5px 0 10px 0; color: var(--text-main); font-size: 1.3rem;">${ev.title}</h2><p style="font-size: 0.95rem; color: var(--text-sub); line-height: 1.6; margin: 0 0 10px 0;">${ev.content}</p>${linkHtml}${videoHtml}</div>`;
+        let linkHtml = ev.link ? `<p style="font-size: 0.9rem; margin: 8px 0 4px 0;">🔗 <a href="${ev.link}" target="_blank">${ev.linkText}</a></p>` : '', videoHtml = ev.videoLink ? `<p style="font-size: 0.9rem; margin: 4px 0;"><a href="${ev.videoLink}" target="_blank">${ev.videoText}</a></p>` : '', photoHtml = createCarouselHtml(ev.photo, 'modal-carousel');
+        bodyContainer.innerHTML = `<div class="event-modal-left">${photoHtml}</div><div class="event-modal-right"><span class="badge-duo">📅 ${ev.date}</span><h2 style="margin: 4px 0 8px 0; color: var(--text-main); font-size: 1.2rem;">${ev.title}</h2><p style="font-size: 0.9rem; color: var(--text-sub); line-height: 1.5; margin: 0 0 8px 0;">${ev.content}</p>${linkHtml}${videoHtml}</div>`;
         if (currentModalEvents.length > 1) { navContainer.style.display = 'flex'; counterEl.innerText = `${currentModalIndex + 1} / ${currentModalEvents.length}`; } else { navContainer.style.display = 'none'; }
     }
 
