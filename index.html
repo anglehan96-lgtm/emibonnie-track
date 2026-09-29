@@ -3,156 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>活動行程時間軸</title>
+    <title>行程時間軸 (含相簿切換)</title>
     <style>
-        :root {
-            --primary-color: #3b82f6;
-            --bg-color: #f8f9fa;
-            --text-main: #333;
-            --text-muted: #64748b;
-        }
-
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
             max-width: 800px;
             margin: 40px auto;
             padding: 20px;
-            line-height: 1.6;
         }
 
-        h1 {
-            text-align: center;
-            margin-bottom: 50px;
-            color: #1e293b;
-            font-weight: 800;
-            letter-spacing: 1px;
-        }
+        h1 { text-align: center; margin-bottom: 40px; color: #2c3e50; }
 
-        /* 時間軸主體 */
-        .timeline {
-            position: relative;
-            padding-left: 35px;
-        }
-
+        .timeline { position: relative; padding-left: 30px; }
         .timeline::before {
-            content: '';
-            position: absolute;
-            left: 14px;
-            top: 5px;
-            bottom: 5px;
-            width: 3px;
-            background-color: #cbd5e1;
-            border-radius: 3px;
+            content: ''; position: absolute; left: 10px; top: 5px; bottom: 5px;
+            width: 3px; background-color: #cbd5e1;
         }
 
-        .timeline-item {
-            position: relative;
-            margin-bottom: 40px;
-        }
-
-        /* 圓點 */
+        .timeline-item { position: relative; margin-bottom: 35px; }
         .timeline-item::before {
-            content: '';
-            position: absolute;
-            left: -28px;
-            top: 4px;
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            background-color: var(--primary-color);
-            border: 3px solid #fff;
-            box-shadow: 0 0 0 2px var(--primary-color);
-            z-index: 2;
+            content: ''; position: absolute; left: -24px; top: 4px;
+            width: 12px; height: 12px; border-radius: 50%;
+            background-color: #3b82f6; border: 3px solid #fff; box-shadow: 0 0 0 2px #3b82f6;
         }
 
-        .timeline-date {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: #0f172a;
-            margin-bottom: 12px;
-            letter-spacing: 0.5px;
-        }
-
-        /* 內容卡片與 Hover 效果 */
+        .timeline-date { font-size: 1.15rem; font-weight: bold; color: #1e293b; margin-bottom: 10px; }
         .timeline-content {
-            background: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
-            border-left: 4px solid var(--primary-color);
-            transition: all 0.3s ease;
+            background: #fff; padding: 15px 20px; border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05); border-left: 4px solid #3b82f6;
         }
 
-        .timeline-content:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 15px rgba(0,0,0,0.08);
-        }
+        .event-list { margin: 0; padding-left: 20px; }
+        .event-list li { margin-bottom: 15px; line-height: 1.6; }
+        a { color: #2563eb; text-decoration: none; }
+        a:hover { text-decoration: underline; }
 
-        .event-list {
-            margin: 0;
-            padding-left: 20px;
-        }
-
-        .event-list > li {
-            margin-bottom: 20px;
-            font-weight: 500;
-        }
-
-        .event-list > li:last-child {
-            margin-bottom: 0;
-        }
-
-        /* 巢狀文字說明與連結 */
-        .sub-desc {
-            margin-top: 8px;
-            padding-left: 0;
-            list-style-type: none;
-            font-size: 0.95rem;
-            color: var(--text-muted);
-            font-weight: normal;
-        }
-        
-        .sub-desc li {
-            position: relative;
-            padding-left: 15px;
-            margin-bottom: 4px;
-        }
-        
-        .sub-desc li::before {
-            content: "•";
-            position: absolute;
-            left: 0;
-            color: #cbd5e1;
-        }
-
-        a {
-            color: var(--primary-color);
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-
-        a:hover {
-            text-decoration: underline;
-            color: #2563eb;
-        }
-
-        .yt-link {
-            color: #dc2626; /* YouTube 紅色 */
-            font-weight: 600;
-        }
-
-        /* 相簿輪播區塊 */
+        /* 相簿輪播容器樣式 */
         .carousel-container {
             position: relative;
             width: 100%;
-            max-width: 480px;
-            margin: 12px 0;
+            max-width: 400px;
+            margin-top: 10px;
             border-radius: 8px;
             overflow: hidden;
-            background: #f1f5f9;
-            box-shadow: inset 0 0 4px rgba(0,0,0,0.05);
+            background: #eee;
         }
 
         .carousel-track {
@@ -160,18 +56,17 @@
             overflow-x: auto;
             scroll-snap-type: x mandatory;
             scroll-behavior: smooth;
-            -ms-overflow-style: none; 
-            scrollbar-width: none; 
+            -ms-overflow-style: none; /* IE and Edge */
+            scrollbar-width: none; /* Firefox */
         }
-
+        
         .carousel-track::-webkit-scrollbar { display: none; }
 
         .carousel-track img {
             width: 100%;
             flex-shrink: 0;
             scroll-snap-align: start;
-            object-fit: contain;
-            background-color: #e2e8f0;
+            object-fit: cover;
             aspect-ratio: 16/9;
         }
 
@@ -180,240 +75,44 @@
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            background: rgba(15, 23, 42, 0.6);
+            background: rgba(0, 0, 0, 0.5);
             color: white;
             border: none;
-            width: 32px;
-            height: 32px;
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
             cursor: pointer;
             z-index: 10;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 16px;
-            transition: background 0.2s;
+            font-size: 14px;
         }
 
-        .carousel-btn:hover {
-            background: rgba(15, 23, 42, 0.9);
-        }
-
-        .carousel-btn.prev { left: 8px; }
-        .carousel-btn.next { right: 8px; }
+        .carousel-btn:hover { background: rgba(0, 0, 0, 0.8); }
+        .carousel-btn.prev { left: 10px; }
+        .carousel-btn.next { right: 10px; }
     </style>
 </head>
 <body>
 
-    <h1>📅 活動行程時間軸</h1>
+    <h1>活動行程時間軸</h1>
     <div class="timeline">
 
-        <!-- 2026.8.8 -->
-        <div class="timeline-item">
-            <div class="timeline-date">2026.8.8</div>
-            <div class="timeline-content">
-                <ol class="event-list">
-                    <li>JUNIOR MARK SunnyMoon CONCERT</li>
-                    <li>去演唱會做嘉賓</li>
-                </ol>
-            </div>
-        </div>
-
-        <!-- 2026.9.2 -->
-        <div class="timeline-item">
-            <div class="timeline-date">2026.9.2</div>
-            <div class="timeline-content">
-                <ol class="event-list">
-                    <li>Moonshadow ep.4</li>
-                </ol>
-            </div>
-        </div>
-
-        <!-- 2026.9.3 -->
-        <div class="timeline-item">
-            <div class="timeline-date">2026.9.3</div>
-            <div class="timeline-content">
-                <ol class="event-list">
-                    <li>Glitch Official MV (Emi)
-                        <div class="carousel-container">
-                            <div class="carousel-track">
-                                <img src="https://drive.google.com/uc?id=1CiyKXACfcwiJg7H8QIxDKEMWKQye1aCo" alt="Glitch MV 照片" loading="lazy">
-                            </div>
-                        </div>
-                        <ul class="sub-desc">
-                            <li><a href="https://www.youtube.com/watch?v=TNbvfhxCBtQ" target="_blank" class="yt-link">▶️ YouTube 影片連結</a></li>
-                            <li><a href="https://drive.google.com/file/d/1CiyKXACfcwiJg7H8QIxDKEMWKQye1aCo/view?usp=drive_link" target="_blank">Drive 原始照片連結</a></li>
-                        </ul>
-                    </li>
-                </ol>
-            </div>
-        </div>
-
-        <!-- 2026.9.5 -->
-        <div class="timeline-item">
-            <div class="timeline-date">2026.9.5</div>
-            <div class="timeline-content">
-                <ol class="event-list">
-                    <li>sheep (迪士尼公主系列) 唱了
-                        <div class="carousel-container">
-                            <div class="carousel-track">
-                                <img src="https://drive.google.com/uc?id=15m3Z5glENRBA7RNSQp3r4Z62HiNz6w0h" alt="sheep 照片" loading="lazy">
-                            </div>
-                        </div>
-                        <ul class="sub-desc">
-                            <li><a href="https://drive.google.com/file/d/15m3Z5glENRBA7RNSQp3r4Z62HiNz6w0h/view?usp=drive_link" target="_blank">Drive 原始照片連結</a></li>
-                        </ul>
-                    </li>
-                </ol>
-            </div>
-        </div>
-
-        <!-- 2026.9.6 -->
-        <div class="timeline-item">
-            <div class="timeline-date">2026.9.6</div>
-            <div class="timeline-content">
-                <ol class="event-list">
-                    <li>Gemini演唱會嘉賓
-                        <ul class="sub-desc">
-                            <li>bonnie第一天去gemini說很高興請到p'emi的對象來，bonnie害羞笑沒否認。</li>
-                            <li>有人剪輯bonnie的這段影片emi轉發，然後第三天emi來就被問，emi也是害羞笑沒否認。</li>
-                        </ul>
-                        <div class="carousel-container">
-                            <button class="carousel-btn prev" onclick="moveSlide(this, -1)">&#10094;</button>
-                            <div class="carousel-track">
-                                <img src="https://drive.google.com/uc?id=1Y-9iPO8QQvDlrCYNrBMdv198CHQh-viE" alt="照片1" loading="lazy">
-                                <img src="https://drive.google.com/uc?id=1enf9RkmQXYiBBn9VA5lnoo_6nz2UeHiW" alt="照片2" loading="lazy">
-                            </div>
-                            <button class="carousel-btn next" onclick="moveSlide(this, 1)">&#10095;</button>
-                        </div>
-                        <ul class="sub-desc">
-                            <li>Drive 原始連結: <a href="https://drive.google.com/file/d/1Y-9iPO8QQvDlrCYNrBMdv198CHQh-viE/view?usp=drive_link" target="_blank">[圖1]</a> <a href="https://drive.google.com/file/d/1enf9RkmQXYiBBn9VA5lnoo_6nz2UeHiW/view?usp=drive_link" target="_blank">[圖2]</a></li>
-                        </ul>
-                    </li>
-                </ol>
-            </div>
-        </div>
-
-        <!-- 2026.9.8 -->
-        <div class="timeline-item">
-            <div class="timeline-date">2026.9.8</div>
-            <div class="timeline-content">
-                <ol class="event-list">
-                    <li>劇集討論直播</li>
-                    <li>線下點名活動 (雖然是工作日但去的人還是非常多)
-                        <ul class="sub-desc">
-                            <li>兩人角色上身，特別是bonnie根本是n'key</li>
-                        </ul>
-                        <div class="carousel-container">
-                            <button class="carousel-btn prev" onclick="moveSlide(this, -1)">&#10094;</button>
-                            <div class="carousel-track">
-                                <img src="https://drive.google.com/uc?id=1aakeQKUGror6L9HZPFy7TbFA-0LcZ1lQ" alt="點名活動 照片1" loading="lazy">
-                                <img src="https://drive.google.com/uc?id=1D2SXqSf1oSxlSq9L-mkjlQsOlDY5UacK" alt="點名活動 照片2" loading="lazy">
-                            </div>
-                            <button class="carousel-btn next" onclick="moveSlide(this, 1)">&#10095;</button>
-                        </div>
-                        <ul class="sub-desc">
-                            <li>Drive 原始連結: <a href="https://drive.google.com/file/d/1aakeQKUGror6L9HZPFy7TbFA-0LcZ1lQ/view?usp=drive_link" target="_blank">[圖1]</a> <a href="https://drive.google.com/file/d/1D2SXqSf1oSxlSq9L-mkjlQsOlDY5UacK/view?usp=drive_link" target="_blank">[圖2]</a></li>
-                        </ul>
-                    </li>
-                    <li>GMMtv Live House
-                        <ul class="sub-desc">
-                            <li>junior主持any也在，any根本意外miminini超黏</li>
-                            <li><a href="https://www.youtube.com/watch?v=JsexJeh4Bf8" target="_blank" class="yt-link">▶️ YouTube 影片連結</a></li>
-                        </ul>
-                        <div class="carousel-container">
-                            <button class="carousel-btn prev" onclick="moveSlide(this, -1)">&#10094;</button>
-                            <div class="carousel-track">
-                                <img src="https://drive.google.com/uc?id=17R9zJeqHBUZERySVauBqqOR688CnfGe9" alt="Live House 照片1" loading="lazy">
-                                <img src="https://drive.google.com/uc?id=1karVBZaaSFbS8LniDgXJ6hXssEol5r56" alt="Live House 照片2" loading="lazy">
-                            </div>
-                            <button class="carousel-btn next" onclick="moveSlide(this, 1)">&#10095;</button>
-                        </div>
-                    </li>
-                </ol>
-            </div>
-        </div>
-
-        <!-- 2026.9.9 -->
-        <div class="timeline-item">
-            <div class="timeline-date">2026.9.9</div>
-            <div class="timeline-content">
-                <ol class="event-list">
-                    <li>Moonshadow ep.5</li>
-                </ol>
-            </div>
-        </div>
-
-        <!-- 2026.9.12 -->
-        <div class="timeline-item">
-            <div class="timeline-date">2026.9.12</div>
-            <div class="timeline-content">
-                <ol class="event-list">
-                    <li>You One Official MV (Bonnie)
-                        <ul class="sub-desc">
-                            <li><a href="https://www.youtube.com/watch?v=AUPbHx7J8iQ" target="_blank" class="yt-link">▶️ YouTube 影片連結</a></li>
-                        </ul>
-                        <div class="carousel-container">
-                            <button class="carousel-btn prev" onclick="moveSlide(this, -1)">&#10094;</button>
-                            <div class="carousel-track">
-                                <img src="https://drive.google.com/uc?id=1C1Ev5wXoagEJVVaKh_Yr2kEovLOCVjpu" alt="MV 照片1" loading="lazy">
-                                <img src="https://drive.google.com/uc?id=1bkW4_Zn6rWfBGdxd0fG_rbTJWSz2kDry" alt="MV 照片2" loading="lazy">
-                            </div>
-                            <button class="carousel-btn next" onclick="moveSlide(this, 1)">&#10095;</button>
-                        </div>
-                    </li>
-                    <li>Mint Awards 2026
-                        <ul class="sub-desc">
-                            <li>下午展櫃賣東西，兩人又隔對面但一直在傳情</li>
-                            <li>晚上出席頒獎活動 (mee and thee得獎bonnie一起領獎)</li>
-                        </ul>
-                        <div class="carousel-container">
-                            <button class="carousel-btn prev" onclick="moveSlide(this, -1)">&#10094;</button>
-                            <div class="carousel-track">
-                                <img src="https://drive.google.com/uc?id=1Jl-Mf8H_NOGupLPKloJyzvdr68newEEg" alt="Awards 照片1" loading="lazy">
-                                <img src="https://drive.google.com/uc?id=1M5FoVKux3Xve-lmlpJAVkI0Qa-aht4iZ" alt="Awards 照片2" loading="lazy">
-                            </div>
-                            <button class="carousel-btn next" onclick="moveSlide(this, 1)">&#10095;</button>
-                        </div>
-                    </li>
-                </ol>
-            </div>
-        </div>
-
-        <!-- 2026.9.15 -->
-        <div class="timeline-item">
-            <div class="timeline-date">2026.9.15</div>
-            <div class="timeline-content">
-                <ol class="event-list">
-                    <li>Emi到 GEMM HOUSE 打工
-                        <div class="carousel-container">
-                            <button class="carousel-btn prev" onclick="moveSlide(this, -1)">&#10094;</button>
-                            <div class="carousel-track">
-                                <img src="https://drive.google.com/uc?id=11zxxBUUkapeL7H-xVfwXTalI1hdmBM-O" alt="打工 照片1" loading="lazy">
-                                <img src="https://drive.google.com/uc?id=1yeUR3bgUpF7MR9XxxtNhJ_hZhYEGX_jy" alt="打工 照片2" loading="lazy">
-                            </div>
-                            <button class="carousel-btn next" onclick="moveSlide(this, 1)">&#10095;</button>
-                        </div>
-                    </li>
-                </ol>
-            </div>
-        </div>
-
-        <!-- 2026.9.16 -->
+        <!-- 2026.9.16 範例：有多張照片 -->
         <div class="timeline-item">
             <div class="timeline-date">2026.9.16</div>
             <div class="timeline-content">
                 <ol class="event-list">
-                    <li>兩人去 GEMM HOUSE
-                        <ul class="sub-desc">
-                            <li>點餐還要黏在一起</li>
-                        </ul>
+                    <li>兩人去 GEMM HOUSE (點餐還要黏在一起)
+                        <!-- 這是相簿輪播區塊 -->
                         <div class="carousel-container">
                             <button class="carousel-btn prev" onclick="moveSlide(this, -1)">&#10094;</button>
                             <div class="carousel-track">
-                                <img src="https://drive.google.com/uc?id=1n8JGF0yde2ILSfRq1a8Whsq-QIG4Hwnt" alt="GEMM HOUSE 照片1" loading="lazy">
-                                <img src="https://drive.google.com/uc?id=1EkegtA0rsTk8lwzG9qmgggjpJGmI6A7c" alt="GEMM HOUSE 照片2" loading="lazy">
-                                <img src="https://drive.google.com/uc?id=15xHpz6fienMCWFzmLoBauBBHcKwkNO2R" alt="GEMM HOUSE 照片3" loading="lazy">
+                                <!-- 已將 Google Drive 連結轉為直接顯示圖片的格式 (uc?id=檔案ID) -->
+                                <img src="https://drive.google.com/uc?id=1n8JGF0yde2ILSfRq1a8Whsq-QIG4Hwnt" alt="照片1">
+                                <img src="https://drive.google.com/uc?id=1EkegtA0rsTk8lwzG9qmgggjpJGmI6A7c" alt="照片2">
+                                <img src="https://drive.google.com/uc?id=15xHpz6fienMCWFzmLoBauBBHcKwkNO2R" alt="照片3">
                             </div>
                             <button class="carousel-btn next" onclick="moveSlide(this, 1)">&#10095;</button>
                         </div>
@@ -423,28 +122,7 @@
             </div>
         </div>
 
-        <!-- 2026.9.20 -->
-        <div class="timeline-item">
-            <div class="timeline-date">2026.9.20</div>
-            <div class="timeline-content">
-                <ol class="event-list">
-                    <li>ANY去 skynani 演唱會做嘉賓，米米跟邦邦去看小朋友演出
-                        <div class="carousel-container">
-                            <button class="carousel-btn prev" onclick="moveSlide(this, -1)">&#10094;</button>
-                            <div class="carousel-track">
-                                <img src="https://drive.google.com/uc?id=1ZGpTTYF71o-ehqcHSofBKZo9mHIrh8ZV" alt="演唱會 照片1" loading="lazy">
-                                <img src="https://drive.google.com/uc?id=1oC2rvKAttvByVoFgNrah5WhbAVNcUn7r" alt="演唱會 照片2" loading="lazy">
-                                <img src="https://drive.google.com/uc?id=1Dp_oLL5GxbnMkPklZWZVX8ZTAMSiRv00" alt="演唱會 照片3" loading="lazy">
-                                <img src="https://drive.google.com/uc?id=1utd0yeV9hLZeoy9WH7WbeZ7lo73PfSEc" alt="演唱會 照片4" loading="lazy">
-                            </div>
-                            <button class="carousel-btn next" onclick="moveSlide(this, 1)">&#10095;</button>
-                        </div>
-                    </li>
-                </ol>
-            </div>
-        </div>
-
-        <!-- 2026.9.23 -->
+        <!-- 2026.9.23 範例：有 5 張照片 -->
         <div class="timeline-item">
             <div class="timeline-date">2026.9.23</div>
             <div class="timeline-content">
@@ -453,90 +131,27 @@
                         <div class="carousel-container">
                             <button class="carousel-btn prev" onclick="moveSlide(this, -1)">&#10094;</button>
                             <div class="carousel-track">
-                                <img src="https://drive.google.com/uc?id=1Q0DWJbWo5Fp6Mg4NVncc7dQdQA4XPOGm" alt="照片1" loading="lazy">
-                                <img src="https://drive.google.com/uc?id=1JJbxnLJLEqwq2D4iK1yZwsN9cl-VcaNu" alt="照片2" loading="lazy">
-                                <img src="https://drive.google.com/uc?id=1OrAysc0aUG5nZKsqDK36_qtR16aA5KDQ" alt="照片3" loading="lazy">
-                                <img src="https://drive.google.com/uc?id=1fdliUPRH756JPPMMf_RTJ49ffR4xXp7O" alt="照片4" loading="lazy">
-                                <img src="https://drive.google.com/uc?id=16m6eP_g_7QTYo4qY56E4lBKzOpdaYGQT" alt="照片5" loading="lazy">
+                                <img src="https://drive.google.com/uc?id=1Q0DWJbWo5Fp6Mg4NVncc7dQdQA4XPOGm" alt="照片1">
+                                <img src="https://drive.google.com/uc?id=1JJbxnLJLEqwq2D4iK1yZwsN9cl-VcaNu" alt="照片2">
+                                <img src="https://drive.google.com/uc?id=1OrAysc0aUG5nZKsqDK36_qtR16aA5KDQ" alt="照片3">
+                                <img src="https://drive.google.com/uc?id=1fdliUPRH756JPPMMf_RTJ49ffR4xXp7O" alt="照片4">
+                                <img src="https://drive.google.com/uc?id=16m6eP_g_7QTYo4qY56E4lBKzOpdaYGQT" alt="照片5">
                             </div>
                             <button class="carousel-btn next" onclick="moveSlide(this, 1)">&#10095;</button>
                         </div>
                     </li>
-                </ol>
-            </div>
-        </div>
-
-        <!-- 2026.9.24 -->
-        <div class="timeline-item">
-            <div class="timeline-date">2026.9.24</div>
-            <div class="timeline-content">
-                <ol class="event-list">
-                    <li>月影 Volog part1
-                        <ul class="sub-desc">
-                            <li><a href="https://www.youtube.com/watch?v=wO__XKi_eFI" target="_blank" class="yt-link">▶️ YouTube 影片連結</a></li>
-                        </ul>
-                        <div class="carousel-container">
-                            <button class="carousel-btn prev" onclick="moveSlide(this, -1)">&#10094;</button>
-                            <div class="carousel-track">
-                                <img src="https://drive.google.com/uc?id=18VmlKFbS_8Vo3_d_lGZpqm1sCY4aTKpD" alt="Volog 照片1" loading="lazy">
-                                <img src="https://drive.google.com/uc?id=16LCQ_gTGMJ8mBNo0H4Cl0vLXluWr28Bt" alt="Volog 照片2" loading="lazy">
-                            </div>
-                            <button class="carousel-btn next" onclick="moveSlide(this, 1)">&#10095;</button>
-                        </div>
-                    </li>
-                    <li>Fan party and after party 賣票直播
-                        <ul class="sub-desc">
-                            <li>玩遊戲bonnie給mimi挖坑打分GEMM HOUSE的產品, mimi玩到懷疑自己的喜好，自己不知道但邦邦知道。</li>
-                            <li>mimi口誤場面失控一度跑出螢幕外, 笑死p'leo跟bonnie。</li>
-                            <li><a href="https://www.youtube.com/watch?v=AzXx4K2cMZQ" target="_blank" class="yt-link">▶️ YouTube 影片連結</a></li>
-                        </ul>
-                        <div class="carousel-container">
-                            <button class="carousel-btn prev" onclick="moveSlide(this, -1)">&#10094;</button>
-                            <div class="carousel-track">
-                                <img src="https://drive.google.com/uc?id=1Zfb3QwDx8WnaSYOAXqLonIvra2S_5iGb" alt="直播 照片1" loading="lazy">
-                                <img src="https://drive.google.com/uc?id=1HU-m1YeDz4LZg-4sXMFI8R2j3-H2Tfgf" alt="直播 照片2" loading="lazy">
-                            </div>
-                            <button class="carousel-btn next" onclick="moveSlide(this, 1)">&#10095;</button>
-                        </div>
-                    </li>
-                </ol>
-            </div>
-        </div>
-
-        <!-- 2026.9.27 -->
-        <div class="timeline-item">
-            <div class="timeline-date">2026.9.27</div>
-            <div class="timeline-content">
-                <ol class="event-list">
-                    <li>猜歌節目播出
-                        <ul class="sub-desc">
-                            <li><a href="https://www.youtube.com/watch?v=cQ8xwIj2t9o" target="_blank" class="yt-link">▶️ YouTube 影片連結</a></li>
-                        </ul>
-                    </li>
-                </ol>
-            </div>
-        </div>
-
-        <!-- 2026.9.30 -->
-        <div class="timeline-item">
-            <div class="timeline-date">2026.9.30</div>
-            <div class="timeline-content">
-                <ol class="event-list">
-                    <li>Moonshadow ep.8</li>
-                    <li>ARM SHARE Rising Runway Star 2026 (any上節目)</li>
                 </ol>
             </div>
         </div>
 
     </div>
 
-    <!-- 照片輪播控制程式碼 -->
+    <!-- 這是讓左右按鈕可以滑動圖片的程式碼 -->
     <script>
         function moveSlide(btn, direction) {
             const container = btn.parentElement;
             const track = container.querySelector('.carousel-track');
-            // 抓取第一張圖片的寬度作為滑動距離
-            const scrollAmount = track.querySelector('img').clientWidth; 
+            const scrollAmount = track.clientWidth; 
             track.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
         }
     </script>
