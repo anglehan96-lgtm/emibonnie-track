@@ -2,158 +2,1195 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>行程時間軸 (含相簿切換)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#fff0f3">
+    <title>EmiBonnie 官宣記得吱我一聲</title>
+    <!-- 引入 Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+            --accent-pink: #ff758c;
+            --accent-purple: #a18cd1;
+            --bg-color: #fcf6f7;
+            --card-bg: rgba(255, 255, 255, 0.92);
+            --text-main: #4a4044;
+            --text-sub: #8c7d84;
+            --border-color: #f3e5e8;
+            --shadow: 0 12px 35px rgba(255, 154, 158, 0.12);
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: #f8f9fa;
-            color: #333;
-            max-width: 800px;
-            margin: 40px auto;
-            padding: 20px;
+            font-family: 'Noto Sans TC', 'Quicksand', -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(255, 224, 230, 0.4) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(220, 214, 247, 0.4) 0%, transparent 40%);
+            color: var(--text-main);
+            margin: 0;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            box-sizing: border-box;
         }
 
-        h1 { text-align: center; margin-bottom: 40px; color: #2c3e50; }
-
-        .timeline { position: relative; padding-left: 30px; }
-        .timeline::before {
-            content: ''; position: absolute; left: 10px; top: 5px; bottom: 5px;
-            width: 3px; background-color: #cbd5e1;
+        .container {
+            width: 100%;
+            max-width: 720px;
+            animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .timeline-item { position: relative; margin-bottom: 35px; }
-        .timeline-item::before {
-            content: ''; position: absolute; left: -24px; top: 4px;
-            width: 12px; height: 12px; border-radius: 50%;
-            background-color: #3b82f6; border: 3px solid #fff; box-shadow: 0 0 0 2px #3b82f6;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .timeline-date { font-size: 1.15rem; font-weight: bold; color: #1e293b; margin-bottom: 10px; }
-        .timeline-content {
-            background: #fff; padding: 15px 20px; border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05); border-left: 4px solid #3b82f6;
+        .header-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            padding: 35px 20px;
+            border-radius: 28px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            margin-bottom: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            position: relative;
+            overflow: hidden;
         }
 
-        .event-list { margin: 0; padding-left: 20px; }
-        .event-list li { margin-bottom: 15px; line-height: 1.6; }
-        a { color: #2563eb; text-decoration: none; }
-        a:hover { text-decoration: underline; }
+        .header-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 5px;
+            background: var(--primary-gradient);
+        }
 
-        /* 相簿輪播容器樣式 */
-        .carousel-container {
+        .header-card h1 {
+            margin: 0 0 8px 0;
+            background: linear-gradient(135deg, #ff758c, #a18cd1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 2.6rem;
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .header-card p {
+            margin: 0;
+            color: var(--text-sub);
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            background: rgba(240, 235, 238, 0.6);
+            backdrop-filter: blur(10px);
+            padding: 8px;
+            border-radius: 22px;
+            gap: 6px;
+            margin-bottom: 25px;
+            box-shadow: inset 0 2px 6px rgba(0,0,0,0.02);
+        }
+
+        .nav-btn {
+            flex: 1;
+            border: none;
+            background: transparent;
+            padding: 12px 0;
+            border-radius: 16px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-sub);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-btn:hover {
+            color: var(--accent-pink);
+        }
+
+        .nav-btn.active {
+            background: #ffffff;
+            color: var(--accent-pink);
+            box-shadow: 0 6px 20px rgba(255, 117, 140, 0.18);
+            transform: scale(1.02);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeInTab 0.4s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeInTab {
+            from { opacity: 0; transform: scale(0.98); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .year-filter-bar {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 12px;
+            margin-bottom: 25px;
+            justify-content: center;
+            scrollbar-width: none;
+        }
+        .year-filter-bar::-webkit-scrollbar { display: none; }
+
+        .year-filter-btn {
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid var(--border-color);
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text-sub);
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+
+        .year-filter-btn:hover {
+            background: #fff0f3;
+            border-color: #ffb6c1;
+            color: var(--accent-pink);
+        }
+
+        .year-filter-btn.active {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            box-shadow: 0 6px 18px rgba(255, 117, 140, 0.3);
+        }
+
+        .timeline-container {
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            top: 0; bottom: 0; left: 24px;
+            width: 3px;
+            background: linear-gradient(to bottom, #ff9a9e, #a18cd1, #f0ebf0);
+            border-radius: 4px;
+        }
+
+        @media (min-width: 600px) {
+            .timeline-container::before { left: 50%; transform: translateX(-50%); }
+        }
+
+        .year-section { margin-bottom: 40px; }
+
+        .year-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #fff;
+            background: linear-gradient(135deg, #ff9a9e, #a18cd1);
+            padding: 8px 22px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 25px;
+            box-shadow: 0 6px 15px rgba(161, 140, 209, 0.25);
+            position: relative;
+            left: 48px;
+            letter-spacing: 0.5px;
+        }
+
+        @media (min-width: 600px) {
+            .year-title { left: 50%; transform: translateX(-50%); display: table; }
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 35px;
+            padding-left: 55px;
+        }
+
+        @media (min-width: 600px) {
+            .timeline-item { padding-left: 0; width: 46%; margin-left: 4%; }
+            .timeline-item:nth-child(odd) { margin-left: 54%; }
+        }
+
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            left: 17px; top: 18px;
+            width: 14px; height: 14px;
+            background: #ffffff;
+            border: 4px solid var(--accent-pink);
+            border-radius: 50%;
+            box-shadow: 0 0 0 5px rgba(255, 117, 140, 0.15);
+            z-index: 2;
+            transition: transform 0.3s;
+        }
+
+        .timeline-item:hover::after {
+            transform: scale(1.2);
+            background: var(--accent-pink);
+        }
+
+        @media (min-width: 600px) {
+            .timeline-item:nth-child(odd)::after { left: -31.5px; }
+            .timeline-item:nth-child(even)::after { left: auto; right: -31.5px; }
+        }
+
+        .timeline-date {
+            font-size: 0.85rem;
+            color: var(--accent-pink);
+            font-weight: 700;
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            padding: 26px;
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            margin-bottom: 0;
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            position: relative;
+            box-sizing: border-box;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 16px 40px rgba(255, 117, 140, 0.16);
+            border-color: rgba(255, 117, 140, 0.3);
+        }
+
+        .badge-duo {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 5px 14px;
+            border-radius: 14px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            display: inline-block;
+            margin-bottom: 12px;
+            box-shadow: 0 4px 12px rgba(255, 117, 140, 0.2);
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 15px auto;
+            display: block;
+            border: 4px solid #fff;
+            box-shadow: 0 8px 25px rgba(255, 117, 140, 0.2);
+            cursor: pointer;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .profile-avatar:hover { transform: scale(1.08) rotate(3deg); }
+
+        .profile-info { text-align: center; margin-bottom: 18px; }
+        
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px dashed rgba(140, 125, 132, 0.2);
+            font-size: 0.95rem;
+        }
+        .info-row span { color: var(--text-sub); }
+        .info-row strong { color: var(--text-main); }
+
+        .photo-carousel {
             position: relative;
             width: 100%;
-            max-width: 400px;
-            margin-top: 10px;
-            border-radius: 8px;
+            border-radius: 18px;
             overflow: hidden;
-            background: #eee;
+            margin-top: 16px;
+            background: #1a1a1a;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
         }
 
-        .carousel-track {
-            display: flex;
-            overflow-x: auto;
-            scroll-snap-type: x mandatory;
-            scroll-behavior: smooth;
-            -ms-overflow-style: none; /* IE and Edge */
-            scrollbar-width: none; /* Firefox */
-        }
-        
-        .carousel-track::-webkit-scrollbar { display: none; }
-
-        .carousel-track img {
+        .carousel-img {
             width: 100%;
-            flex-shrink: 0;
-            scroll-snap-align: start;
+            height: 250px;
             object-fit: cover;
-            aspect-ratio: 16/9;
+            display: none;
+            cursor: pointer;
+            transition: transform 0.4s ease;
         }
 
-        /* 左右切換按鈕 */
+        .carousel-img:hover { transform: scale(1.03); }
+        .carousel-img.active { display: block; animation: fadeIn 0.4s ease; }
+
         .carousel-btn {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            background: rgba(0, 0, 0, 0.5);
-            color: white;
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(4px);
+            color: var(--text-main);
             border: none;
-            width: 30px;
-            height: 30px;
+            width: 38px; height: 38px;
+            cursor: pointer;
+            font-size: 1rem;
             border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            z-index: 10;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .carousel-btn:hover { background: #ffffff; color: var(--accent-pink); transform: translateY(-50%) scale(1.1); }
+        .carousel-prev { left: 12px; }
+        .carousel-next { right: 12px; }
+
+        .carousel-indicators {
+            position: absolute;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 6px;
+            background: rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(4px);
+            padding: 5px 10px;
+            border-radius: 12px;
+        }
+
+        .indicator-dot {
+            width: 7px; height: 7px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .indicator-dot.active { background: white; width: 20px; border-radius: 4px; }
+
+        a { color: var(--accent-pink); font-weight: 700; text-decoration: none; transition: opacity 0.2s; }
+        a:hover { opacity: 0.8; text-decoration: underline; }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 12px;
+        }
+
+        .gallery-grid img {
+            height: 150px;
+            width: 100%;
+            margin-top: 0;
+            border-radius: 16px;
+            object-fit: cover;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+        }
+
+        .gallery-grid img:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 25px rgba(255, 117, 140, 0.25);
+        }
+
+        .image-load-failed::after {
+            content: '圖片無法載入，請檢查 Google Drive 分享權限';
+            display: block;
+            padding: 12px;
+            text-align: center;
+            color: var(--text-sub);
+            font-size: 0.75rem;
+            background: #faf6f8;
+        }
+
+
+        /* 重新設計的行事曆切換按鈕排版（上方年份、下方月份） */
+        .calendar-header {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .calendar-nav-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .calendar-header button {
+            background: #fff;
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            color: var(--text-main);
+            font-size: 0.85rem;
+            transition: all 0.2s;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+        }
+
+        .calendar-header button:hover {
+            background: #fff0f3;
+            border-color: #ffb6c1;
+            color: var(--accent-pink);
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, minmax(0, 1fr));
+            gap: 4px;
+            text-align: center;
+            width: 100%;
+        }
+
+        .calendar-weekdays {
+            font-weight: 700;
+            color: var(--text-sub);
+            font-size: 0.75rem;
+            padding-bottom: 6px;
+        }
+
+        .calendar-day {
+            background: #ffffff;
+            min-height: 75px;
+            border-radius: 12px;
+            padding: 4px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            font-size: 0.75rem;
+            position: relative;
+            border: 1px solid var(--border-color);
+            box-sizing: border-box;
+            cursor: pointer;
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+
+        .calendar-day:hover {
+            background: #fff5f7;
+            border-color: #ffb6c1;
+            transform: translateY(-2px);
+        }
+
+        .calendar-day.empty {
+            background: transparent;
+            border: none;
+            cursor: default;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .day-number {
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 2px;
+            font-size: 0.8rem;
+        }
+
+        .calendar-event-tag {
+            background: var(--primary-gradient);
+            color: white;
+            font-size: 0.55rem;
+            padding: 1px 4px;
+            border-radius: 6px;
+            margin-top: 2px;
+            width: 100%;
+            text-align: left;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            box-sizing: border-box;
+        }
+
+        @media (max-width: 600px) {
+            body { padding: 8px; }
+            .header-card { padding: 22px 12px; border-radius: 18px; margin-bottom: 15px; }
+            .header-card h1 { font-size: 1.8rem; }
+            .card { padding: 14px; border-radius: 16px; }
+            .nav-tabs { padding: 6px; margin-bottom: 18px; border-radius: 16px; }
+            .nav-btn { padding: 10px 0; font-size: 0.85rem; }
+            
+            .calendar-header h3 { font-size: 1rem !important; }
+            .calendar-header button { padding: 6px 12px; font-size: 0.8rem; border-radius: 10px; }
+            
+            .calendar-grid { gap: 3px; }
+            .calendar-weekdays { font-size: 0.65rem; }
+            .calendar-day {
+                min-height: 52px;
+                padding: 3px;
+                border-radius: 8px;
+            }
+            .day-number { font-size: 0.7rem; margin-bottom: 1px; }
+            .calendar-event-tag {
+                font-size: 0.5rem;
+                padding: 1px 2px;
+                border-radius: 4px;
+                margin-top: 1px;
+            }
+        }
+
+        #imageModal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(45, 35, 40, 0.85);
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+            backdrop-filter: blur(8px);
+            animation: fadeIn 0.3s ease;
+        }
+
+        #modalImage {
+            max-width: 90%;
+            max-height: 85vh;
+            object-fit: contain;
+            border-radius: 16px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+            background: #111;
+        }
+
+        .modal-drive-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 10px;
+            padding: 8px 14px;
+            border-radius: 12px;
+            background: #fff0f3;
+            color: var(--accent-pink);
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .modal-drive-link:hover { background: #ffe2e8; text-decoration: none; }
+        .event-card { cursor: pointer; }
+        .event-card:focus-visible { outline: 3px solid rgba(255,117,140,0.35); outline-offset: 3px; }
+        .image-load-failed { background: #faf6f8; }
+
+        #eventModal {
+            display: none;
+            position: fixed;
+            z-index: 1500;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(45, 35, 40, 0.6);
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            box-sizing: border-box;
+            backdrop-filter: blur(6px);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .event-modal-content {
+            background: #ffffff;
+            width: 100%;
+            max-width: 680px;
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .event-modal-body {
+            display: flex;
+            flex-direction: row;
+            gap: 24px;
+            padding: 30px;
+            align-items: center;
+        }
+
+        @media (max-width: 600px) {
+            .event-modal-body { flex-direction: column; padding: 18px; gap: 12px; }
+        }
+
+        .event-modal-left { flex: 1; width: 100%; }
+        .event-modal-right { flex: 1; width: 100%; display: flex; flex-direction: column; justify-content: center; }
+
+        .event-modal-close {
+            position: absolute;
+            top: 18px; right: 20px;
+            background: #f0ebf0;
+            border: none;
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            font-weight: 700;
             cursor: pointer;
             z-index: 10;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 14px;
+            color: var(--text-sub);
+            transition: all 0.2s;
         }
 
-        .carousel-btn:hover { background: rgba(0, 0, 0, 0.8); }
-        .carousel-btn.prev { left: 10px; }
-        .carousel-btn.next { right: 10px; }
+        .event-modal-close:hover { background: var(--accent-pink); color: white; transform: scale(1.1); }
+
+        .event-modal-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #faf6f8;
+            padding: 16px 24px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .event-modal-nav button {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 0.85rem;
+            box-shadow: 0 4px 12px rgba(255, 117, 140, 0.25);
+            transition: all 0.2s;
+        }
+
+        .event-modal-nav button:hover { transform: scale(1.05); }
     </style>
 </head>
 <body>
-
-    <h1>活動行程時間軸</h1>
-    <div class="timeline">
-
-        <!-- 2026.9.16 範例：有多張照片 -->
-        <div class="timeline-item">
-            <div class="timeline-date">2026.9.16</div>
-            <div class="timeline-content">
-                <ol class="event-list">
-                    <li>兩人去 GEMM HOUSE (點餐還要黏在一起)
-                        <!-- 這是相簿輪播區塊 -->
-                        <div class="carousel-container">
-                            <button class="carousel-btn prev" onclick="moveSlide(this, -1)">&#10094;</button>
-                            <div class="carousel-track">
-                                <!-- 已將 Google Drive 連結轉為直接顯示圖片的格式 (uc?id=檔案ID) -->
-                                <img src="https://drive.google.com/uc?id=1n8JGF0yde2ILSfRq1a8Whsq-QIG4Hwnt" alt="照片1">
-                                <img src="https://drive.google.com/uc?id=1EkegtA0rsTk8lwzG9qmgggjpJGmI6A7c" alt="照片2">
-                                <img src="https://drive.google.com/uc?id=15xHpz6fienMCWFzmLoBauBBHcKwkNO2R" alt="照片3">
-                            </div>
-                            <button class="carousel-btn next" onclick="moveSlide(this, 1)">&#10095;</button>
-                        </div>
-                    </li>
-                    <li>Moonshadow ep.6</li>
-                </ol>
-            </div>
-        </div>
-
-        <!-- 2026.9.23 範例：有 5 張照片 -->
-        <div class="timeline-item">
-            <div class="timeline-date">2026.9.23</div>
-            <div class="timeline-content">
-                <ol class="event-list">
-                    <li>Moonshadow ep.7
-                        <div class="carousel-container">
-                            <button class="carousel-btn prev" onclick="moveSlide(this, -1)">&#10094;</button>
-                            <div class="carousel-track">
-                                <img src="https://drive.google.com/uc?id=1Q0DWJbWo5Fp6Mg4NVncc7dQdQA4XPOGm" alt="照片1">
-                                <img src="https://drive.google.com/uc?id=1JJbxnLJLEqwq2D4iK1yZwsN9cl-VcaNu" alt="照片2">
-                                <img src="https://drive.google.com/uc?id=1OrAysc0aUG5nZKsqDK36_qtR16aA5KDQ" alt="照片3">
-                                <img src="https://drive.google.com/uc?id=1fdliUPRH756JPPMMf_RTJ49ffR4xXp7O" alt="照片4">
-                                <img src="https://drive.google.com/uc?id=16m6eP_g_7QTYo4qY56E4lBKzOpdaYGQT" alt="照片5">
-                            </div>
-                            <button class="carousel-btn next" onclick="moveSlide(this, 1)">&#10095;</button>
-                        </div>
-                    </li>
-                </ol>
-            </div>
-        </div>
-
+<div class="container">
+    <div class="header-card">
+        <h1>EmiBonnie</h1>
+        <p>✨ 官宣記得吱我一聲 ✨</p>
     </div>
+    <div class="nav-tabs">
+        <button class="nav-btn active" onclick="switchTab('timeline')">⌛ 時間軸</button>
+        <button class="nav-btn" onclick="switchTab('calendar')">📅 行事曆</button>
+        <button class="nav-btn" onclick="switchTab('profile')">📁 資料</button>
+        <button class="nav-btn" onclick="switchTab('gallery')">🖼️ 照片</button>
+    </div>
+    <div id="timeline" class="tab-content active">
+        <div id="year-filter-container" class="year-filter-bar"></div>
+        <div id="timeline-container" class="timeline-container"></div>
+    </div>
+    <div id="calendar" class="tab-content">
+        <div class="card">
+            <div class="calendar-header">
+                <!-- 上方：年份切換 -->
+                <div class="calendar-nav-row">
+                    <button onclick="changeYear(-1)">◀ 去年</button>
+                    <button onclick="changeYear(1)">明年 ▶</button>
+                </div>
+                <!-- 下方：月份切換與年月標題 -->
+                <div class="calendar-nav-row">
+                    <button onclick="changeMonth(-1)">❮ 上月</button>
+                    <h3 id="calendar-month-year" style="margin:0; font-size: 1.1rem; color: var(--text-main);">2026 年 8 月</h3>
+                    <button onclick="changeMonth(1)">下月 ❯</button>
+                </div>
+            </div>
+            <div class="calendar-grid calendar-weekdays">
+                <div>日</div><div>一</div><div>二</div><div>三</div><div>四</div><div>五</div><div>六</div>
+            </div>
+            <div id="calendar-days" class="calendar-grid"></div>
+        </div>
+    </div>
+    <div id="profile" class="tab-content">
+        <!-- Emi 資料卡 -->
+        <div class="card">
+            <img src="https://drive.google.com/thumbnail?id=1Rk3UdpY0ncXMjsNxUuSpvkSP9n4z9Yos&sz=w1600" alt="Emi 頭貼" class="profile-avatar" onclick="openModal(this.src)">
+            <div class="profile-info">
+                <h3 style="margin: 5px 0 2px 0; color: var(--accent-pink);">Emi</h3>
+                <span style="font-size: 0.85rem; color: var(--text-sub);">Emi Thasorn Klinnim</span>
+            </div>
+            <div class="info-row"><span>暱稱</span><strong>p'mi、mimi、papa</strong></div>
+            <div class="info-row"><span>生日</span><strong>1998.04.25 (28歲)</strong></div>
+            <div class="info-row"><span>星座</span><strong>金牛座</strong></div>
+            <div class="info-row"><span>性別</span><strong>女</strong></div>
+            <div class="info-row"><span>身高 / 體重</span><strong>165cm / 48kg</strong></div>
+            <div class="info-row"><span>喜好</span><strong>追劇、看演唱會、抱鞋</strong></div>
+            <div class="info-row"><span>寵物</span><strong>博美犬（醬油）</strong></div>
+            <div class="info-row"><span>喜歡的食物</span><strong>生醃鮭魚、抹茶拿鐵（不喜歡 辣的、香菜、香蕉）</strong></div>
+        </div>
 
-    <!-- 這是讓左右按鈕可以滑動圖片的程式碼 -->
-    <script>
-        function moveSlide(btn, direction) {
-            const container = btn.parentElement;
-            const track = container.querySelector('.carousel-track');
-            const scrollAmount = track.clientWidth; 
-            track.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
+        <!-- Bonnie 資料卡 -->
+        <div class="card" style="margin-top: 20px;">
+            <img src="https://drive.google.com/thumbnail?id=1xwYt2bJspTLGFzxb4Bhm_tdfyGxQP9Py&sz=w1600" alt="Bonnie 頭貼" class="profile-avatar" onclick="openModal(this.src)">
+            <div class="profile-info">
+                <h3 style="margin: 5px 0 2px 0; color: var(--accent-pink);">Bonnie</h3>
+                <span style="font-size: 0.85rem; color: var(--text-sub);">Bonnie Pattraphus Borattasuwan</span>
+            </div>
+            <div class="info-row"><span>暱稱</span><strong>nini、bonbon</strong></div>
+            <div class="info-row"><span>生日</span><strong>2004.01.27 (22歲)</strong></div>
+            <div class="info-row"><span>星座</span><strong>水瓶座</strong></div>
+            <div class="info-row"><span>性別</span><strong>女</strong></div>
+            <div class="info-row"><span>身高 / 體重</span><strong>165cm / 47kg</strong></div>
+            <div class="info-row"><span>喜好</span><strong>動漫、遊戲、畫畫、吉他</strong></div>
+            <div class="info-row"><span>寵物</span><strong>馬爾濟斯 (muju)</strong></div>
+            <div class="info-row"><span>喜歡的食物</span><strong>草莓... (過敏 牛肉、牛奶)</strong></div>
+        </div>
+
+        <!-- Any 資料卡 -->
+        <div class="card" style="margin-top: 20px;">
+            <img src="https://drive.google.com/thumbnail?id=17fD21DSfvEadGqyd_Vvqvx-nkcgnPFf5&sz=w1600" alt="Any 頭貼" class="profile-avatar" onclick="openModal(this.src)">
+            <div class="profile-info">
+                <h3 style="margin: 5px 0 2px 0; color: var(--accent-pink);">Any</h3>
+                <span style="font-size: 0.85rem; color: var(--text-sub);">Any Klinnim Borattasuwan</span>
+            </div>
+            <div class="info-row"><span>暱稱</span><strong>any</strong></div>
+            <div class="info-row"><span>生日</span><strong>2025.03.14 (1歲)</strong></div>
+            <div class="info-row"><span>星座</span><strong>-</strong></div>
+            <div class="info-row"><span>性別</span><strong>女</strong></div>
+            <div class="info-row"><span>身高 / 體重</span><strong>- / -</strong></div>
+            <div class="info-row"><span>喜好</span><strong>唱歌、yellow</strong></div>
+            <div class="info-row"><span>寵物</span><strong>-</strong></div>
+            <div class="info-row"><span>喜歡的食物</span><strong>雞翅、omakase</strong></div>
+        </div>
+    </div>
+    <div id="gallery" class="tab-content">
+        <div class="card">
+            <h3 style="margin-top: 0; margin-bottom: 20px; color: var(--text-main);">🖼️ 照片收藏庫</h3>
+            <div class="gallery-grid" id="gallery-container"></div>
+        </div>
+    </div>
+</div>
+<div id="imageModal" onclick="closeModal()">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:10px;max-width:95vw;max-height:95vh;">
+        <img id="modalImage" src="" alt="完整照片" style="display:block;">
+        <a id="modalDriveLink" href="#" target="_blank" rel="noopener" style="display:none;background:rgba(255,255,255,0.92);padding:8px 14px;border-radius:12px;color:#a64c69;font-weight:700;text-decoration:none;" onclick="event.stopPropagation();">↗ 開啟 Google Drive 原圖</a>
+    </div>
+</div>
+<div id="eventModal" onclick="checkCloseEventModal(event)">
+    <div class="event-modal-content">
+        <button class="event-modal-close" onclick="closeEventModal()">✕</button>
+        <div class="event-modal-body" id="event-modal-body"></div>
+        <div class="event-modal-nav" id="event-modal-nav" style="display: none;">
+            <button onclick="changeModalEvent(-1)">◀ 上一個事件</button>
+            <span id="event-counter" style="font-size: 0.85rem; font-weight: 700; color: var(--text-sub);">1 / 1</span>
+            <button onclick="changeModalEvent(1)">下一個事件 ▶</button>
+        </div>
+    </div>
+</div>
+<script>
+    // 活動資料：沿用原檔中所有完整事件，並持續加入你提供的 2026 年 9 月活動紀錄。
+    // 原始檔的 2025/12/26 紀錄在貼上時被截斷，因此沒有自行補寫。
+    const eventsData = [
+        { date: "2026-08-11", title: "Moonshadow Q22", content: "米米拍戲很晚到家 明天還有工作", link: "", linkText: "", videoLink: "", videoText: "", photo: ["https://drive.google.com/thumbnail?id=1hGi_zMIgWH4iFAwAKU2c2WXMigDTx-OM&sz=w1600"] },
+        { date: "2026-08-10", title: "Red Kiss 新歌發布", content: "啊好好聽！！！GMMtv一首歌兩用我不接受", link: "https://www.gmm-tv.com", linkText: "GMMTV 官方網站", videoLink: "https://www.youtube.com/watch?v=jad-V_nyvaY", videoText: "📺 Red Kiss - EMIBONNIE [ OFFICIAL MV ]", photo: ["https://drive.google.com/thumbnail?id=139IMGslcvRQerOjhzyyzhaLgF-wTZddN&sz=w1600", "https://drive.google.com/thumbnail?id=1eu3gKii3jiEXxUi-JjeZ8zfwfalYvS0b&sz=w1600", "https://drive.google.com/thumbnail?id=1PnRRFU5kEK2i1rjE8uPiHZLvslWjp8fm&sz=w1600", "https://drive.google.com/thumbnail?id=1j4XYWt3WnHFiTGNv84p_1m9lLEPCRej-&sz=w1600"] },
+        { date: "2023-08-03", title: "初見面", content: "和GMM簽約，並拍攝個人公式照。命運的齒輪開始轉動。註：後續採訪中兩人聊起初次見面，Emi主動搭話協助Bonnie拍照時調整姿勢。", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2026-08-12", title: "Moonshadow ep.1 首映", content: "終於等來了", link: "", linkText: "", videoLink: "", videoText: "", photo: ["https://drive.google.com/thumbnail?id=1qoQAZCXnUx7dWiR4bPy36P4DBi1YeYR9&sz=w1600"] },
+        { date: "2024-10-13", title: "Us開拍", content: "", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2025-06-28", title: "Blush Blossom Fan Fest", content: "第一次演唱會", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2025-09-05", title: "404 Not Found 寫真書簽名會", content: "", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2025-09-07", title: "Mint Awards 2025", content: "", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2025-09-13", title: "Infinity Medical Clinic", content: "於TayNew的節目中提到是Emi邀請Bonnie一起去清邁拜拜，同行者還有Bonnie媽媽", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2025-09-23", title: "Y Entertain Awards 2025", content: "兩人合唱More Than Words(Jazz ver.)。Bonnie終於收到Emi的個人品牌IMM ANOTHER衣服。媒體聯訪重點節錄：Bonnie提到喜歡看粉絲剪的Emi迷因影片並按讚；被問到招商會嘴巴閉很緊，Bonnie想當酷女孩被姐姐追，Emi想當開朗又嗆辣的角色；Bonnie說Emi很愛買食物分享但是自己只吃一兩口，所以最後是她空盤。", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2025-09-27", title: "香港FM", content: "", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2025-10-01", title: "Emiamily in Paris: 出席YSL女裝秀", content: "Bonnie作為刷趨勢大隊長，非常認真的幫Emi刷數據", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2025-11-06", title: "Emi亂入賣卡直播間", content: "", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2025-11-23", title: "越南市區逛逛", content: "兩人在越南結束Fanday行程後，隔天一起去逛胡志明市區，逛街時互相幫對方拍照。吃Pho的時候，Bonnie上傳了限時動態，是自己又弄到褲子上，Emi認真幫她擦的片段。", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2025-11-29", title: "下意識的照顧", content: "兩人搭機穿同款勃肯鞋。接機人潮過多，Emi在移動途中不時關注Bonnie的狀態，搭肩、拉手、注意尖角會不會撞到", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2025-11-30", title: "BBFanFest 澳門場", content: "工作人員上傳兩人在後台的影片&照片，Bonnie坐在Emi腿上。花絮採訪的接力問答，June問Emi有沒有哄好Bonnie(前情提要：June發佈了Emi靠在她身上撒嬌的照片）Emi回答問題的時候Bonnie在旁邊一邊吃蛋塔一邊吃醋生氣說那就去找她阿", link: "", linkText: "", videoLink: "", videoText: "", photo: ["https://drive.google.com/thumbnail?id=1OvppU5kp6GGI76_u1FA80Ildvyh_mSDj&sz=w1600"] },
+        { date: "2025-12-01", title: "旅途中的依靠", content: "Love發佈限時動態，為機上Bonnie靠在Emi身上睡的很熟。Emi轉發留言「沒有枕頭比我的懷裡更安心」", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2025-12-07", title: "Seoul Medical Clinic 活動", content: "後台拍照Emi疑似坐在Bonnie腿上。活動結束後，Bonnie和Emi與Emi的朋友們一起去動物園。Bonnie發了限時動態是Emi假裝喂兔子的影片。Emi的朋友(Nurse)在X上轉發Emi泰站表示在旁邊看EB二人很像在看真人版Nick和Judy", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2025-12-09", title: "CPS x IRADA 品牌活動", content: "Emi在活動後的After Party和美女貼身熱舞。Bonnie在粉絲分享的影片下面評論「讓她去過自己的生活吧」。Emi則是到處在Bonnie的推文下留言，疑似求和", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2025-12-09", title: "Kamart 直播帶貨", content: "兩人各有一小時的單人直播。Emi直播時Bonnie在旁邊看，被問到faen的時候，Emi表示「單身，但有一個孩子」。接著是Bonnie首次單人帶貨直播，Bonnie很緊張拉著Emi不放，但是Emi有下一個行程所以要先離開，最後依依不捨摸頭鼓勵Bonnie再離開。Bonnie直播時表示「單身，但有一個faen」。", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2025-12-10", title: "Cute Press 直播帶貨", content: "Bonnie在直播中火力全開，強力回擊昨日Emi的 「單身論」和貼貼熱舞，表示兩人只是partner、 phi-nong、 coworker的關係，為什麼要被哄， 並且逼問Emi為什麼不對她說我愛你。 Emi整場直播瘋狂貼貼，在被說為什麼不說我愛你的時候，長達五分鐘都在拖拖拉拉不好意思，說不是不願意說但是直播太多人了（3500人），一開始先說了日語版，接著說了中文版，最後才看Bonnie氣到要放棄的時候趕快耍帥講了泰語版。", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2025-12-11", title: "Zootopia 2 觀影活動", content: "首次一家人單獨的觀影活動。Emi出場下樓梯絆到，Bonnie立刻上前摟住。Bonnie 直接喊Emi而不是P'Mi。Emi面交了上次在TikTok直播間搶到的小卡", link: "", linkText: "", videoLink: "", videoText: "", photo: ["https://drive.google.com/thumbnail?id=1H6vCMFjsUZpAQJvakC09qZ1r5Gan2FfH&sz=w1600"] },
+        { date: "2025-12-12", title: "TikTok影片", content: "Emi發佈LINEMAN相關影片，Bonnie喂她吃起司蛋糕還幫忙用手擦嘴。 Bonnie隨後在TikTok直播表示因為Emi最近吃很少，食慾不佳所以要用這樣的方法餵她吃", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2025-12-20", title: "GMMTV Starlympics 2025", content: "開場花車巡迴時，Bonnie被發現在偷看Emi，Emi大方轉身讓她看個夠。 在台下看比賽時，兩人大部分時間都黏在一起、 互相撒嬌，Emi幫Bonnie開水瓶後直接喝同一瓶，Bonnie想玩打鼓就帶她去還拍下來。 接力比賽前，Emi蹲下來幫Bonnie繫鞋帶（兩人穿的是Emi推廣的品牌情侶款，Emi特地從家裡帶的），頒獎也要抱著出場，無時無刻都在牽手摟腰，拿到獎牌還要親獎牌再貼貼。 前一天彩排時，Emi送給Bonnie自己品牌新出的牛仔褲（第一個收到的人）隔天兩人都穿上去運動會現場。", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2025-12-25", title: "聖誕禮物", content: "Bonnie和朋友一起去製作手工薑餅屋，薑餅屋上有一家人的元素，包含手繪的Any、 Emi和Bonnie的名字。 製作完後Bonnie拍了拍立得，和薑餅屋一起送去給Emi作為聖誕禮物，並且傳訊息表示自己要送Emi房子。 粉絲在X上詢問為什麼要送自己的拍立得，Bonnie表示直接給Emi一張獨一無二的，這樣就不用去TikTok買她的拍立得。", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+
+        // 2026/9/2～9/15：依照你這次提供的紀錄加入時間軸；同一天不同活動各自成為獨立事件。
+        { date: "2026-09-02", title: "Moonshadow ep.4", content: "", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2026-09-03", title: "Glitch Official MV (Emi)", content: "", link: "", linkText: "", videoLink: "https://www.youtube.com/watch?v=TNbvfhxCBtQ", videoText: "📺 Glitch Official MV (Emi)", photo: [
+            "https://drive.google.com/thumbnail?id=1CiyKXACfcwiJg7H8QIxDKEMWKQye1aCo&sz=w1600"
+        ] },
+        { date: "2026-09-05", title: "sheep（迪士尼公主系列）", content: "唱了", link: "", linkText: "", videoLink: "", videoText: "", photo: [
+            "https://drive.google.com/thumbnail?id=15m3Z5glENRBA7RNSQp3r4Z62HiNz6w0h&sz=w1600"
+        ] },
+        { date: "2026-09-06", title: "Gemini 演唱會嘉賓", content: "bonnie第一天去gemini說很高興請到p'emi的對象來，bonnie害羞笑沒否認。\n有人剪輯bonnie的這段影片emi轉發，然後第三天emi來就被問，emi也是害羞笑沒否認。", link: "", linkText: "", videoLink: "", videoText: "", photo: [
+            "https://drive.google.com/thumbnail?id=1Y-9iPO8QQvDlrCYNrBMdv198CHQh-viE&sz=w1600",
+            "https://drive.google.com/thumbnail?id=1enf9RkmQXYiBBn9VA5lnoo_6nz2UeHiW&sz=w1600"
+        ] },
+        { date: "2026-09-08", title: "劇集討論直播", content: "兩人角色上身特別是bonnie根本是n'key", link: "", linkText: "", videoLink: "", videoText: "", photo: [
+            "https://drive.google.com/thumbnail?id=1aakeQKUGror6L9HZPFy7TbFA-0LcZ1lQ&sz=w1600",
+            "https://drive.google.com/thumbnail?id=1D2SXqSf1oSxlSq9L-mkjlQsOlDY5UacK&sz=w1600"
+        ] },
+        { date: "2026-09-08", title: "線下點名活動", content: "雖然是工作日但去的人還是非常多。兩人角色上身特別是bonnie根本是n'key", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2026-09-08", title: "GMMTV Live House", content: "junior主持any也在，any根本意外miminini超黏", link: "", linkText: "", videoLink: "https://www.youtube.com/watch?v=JsexJeh4Bf8", videoText: "📺 GMMTV Live House", photo: [
+            "https://drive.google.com/thumbnail?id=17R9zJeqHBUZERySVauBqqOR688CnfGe9&sz=w1600",
+            "https://drive.google.com/thumbnail?id=1karVBZaaSFbS8LniDgXJ6hXssEol5r56&sz=w1600"
+        ] },
+        { date: "2026-09-09", title: "Moonshadow ep.5", content: "", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2026-09-12", title: "You One Official MV (Bonnie)", content: "", link: "", linkText: "", videoLink: "https://www.youtube.com/watch?v=AUPbHx7J8iQ", videoText: "📺 You One Official MV (Bonnie)", photo: [
+            "https://drive.google.com/thumbnail?id=1C1Ev5wXoagEJVVaKh_Yr2kEovLOCVjpu&sz=w1600",
+            "https://drive.google.com/thumbnail?id=1bkW4_Zn6rWfBGdxd0fG_rbTJWSz2kDry&sz=w1600"
+        ] },
+        { date: "2026-09-12", title: "Mint Awards 2026", content: "下午展櫃賣東西，兩人又隔對面但一直在傳情\n晚上出席頒獎活動（mee and thee得獎bonnie一起領獎）", link: "", linkText: "", videoLink: "", videoText: "", photo: [
+            "https://drive.google.com/thumbnail?id=1Jl-Mf8H_NOGupLPKloJyzvdr68newEEg&sz=w1600",
+            "https://drive.google.com/thumbnail?id=1M5FoVKux3Xve-lmlpJAVkI0Qa-aht4iZ&sz=w1600"
+        ] },
+        { date: "2026-09-15", title: "Emi 到 GEMM HOUSE 打工", content: "", link: "", linkText: "", videoLink: "", videoText: "", photo: [
+            "https://drive.google.com/thumbnail?id=11zxxBUUkapeL7H-xVfwXTalI1hdmBM-O&sz=w1600",
+            "https://drive.google.com/thumbnail?id=1yeUR3bgUpF7MR9XxxtNhJ_hZhYEGX_jy&sz=w1600"
+        ] },
+        
+        // 2026/9/20～9/30：延續同樣格式；同日多活動分開顯示。
+        { date: "2026-09-20", title: "ANY 去 SkyNani 演唱會做嘉賓", content: "米米跟邦邦去看小朋友演出", link: "", linkText: "", videoLink: "", videoText: "", photo: [
+            "https://drive.google.com/thumbnail?id=1ZGpTTYF71o-ehqcHSofBKZo9mHIrh8ZV&sz=w1600",
+            "https://drive.google.com/thumbnail?id=1oC2rvKAttvByVoFgNrah5WhbAVNcUn7r&sz=w1600",
+            "https://drive.google.com/thumbnail?id=1Dp_oLL5GxbnMkPklZWZVX8ZTAMSiRv00&sz=w1600",
+            "https://drive.google.com/thumbnail?id=1utd0yeV9hLZeoy9WH7WbeZ7lo73PfSEc&sz=w1600"
+        ] },
+        
+        // 2026/9/16：依照你提供的時間軸資料拆成兩個事件，照片保留在 GEMM HOUSE 那筆。
+        { date: "2026-09-16", title: "GEMM HOUSE", content: "兩人去 GEMM HOUSE（點餐還要黏在一起）", link: "", linkText: "", videoLink: "", videoText: "", photo: [
+            "https://drive.google.com/thumbnail?id=1n8JGF0yde2ILSfRq1a8Whsq-QIG4Hwnt&sz=w1600",
+            "https://drive.google.com/thumbnail?id=1EkegtA0rsTk8lwzG9qmgggjpJGmI6A7c&sz=w1600",
+            "https://drive.google.com/thumbnail?id=15xHpz6fienMCWFzmLoBauBBHcKwkNO2R&sz=w1600"
+        ] },
+        { date: "2026-09-16", title: "Moonshadow ep.6", content: "", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2026-09-23", title: "Moonshadow ep.7", content: "", link: "", linkText: "", videoLink: "", videoText: "", photo: [
+            "https://drive.google.com/thumbnail?id=1Q0DWJbWo5Fp6Mg4NVncc7dQdQA4XPOGm&sz=w1600",
+            "https://drive.google.com/thumbnail?id=1JJbxnLJLEqwq2D4iK1yZwsN9cl-VcaNu&sz=w1600",
+            "https://drive.google.com/thumbnail?id=1OrAysc0aUG5nZKsqDK36_qtR16aA5KDQ&sz=w1600",
+            "https://drive.google.com/thumbnail?id=1fdliUPRH756JPPMMf_RTJ49ffR4xXp7O&sz=w1600",
+            "https://drive.google.com/thumbnail?id=16m6eP_g_7QTYo4qY56E4lBKzOpdaYGQT&sz=w1600"
+        ] }
+,
+        { date: "2026-09-24", title: "月影 Volog part1", content: "", link: "", linkText: "", videoLink: "https://www.youtube.com/watch?v=wO__XKi_eFI", videoText: "📺 月影 Volog part1", photo: [
+            "https://drive.google.com/thumbnail?id=18VmlKFbS_8Vo3_d_lGZpqm1sCY4aTKpD&sz=w1600",
+            "https://drive.google.com/thumbnail?id=16LCQ_gTGMJ8mBNo0H4Cl0vLXluWr28Bt&sz=w1600"
+        ] },
+        { date: "2026-09-24", title: "Fan party and after party 賣票直播", content: "玩遊戲bonnie給mimi挖坑打分GEMM HOUSE的產品,mimi玩到懷疑自己的喜好，自己不知道但邦邦知道。\nmimi口誤場面失控一度跑出螢幕外，笑死p'leo跟bonnie", link: "", linkText: "", videoLink: "https://www.youtube.com/watch?v=AzXx4K2cMZQ", videoText: "📺 Fan party and after party 賣票直播", photo: [
+            "https://drive.google.com/thumbnail?id=1Zfb3QwDx8WnaSYOAXqLonIvra2S_5iGb&sz=w1600",
+            "https://drive.google.com/thumbnail?id=1HU-m1YeDz4LZg-4sXMFI8R2j3-H2Tfgf&sz=w1600"
+        ] },
+        { date: "2026-09-27", title: "猜歌節目播出", content: "", link: "", linkText: "", videoLink: "https://www.youtube.com/watch?v=cQ8xwIj2t9o", videoText: "📺 猜歌節目播出", photo: [] },
+        { date: "2026-09-30", title: "Moonshadow ep.8", content: "", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2026-09-30", title: "ARM SHARE Rising Runway Star 2026", content: "any上節目", link: "", linkText: "", videoLink: "", videoText: "", photo: [] }    ];
+
+    let activeYear = 2026;
+    let calendarDate = new Date(2026, 8, 1); // 2026 年 9 月
+    let modalEvents = [];
+    let modalEventIndex = 0;
+
+    function formatDate(dateString) {
+        const d = new Date(dateString + 'T00:00:00');
+        return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`;
+    }
+
+    function uniqueYears() {
+        return [...new Set(eventsData.map(e => Number(e.date.slice(0, 4))))].sort((a, b) => b - a);
+    }
+
+    function escapeHTML(value) {
+        return String(value ?? '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+
+    function switchTab(tabId) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+        const tab = document.getElementById(tabId);
+        const btn = [...document.querySelectorAll('.nav-btn')].find(b => b.getAttribute('onclick')?.includes(`'${tabId}'`));
+        if (tab) tab.classList.add('active');
+        if (btn) btn.classList.add('active');
+        if (tabId === 'gallery') renderGallery();
+        if (tabId === 'calendar') renderCalendar();
+    }
+
+    function renderYearFilters() {
+        const container = document.getElementById('year-filter-container');
+        container.innerHTML = '';
+        uniqueYears().forEach(year => {
+            const btn = document.createElement('button');
+            btn.className = 'year-filter-btn' + (year === activeYear ? ' active' : '');
+            btn.textContent = `${year}`;
+            btn.onclick = () => {
+                activeYear = year;
+                renderYearFilters();
+                renderTimeline();
+            };
+            container.appendChild(btn);
+        });
+    }
+
+    function renderTimeline() {
+        const container = document.getElementById('timeline-container');
+        const filtered = eventsData
+            .filter(e => Number(e.date.slice(0, 4)) === activeYear)
+            .sort((a, b) => b.date.localeCompare(a.date));
+
+        if (!filtered.length) {
+            container.innerHTML = '<div class="card" style="text-align:center;">這一年目前還沒有紀錄 ♡</div>';
+            return;
         }
-    </script>
+
+        // 以年份作為時間軸標題。
+        container.innerHTML = `<div class="year-section"><div class="year-title">${activeYear} 年</div></div>` +
+            filtered.map((event, index) => {
+                const photos = Array.isArray(event.photo) ? event.photo : [];
+                const carousel = photos.length ? `
+                    <div class="photo-carousel">
+                        ${photos.map((url, i) => `<img class="carousel-img ${i === 0 ? 'active' : ''}" src="${escapeHTML(url)}" data-drive-url="${escapeHTML(toDriveViewUrl(url))}" alt="${escapeHTML(event.title)} 照片 ${i + 1}" loading="lazy" onclick="event.stopPropagation(); openModal(this.src, this.dataset.driveUrl)" onerror="handleImageFallback(this)">`).join('')}
+                        ${photos.length > 1 ? `
+                            <button class="carousel-btn carousel-prev" onclick="changeCarousel(this, -1); event.stopPropagation();" aria-label="上一張">❮</button>
+                            <button class="carousel-btn carousel-next" onclick="changeCarousel(this, 1); event.stopPropagation();" aria-label="下一張">❯</button>
+                            <div class="carousel-indicators">
+                                ${photos.map((_, i) => `<span class="indicator-dot ${i === 0 ? 'active' : ''}" onclick="goCarousel(this, ${i}); event.stopPropagation();"></span>`).join('')}
+                            </div>` : ''}
+                    </div>` : '';
+
+                const links = [
+                    event.link ? `<a href="${escapeHTML(event.link)}" target="_blank" rel="noopener">${escapeHTML(event.linkText || '相關連結')}</a>` : '',
+                    event.videoLink ? `<a href="${escapeHTML(event.videoLink)}" target="_blank" rel="noopener">${escapeHTML(event.videoText || '影片')}</a>` : ''
+                ].filter(Boolean).join('<span style="margin:0 8px; color:#d8c8ce;">•</span>');
+
+                return `
+                    <div class="timeline-item">
+                        <div class="timeline-date">${formatDate(event.date)}</div>
+                        <div class="card event-card" data-event-index="${index}" role="button" tabindex="0" aria-label="查看事件：${escapeHTML(event.title)}">
+                            <div class="badge-duo">EmiBonnie</div>
+                            <h3 style="margin:0 0 8px 0; color:var(--text-main);">${escapeHTML(event.title)}</h3>
+                            ${event.content ? `<p style="margin:0; line-height:1.8; color:var(--text-sub); white-space:pre-line;">${escapeHTML(event.content)}</p>` : ''}
+                            ${links ? `<div style="margin-top:12px; font-size:0.85rem;">${links}</div>` : ''}
+                            ${carousel}
+                        </div>
+                    </div>`;
+            }).join('');
+
+        container.querySelectorAll('.event-card').forEach((card, i) => {
+            const open = () => openEventModal(filtered, i);
+            card.addEventListener('click', open);
+            card.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    open();
+                }
+            });
+            card.querySelectorAll('a, button, img, .indicator-dot').forEach(el => {
+                el.addEventListener('click', (e) => e.stopPropagation());
+            });
+        });
+    }
+
+    function getCarouselItems(container) {
+        return [...container.querySelectorAll('.carousel-img')];
+    }
+
+    function setCarouselIndex(container, index) {
+        const imgs = getCarouselItems(container);
+        if (!imgs.length) return;
+        index = (index + imgs.length) % imgs.length;
+        imgs.forEach((img, i) => img.classList.toggle('active', i === index));
+        const dots = [...container.querySelectorAll('.indicator-dot')];
+        dots.forEach((dot, i) => dot.classList.toggle('active', i === index));
+        container.dataset.index = String(index);
+    }
+
+    function changeCarousel(btn, direction) {
+        const container = btn.closest('.photo-carousel');
+        const index = Number(container.dataset.index || 0);
+        setCarouselIndex(container, index + direction);
+    }
+
+    function goCarousel(dot, index) {
+        const container = dot.closest('.photo-carousel');
+        setCarouselIndex(container, index);
+    }
+
+    function renderGallery() {
+        const container = document.getElementById('gallery-container');
+        const photos = eventsData.flatMap(event => (event.photo || []).map(photo => ({ photo, title: event.title, date: event.date })));
+        container.innerHTML = photos.length ? photos.map(item => `
+            <div style="position:relative;">
+                <img src="${escapeHTML(item.photo)}" data-drive-url="${escapeHTML(toDriveViewUrl(item.photo))}" alt="${escapeHTML(item.title)}" loading="lazy" onclick="openModal(this.src, this.dataset.driveUrl)" onerror="handleImageFallback(this)">
+                <div style="font-size:0.7rem;color:var(--text-sub);padding:5px 2px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHTML(item.date.replaceAll('-', '.'))} · ${escapeHTML(item.title)}</div>
+            </div>`).join('') : '<div style="grid-column:1/-1;text-align:center;color:var(--text-sub);padding:30px;">目前還沒有照片 ♡</div>';
+    }
+
+    function getDriveId(value) {
+        const match = String(value || '').match(/(?:[?&]id=|\/d\/|drive.google.com\/file\/d\/)([A-Za-z0-9_-]{10,})/);
+        return match ? match[1] : '';
+    }
+
+    function toDriveViewUrl(value) {
+        const id = getDriveId(value);
+        return id ? `https://drive.google.com/file/d/${id}/view?usp=drive_link` : value;
+    }
+
+    function getImageCandidates(value) {
+        const id = getDriveId(value);
+        if (!id) return [value];
+        return [
+            `https://drive.google.com/thumbnail?id=${id}&sz=w1600`,
+            `https://lh3.googleusercontent.com/d/${id}=w1600`,
+            `https://drive.google.com/uc?export=view&id=${id}`,
+            `https://drive.usercontent.google.com/download?id=${id}&export=view&authuser=0`
+        ];
+    }
+
+    function handleImageFallback(img) {
+        const candidates = img.dataset.candidates ? JSON.parse(img.dataset.candidates) : getImageCandidates(img.src);
+        let index = Number(img.dataset.fallbackIndex || 0) + 1;
+        if (index < candidates.length) {
+            img.dataset.candidates = JSON.stringify(candidates);
+            img.dataset.fallbackIndex = String(index);
+            img.src = candidates[index];
+            return;
+        }
+        img.classList.add('image-load-failed');
+        img.title = '圖片目前無法載入。請確認 Google Drive 檔案已設為「知道連結的任何人都可查看」。';
+        img.style.objectFit = 'contain';
+        img.style.opacity = '0.45';
+    }
+
+    function openModal(src, driveUrl = '') {
+        const modal = document.getElementById('imageModal');
+        const image = document.getElementById('modalImage');
+        const candidates = getImageCandidates(src);
+        image.dataset.candidates = JSON.stringify(candidates);
+        image.dataset.fallbackIndex = '0';
+        image.src = candidates[0] || src;
+        image.onerror = function() { handleImageFallback(this); };
+        image.style.opacity = '1';
+        image.style.objectFit = 'contain';
+        const link = document.getElementById('modalDriveLink');
+        if (link) {
+            link.href = driveUrl || toDriveViewUrl(src);
+            link.style.display = (driveUrl || getDriveId(src)) ? 'inline-flex' : 'none';
+        }
+        modal.style.display = 'flex';
+    }
+
+    function closeModal() {
+        const modal = document.getElementById('imageModal');
+        modal.style.display = 'none';
+        const image = document.getElementById('modalImage');
+        image.src = '';
+        image.onerror = null;
+        image.removeAttribute('data-candidates');
+        image.removeAttribute('data-fallback-index');
+        const link = document.getElementById('modalDriveLink');
+        if (link) link.style.display = 'none';
+    }
+
+    function openEventModal(filteredEvents, index = 0) {
+        modalEvents = filteredEvents;
+        modalEventIndex = index;
+        renderEventModal();
+        document.getElementById('eventModal').style.display = 'flex';
+    }
+
+    function renderEventModal() {
+        const event = modalEvents[modalEventIndex];
+        if (!event) return;
+        const body = document.getElementById('event-modal-body');
+        const nav = document.getElementById('event-modal-nav');
+        const photos = event.photo || [];
+        const firstPhoto = photos[0] || '';
+        const eventLinks = [
+            event.link ? `<a href="${escapeHTML(event.link)}" target="_blank" rel="noopener">${escapeHTML(event.linkText || '相關連結')}</a>` : '',
+            event.videoLink ? `<a href="${escapeHTML(event.videoLink)}" target="_blank" rel="noopener">${escapeHTML(event.videoText || '📺 觀看影片')}</a>` : ''
+        ].filter(Boolean).join('<span style="margin:0 8px;color:#d8c8ce;">•</span>');
+        body.innerHTML = `
+            <div class="event-modal-left">
+                ${photos.length ? `<img src="${escapeHTML(firstPhoto)}" data-drive-url="${escapeHTML(toDriveViewUrl(firstPhoto))}" data-candidates="${escapeHTML(JSON.stringify(getImageCandidates(firstPhoto)))}" data-fallback-index="0" style="width:100%;max-height:320px;object-fit:cover;border-radius:18px;cursor:pointer;" alt="${escapeHTML(event.title)}" onclick="event.stopPropagation(); openModal(this.src, this.dataset.driveUrl)" onerror="handleImageFallback(this)">` : '<div style="height:220px;border-radius:18px;background:#faf6f8;display:flex;align-items:center;justify-content:center;color:var(--text-sub);">♡ 暫無照片</div>'}
+                ${firstPhoto ? `<a class="modal-drive-link" href="${escapeHTML(toDriveViewUrl(firstPhoto))}" target="_blank" rel="noopener">↗ 開啟原始照片</a>` : ''}
+            </div>
+            <div class="event-modal-right">
+                <div class="timeline-date">${formatDate(event.date)}</div>
+                <h3 style="margin:4px 0 10px;color:var(--text-main);">${escapeHTML(event.title)}</h3>
+                <p style="margin:0;line-height:1.85;color:var(--text-sub);white-space:pre-line;">${escapeHTML(event.content || '這一天留下了一筆活動紀錄。')}</p>
+                ${eventLinks ? `<div style="margin-top:14px;font-size:0.85rem;line-height:1.8;">${eventLinks}</div>` : ''}
+            </div>`;
+        nav.style.display = modalEvents.length > 1 ? 'flex' : 'none';
+        document.getElementById('event-counter').textContent = `${modalEventIndex + 1} / ${modalEvents.length}`;
+    }
+
+    function closeEventModal() {
+        document.getElementById('eventModal').style.display = 'none';
+    }
+
+    function checkCloseEventModal(event) {
+        if (event.target.id === 'eventModal') closeEventModal();
+    }
+
+    function changeModalEvent(direction) {
+        if (!modalEvents.length) return;
+        modalEventIndex = (modalEventIndex + direction + modalEvents.length) % modalEvents.length;
+        renderEventModal();
+    }
+
+    function renderCalendar() {
+        const year = calendarDate.getFullYear();
+        const month = calendarDate.getMonth();
+        document.getElementById('calendar-month-year').textContent = `${year} 年 ${month + 1} 月`;
+        const container = document.getElementById('calendar-days');
+        container.innerHTML = '';
+        const firstDay = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        for (let i = 0; i < firstDay; i++) {
+            container.insertAdjacentHTML('beforeend', '<div class="calendar-day empty"></div>');
+        }
+        for (let day = 1; day <= daysInMonth; day++) {
+            const iso = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+            const events = eventsData.filter(e => e.date === iso);
+            const tags = events.map(e => `<div class="calendar-event-tag">${escapeHTML(e.title)}</div>`).join('');
+            const cell = document.createElement('div');
+            cell.className = 'calendar-day' + (events.length ? ' has-event' : '');
+            cell.innerHTML = `<div class="day-number">${day}</div>${tags}`;
+            if (events.length) cell.onclick = () => openEventModal(events, 0);
+            container.appendChild(cell);
+        }
+    }
+
+    function changeMonth(delta) {
+        calendarDate = new Date(calendarDate.getFullYear(), calendarDate.getMonth() + delta, 1);
+        renderCalendar();
+    }
+
+    function changeYear(delta) {
+        calendarDate = new Date(calendarDate.getFullYear() + delta, calendarDate.getMonth(), 1);
+        renderCalendar();
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            closeModal();
+            closeEventModal();
+        }
+        const eventModalVisible = document.getElementById('eventModal').style.display === 'flex';
+        if (eventModalVisible && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) {
+            changeModalEvent(e.key === 'ArrowLeft' ? -1 : 1);
+        }
+    });
+
+    renderYearFilters();
+    renderTimeline();
+    renderCalendar();
+    renderGallery();
+</script>
 </body>
 </html>
