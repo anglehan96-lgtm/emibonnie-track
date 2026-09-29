@@ -271,18 +271,6 @@
             border-color: rgba(255, 117, 140, 0.3);
         }
 
-        .badge-duo {
-            background: var(--primary-gradient);
-            color: white;
-            padding: 5px 14px;
-            border-radius: 14px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            display: inline-block;
-            margin-bottom: 12px;
-            box-shadow: 0 4px 12px rgba(255, 117, 140, 0.2);
-        }
-
         .profile-avatar {
             width: 120px;
             height: 120px;
@@ -379,7 +367,7 @@
 
         .indicator-dot.active { background: white; width: 20px; border-radius: 4px; }
 
-        a { color: var(--accent-pink); font-weight: 700; text-decoration: none; transition: opacity 0.2s; }
+        a { color: var(--accent-pink); font-weight: 700; text-decoration: none; transition: opacity 0.2s; display: inline-block; margin-top: 4px;}
         a:hover { opacity: 0.8; text-decoration: underline; }
 
         .gallery-grid {
@@ -404,12 +392,15 @@
             box-shadow: 0 10px 25px rgba(255, 117, 140, 0.25);
         }
 
-        /* 重新設計的行事曆切換按鈕排版（上方年份、下方月份） */
         .calendar-header {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
             margin-bottom: 20px;
+            background: rgba(255, 240, 243, 0.4);
+            padding: 16px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
         }
 
         .calendar-nav-row {
@@ -417,13 +408,14 @@
             justify-content: space-between;
             align-items: center;
             width: 100%;
+            gap: 8px;
         }
 
-        .calendar-header button {
+        .calendar-header select, .calendar-header button {
             background: #fff;
             border: 1px solid var(--border-color);
-            padding: 8px 16px;
-            border-radius: 14px;
+            padding: 8px 14px;
+            border-radius: 12px;
             font-weight: 700;
             cursor: pointer;
             color: var(--text-main);
@@ -432,16 +424,35 @@
             box-shadow: 0 2px 6px rgba(0,0,0,0.02);
         }
 
-        .calendar-header button:hover {
+        .calendar-header select:hover, .calendar-header button:hover {
             background: #fff0f3;
             border-color: #ffb6c1;
             color: var(--accent-pink);
         }
 
+        .calendar-header select {
+            padding: 8px 12px;
+            outline: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238c7d84' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 8px center;
+            background-size: 14px;
+            padding-right: 30px;
+        }
+
+        .btn-today {
+            background: var(--primary-gradient) !important;
+            color: white !important;
+            border: none !important;
+            box-shadow: 0 4px 12px rgba(255, 117, 140, 0.25) !important;
+        }
+        .btn-today:hover { opacity: 0.9; transform: scale(1.03); }
+
         .calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, minmax(0, 1fr));
-            gap: 4px;
+            gap: 6px;
             text-align: center;
             width: 100%;
         }
@@ -449,15 +460,15 @@
         .calendar-weekdays {
             font-weight: 700;
             color: var(--text-sub);
-            font-size: 0.75rem;
-            padding-bottom: 6px;
+            font-size: 0.8rem;
+            padding-bottom: 8px;
         }
 
         .calendar-day {
             background: #ffffff;
-            min-height: 75px;
-            border-radius: 12px;
-            padding: 4px;
+            min-height: 80px;
+            border-radius: 14px;
+            padding: 6px;
             display: flex;
             flex-direction: column;
             align-items: flex-start;
@@ -474,6 +485,7 @@
             background: #fff5f7;
             border-color: #ffb6c1;
             transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255,117,140,0.1);
         }
 
         .calendar-day.empty {
@@ -484,18 +496,36 @@
             box-shadow: none;
         }
 
+        .calendar-day.today {
+            border-color: var(--accent-pink);
+            background: rgba(255, 240, 243, 0.5);
+        }
+
         .day-number {
             font-weight: 700;
             color: var(--text-main);
-            margin-bottom: 2px;
-            font-size: 0.8rem;
+            margin-bottom: 4px;
+            font-size: 0.85rem;
+        }
+
+        .calendar-day.today .day-number {
+            background: var(--accent-pink);
+            color: white;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: -2px;
+            margin-top: -2px;
         }
 
         .calendar-event-tag {
             background: var(--primary-gradient);
             color: white;
-            font-size: 0.55rem;
-            padding: 1px 4px;
+            font-size: 0.6rem;
+            padding: 2px 5px;
             border-radius: 6px;
             margin-top: 2px;
             width: 100%;
@@ -504,6 +534,7 @@
             text-overflow: ellipsis;
             white-space: nowrap;
             box-sizing: border-box;
+            font-weight: 500;
         }
 
         @media (max-width: 600px) {
@@ -514,23 +545,15 @@
             .nav-tabs { padding: 6px; margin-bottom: 18px; border-radius: 16px; }
             .nav-btn { padding: 10px 0; font-size: 0.85rem; }
             
-            .calendar-header h3 { font-size: 1rem !important; }
-            .calendar-header button { padding: 6px 12px; font-size: 0.8rem; border-radius: 10px; }
+            .calendar-header { padding: 12px; gap: 8px; }
+            .calendar-header button, .calendar-header select { padding: 6px 10px; font-size: 0.78rem; border-radius: 10px; }
             
             .calendar-grid { gap: 3px; }
-            .calendar-weekdays { font-size: 0.65rem; }
-            .calendar-day {
-                min-height: 52px;
-                padding: 3px;
-                border-radius: 8px;
-            }
-            .day-number { font-size: 0.7rem; margin-bottom: 1px; }
-            .calendar-event-tag {
-                font-size: 0.5rem;
-                padding: 1px 2px;
-                border-radius: 4px;
-                margin-top: 1px;
-            }
+            .calendar-weekdays { font-size: 0.7rem; }
+            .calendar-day { min-height: 56px; padding: 3px; border-radius: 8px; }
+            .day-number { font-size: 0.75rem; margin-bottom: 1px; }
+            .calendar-day.today .day-number { width: 18px; height: 18px; font-size: 0.65rem; }
+            .calendar-event-tag { font-size: 0.5rem; padding: 1px 3px; border-radius: 4px; margin-top: 1px; }
         }
 
         #imageModal {
@@ -662,16 +685,30 @@
     <div id="calendar" class="tab-content">
         <div class="card">
             <div class="calendar-header">
-                <!-- 上方：年份切換 -->
                 <div class="calendar-nav-row">
-                    <button onclick="changeYear(-1)">◀ 去年</button>
-                    <button onclick="changeYear(1)">明年 ▶</button>
+                    <button class="btn-today" onclick="goToToday()">📍 今天</button>
+                    <div style="display: flex; gap: 6px; align-items: center;">
+                        <select id="calendar-year-select" onchange="onYearSelectChange()"></select>
+                        <select id="calendar-month-select" onchange="onMonthSelectChange()">
+                            <option value="0">1月</option>
+                            <option value="1">2月</option>
+                            <option value="2">3月</option>
+                            <option value="3">4月</option>
+                            <option value="4">5月</option>
+                            <option value="5">6月</option>
+                            <option value="6">7月</option>
+                            <option value="7">8月</option>
+                            <option value="8">9月</option>
+                            <option value="9">10月</option>
+                            <option value="10">11月</option>
+                            <option value="11">12月</option>
+                        </select>
+                    </div>
                 </div>
-                <!-- 下方：月份切換與年月標題 -->
                 <div class="calendar-nav-row">
-                    <button onclick="changeMonth(-1)">❮ 上月</button>
-                    <h3 id="calendar-month-year" style="margin:0; font-size: 1.1rem; color: var(--text-main);">2026 年 8 月</h3>
-                    <button onclick="changeMonth(1)">下月 ❯</button>
+                    <button onclick="changeMonth(-1)">❮ 上個月</button>
+                    <h3 id="calendar-month-year" style="margin:0; font-size: 1.05rem; color: var(--text-main); font-weight: 700;"></h3>
+                    <button onclick="changeMonth(1)">下個月 ❯</button>
                 </div>
             </div>
             <div class="calendar-grid calendar-weekdays">
@@ -710,9 +747,9 @@
             <div class="info-row"><span>星座</span><strong>水瓶座</strong></div>
             <div class="info-row"><span>性別</span><strong>女</strong></div>
             <div class="info-row"><span>身高 / 體重</span><strong>165cm / 47kg</strong></div>
-            <div class="info-row"><span>喜好</span><strong>動漫、遊戲、畫畫、吉他</strong></div>
+            <div class="info-row"><span>喜好</span><strong>動漫, 遊戲, 畫畫, 吉他</strong></div>
             <div class="info-row"><span>寵物</span><strong>馬爾濟斯 (muju)</strong></div>
-            <div class="info-row"><span>喜歡的食物</span><strong>草莓... (過敏 牛肉、牛奶)</strong></div>
+            <div class="info-row"><span>喜歡的食物</span><strong>草莓... (過敏 牛肉, 牛奶)</strong></div>
         </div>
 
         <!-- Any 資料卡 -->
@@ -727,9 +764,9 @@
             <div class="info-row"><span>星座</span><strong>-</strong></div>
             <div class="info-row"><span>性別</span><strong>女</strong></div>
             <div class="info-row"><span>身高 / 體重</span><strong>- / -</strong></div>
-            <div class="info-row"><span>喜好</span><strong>唱歌、yellow</strong></div>
+            <div class="info-row"><span>喜好</span><strong>唱歌, yellow</strong></div>
             <div class="info-row"><span>寵物</span><strong>-</strong></div>
-            <div class="info-row"><span>喜歡的食物</span><strong>雞翅、omakase</strong></div>
+            <div class="info-row"><span>喜歡的食物</span><strong>雞翅, omakase</strong></div>
         </div>
     </div>
     <div id="gallery" class="tab-content">
@@ -755,22 +792,40 @@
 </div>
 <script>
     const eventsData = [
-        { date: "2026-08-11", title: "Moonshadow Q22", content: "米米拍戲很晚到家 明天還有工作", link: "", linkText: "", videoLink: "", videoText: "", photo: ["https://lh3.googleusercontent.com/d/1hGi_zMIgWH4iFAwAKU2c2WXMigDTx-OM"] },
+        // 2026年8-9月新增事件
+        { date: "2026-08-08", title: "JUNIOR MARK SunnyMoon CONCERT", content: "去演唱會做嘉賓", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
         { date: "2026-08-10", title: "Red Kiss 新歌發布", content: "啊好好聽！！！GMMtv一首歌兩用我不接受", link: "https://www.gmm-tv.com", linkText: "GMMTV 官方網站", videoLink: "https://www.youtube.com/watch?v=jad-V_nyvaY", videoText: "📺 Red Kiss - EMIBONNIE [ OFFICIAL MV ]", photo: ["https://lh3.googleusercontent.com/d/139IMGslcvRQerOjhzyyzhaLgF-wTZddN", "https://lh3.googleusercontent.com/d/1eu3gKii3jiEXxUi-JjeZ8zfwfalYvS0b", "https://lh3.googleusercontent.com/d/1PnRRFU5kEK2i1rjE8uPiHZLvslWjp8fm", "https://lh3.googleusercontent.com/d/1j4XYWt3WnHFiTGNv84p_1m9lLEPCRej-"] },
-        { date: "2023-08-03", title: "初見面", content: "和GMM簽約，並拍攝個人公式照。命運的齒輪開始轉動。註：後續採訪中兩人聊起初次見面，Emi主動搭話協助Bonnie拍照時調整姿勢。", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2026-08-11", title: "Moonshadow Q22", content: "米米拍戲很晚到家 明天還有工作", link: "", linkText: "", videoLink: "", videoText: "", photo: ["https://lh3.googleusercontent.com/d/1hGi_zMIgWH4iFAwAKU2c2WXMigDTx-OM"] },
         { date: "2026-08-12", title: "Moonshadow ep.1 首映", content: "終於等來了", link: "", linkText: "", videoLink: "", videoText: "", photo: ["https://lh3.googleusercontent.com/d/1qoQAZCXnUx7dWiR4bPy36P4DBi1YeYR9"] },
+        { date: "2026-09-02", title: "Moonshadow ep.4", content: "", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2026-09-03", title: "Glitch Official MV (Emi)", content: "", link: "", linkText: "", videoLink: "https://www.youtube.com/watch?v=TNbvfhxCBtQ", videoText: "📺 Glitch Official MV", photo: ["https://lh3.googleusercontent.com/d/1CiyKXACfcwiJg7H8QIxDKEMWKQye1aCo"] },
+        { date: "2026-09-05", title: "Sheep (迪士尼公主系列)", content: "唱了迪士尼公主系列歌曲", link: "", linkText: "", videoLink: "", videoText: "", photo: ["https://lh3.googleusercontent.com/d/15m3Z5glENRBA7RNSQp3r4Z62HiNz6w0h"] },
+        { date: "2026-09-06", title: "Gemini演唱會嘉賓", content: "Bonnie第一天去Gemini說很高興請到p'emi的對象來，bonnie害羞笑沒否認。有人剪輯bonnie的這段影片emi轉發，然後第三天emi來就被問，emi也是害羞笑沒否認。", link: "", linkText: "", videoLink: "", videoText: "", photo: ["https://lh3.googleusercontent.com/d/1Y-9iPO8QQvDlrCYNrBMdv198CHQh-viE", "https://lh3.googleusercontent.com/d/1enf9RkmQXYiBBn9VA5lnoo_6nz2UeHiW"] },
+        { date: "2026-09-08", title: "劇集討論直播 & 點名活動 & Live House", content: "1. 劇集討論直播。<br>2. 線下點名活動（工作日人氣依然超高，兩人角色上身，Bonnie根本是n'key）。<br>3. GMMtv Live House（Junior主持，Any也在，意外展現miminini超黏互動）。", link: "", linkText: "", videoLink: "https://www.youtube.com/watch?v=JsexJeh4Bf8", videoText: "📺 GMMtv Live House", photo: ["https://lh3.googleusercontent.com/d/1aakeQKUGror6L9HZPFy7TbFA-0LcZ1lQ", "https://lh3.googleusercontent.com/d/1D2SXqSf1oSxlSq9L-mkjlQsOlDY5UacK", "https://lh3.googleusercontent.com/d/17R9zJeqHBUZERySVauBqqOR688CnfGe9", "https://lh3.googleusercontent.com/d/1karVBZaaSFbS8LniDgXJ6hXssEol5r56"] },
+        { date: "2026-09-09", title: "Moonshadow ep.5", content: "", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2026-09-12", title: "You One Official MV & Mint Awards 2026", content: "1. You One Official MV (Bonnie發布)。<br>2. Mint Awards 2026：下午展櫃賣東西隔對面傳情；晚上出席頒獎活動（Mee and Thee得獎，Bonnie一起領獎）。", link: "", linkText: "", videoLink: "https://www.youtube.com/watch?v=AUPbHx7J8iQ", videoText: "📺 You One Official MV", photo: ["https://lh3.googleusercontent.com/d/1C1Ev5wXoagEJVVaKh_Yr2kEovLOCVjpu", "https://lh3.googleusercontent.com/d/1bkW4_Zn6rWfBGdxd0fG_rbTJWSz2kDry", "https://lh3.googleusercontent.com/d/1Jl-Mf8H_NOGupLPKloJyzvdr68newEEg", "https://lh3.googleusercontent.com/d/1M5FoVKux3Xve-lmlpJAVkI0Qa-aht4iZ"] },
+        { date: "2026-09-15", title: "Emi 到 GEMM HOUSE 打工", content: "", link: "", linkText: "", videoLink: "", videoText: "", photo: ["https://lh3.googleusercontent.com/d/11zxxBUUkapeL7H-xVfwXTalI1hdmBM-O", "https://lh3.googleusercontent.com/d/1yeUR3bgUpF7MR9XxxtNhJ_hZhYEGX_jy"] },
+        { date: "2026-09-16", title: "兩人去 GEMM HOUSE & Moonshadow ep.6", content: "兩人去GEMM HOUSE點餐還要黏在一起，隨後迎來 Moonshadow ep.6。", link: "", linkText: "", videoLink: "", videoText: "", photo: ["https://lh3.googleusercontent.com/d/1n8JGF0yde2ILSfRq1a8Whsq-QIG4Hwnt", "https://lh3.googleusercontent.com/d/1EkegtA0rsTk8lwzG9qmgggjpJGmI6A7c", "https://lh3.googleusercontent.com/d/15xHpz6fienMCWFzmLoBauBBHcKwkNO2R"] },
+        { date: "2026-09-20", title: "Any 去 Skynani 演唱會做嘉賓", content: "米米跟邦邦去看小朋友演出", link: "", linkText: "", videoLink: "", videoText: "", photo: ["https://lh3.googleusercontent.com/d/1ZGpTTYF71o-ehqcHSofBKZo9mHIrh8ZV", "https://lh3.googleusercontent.com/d/1oC2rvKAttvByVoFgNrah5WhbAVNcUn7r", "https://lh3.googleusercontent.com/d/1Dp_oLL5GxbnMkPklZWZVX8ZTAMSiRv00", "https://lh3.googleusercontent.com/d/1utd0yeV9hLZeoy9WH7WbeZ7lo73PfSEc"] },
+        { date: "2026-09-23", title: "Moonshadow ep.7", content: "", link: "", linkText: "", videoLink: "", videoText: "", photo: ["https://lh3.googleusercontent.com/d/1Q0DWJbWo5Fp6Mg4NVncc7dQdQA4XPOGm", "https://lh3.googleusercontent.com/d/1JJbxnLJLEqwq2D4iK1yZwsN9cl-VcaNu", "https://lh3.googleusercontent.com/d/1OrAysc0aUG5nZKsqDK36_qtR16aA5KDQ", "https://lh3.googleusercontent.com/d/1fdliUPRH756JPPMMf_RTJ49ffR4xXp7O", "https://lh3.googleusercontent.com/d/16m6eP_g_7QTYo4qY56E4lBKzOpdaYGQT"] },
+        { date: "2026-09-24", title: "月影 Vlog Part 1 & Fan Party 直播", content: "1. 月影 Vlog Part 1。<br>2. Fan Party and After Party 賣票直播：玩遊戲Bonnie給Mimi挖坑打分GEMM HOUSE的產品，Mimi玩到懷疑自己的喜好，自己不知道但邦邦知道！Mimi口誤場面失控一度跑出螢幕外，笑死P'Leo跟Bonnie。", link: "", linkText: "", videoLink: "https://www.youtube.com/watch?v=wO__XKi_eFI", videoText: "📺 月影 Vlog Part 1 / 直播", photo: ["https://lh3.googleusercontent.com/d/18VmlKFbS_8Vo3_d_lGZpqm1sCY4aTKpD", "https://lh3.googleusercontent.com/d/16LCQ_gTGMJ8mBNo0H4Cl0vLXluWr28Bt", "https://lh3.googleusercontent.com/d/1Zfb3QwDx8WnaSYOAXqLonIvra2S_5iGb", "https://lh3.googleusercontent.com/d/1HU-m1YeDz4LZg-4sXMFI8R2j3-H2Tfgf"] },
+        { date: "2026-09-27", title: "猜歌節目播出", content: "", link: "", linkText: "", videoLink: "https://www.youtube.com/watch?v=cQ8xwIj2t9o", videoText: "📺 猜歌節目", photo: [] },
+        { date: "2026-09-30", title: "Moonshadow ep.8 & ARM SHARE", content: "1. Moonshadow ep.8。<br>2. ARM SHARE Rising Runway Star 2026 (Any上節目)。", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+
+        // 既有事件 (2023-2025)
+        { date: "2023-08-03", title: "初見面", content: "和GMM簽約，並拍攝個人公式照。命運的齒輪開始轉動。註：後續採訪中兩人聊起初次見面，Emi主動搭話協助Bonnie拍照時調整姿勢。", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
         { date: "2024-10-13", title: "Us開拍", content: "", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
         { date: "2025-06-28", title: "Blush Blossom Fan Fest", content: "第一次演唱會", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
         { date: "2025-09-05", title: "404 Not Found 寫真書簽名會", content: "", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
         { date: "2025-09-07", title: "Mint Awards 2025", content: "", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
         { date: "2025-09-13", title: "Infinity Medical Clinic", content: "於TayNew的節目中提到是Emi邀請Bonnie一起去清邁拜拜，同行者還有Bonnie媽媽", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
-        { date: "2025-09-23", title: "Y Entertain Awards 2025", content: "兩人合唱More Than Words(Jazz ver.)。Bonnie終於收到Emi的個人品牌IMM ANOTHER衣服。媒體聯訪重點節錄：Bonnie提到喜歡看粉絲剪的Emi迷因影片並按讚；被問到招商會嘴巴閉很緊，Bonnie想當酷女孩被姐姐追，Emi想當開朗又嗆辣的角色；Bonnie說Emi很愛買食物分享但是自己只吃一兩口，所以最後是她空盤。", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2025-09-23", title: "Y Entertain Awards 2025", content: "兩人合唱More Than Words(Jazz ver.)。Bonnie終於收到Emi的個人品牌IMM ANOTHER衣服。媒體聯訪重點節錄：Bonnie提到喜歡看粉絲剪的Emi迷因影片並按讚;被問到招商會嘴巴閉很緊，Bonnie想當酷女孩被姐姐追，Emi想當開朗又嗆辣的角色;Bonnie說Emi很愛買食物分享但是自己只吃一兩口，所以最後是她空盤。", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
         { date: "2025-09-27", title: "香港FM", content: "", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
         { date: "2025-10-01", title: "Emiamily in Paris: 出席YSL女裝秀", content: "Bonnie作為刷趨勢大隊長，非常認真的幫Emi刷數據", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
         { date: "2025-11-06", title: "Emi亂入賣卡直播間", content: "", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
         { date: "2025-11-23", title: "越南市區逛逛", content: "兩人在越南結束Fanday行程後，隔天一起去逛胡志明市區，逛街時互相幫對方拍照。吃Pho的時候，Bonnie上傳了限時動態，是自己又弄到褲子上，Emi認真幫她擦的片段。", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
         { date: "2025-11-29", title: "下意識的照顧", content: "兩人搭機穿同款勃肯鞋。接機人潮過多，Emi在移動途中不時關注Bonnie的狀態，搭肩、拉手、注意尖角會不會撞到", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
-        { date: "2025-11-30", title: "BBFanFest 澳門場", content: "工作人員上傳兩人在後台的影片&照片，Bonnie坐在Emi腿上。花絮採訪的接力問答，June問Emi有沒有哄好Bonnie(前情提要：June發佈了Emi靠在她身上撒嬌的照片）Emi回答問題的時候Bonnie在旁邊一邊吃蛋塔一邊吃醋生氣說那就去找她阿", link: "", linkText: "", videoLink: "", videoText: "", photo: ["https://lh3.googleusercontent.com/d/1OvppU5kp6GGI76_u1FA80Ildvyh_mSDj"] },
+        { date: "2025-11-30", title: "BBFanFest 澳門場", content: "工作人員上傳兩人在後台的影片&照片，Bonnie坐在Emi腿上。花絮採訪的接力問答，June問Emi有沒有哄好Bonnie(前情提要：June發佈了Emi靠在她身上撒嬌的照片)Emi回答問題的時候Bonnie在旁邊一邊吃蛋塔一邊吃醋生氣說那就去找她阿", link: "", linkText: "", videoLink: "", videoText: "", photo: ["https://lh3.googleusercontent.com/d/1OvppU5kp6GGI76_u1FA80Ildvyh_mSDj"] },
         { date: "2025-12-01", title: "旅途中的依靠", content: "Love發佈限時動態，為機上Bonnie靠在Emi身上睡的很熟。Emi轉發留言「沒有枕頭比我的懷裡更安心」", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
         { date: "2025-12-07", title: "Seoul Medical Clinic 活動", content: "後台拍照Emi疑似坐在Bonnie腿上。活動結束後，Bonnie和Emi與Emi的朋友們一起去動物園。Bonnie發了限時動態是Emi假裝喂兔子的影片。Emi的朋友(Nurse)在X上轉發Emi泰站表示在旁邊看EB二人很像在看真人版Nick和Judy", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
         { date: "2025-12-09", title: "CPS x IRADA 品牌活動", content: "Emi在活動後的After Party和美女貼身熱舞。Bonnie在粉絲分享的影片下面評論「讓她去過自己的生活吧」。Emi則是到處在Bonnie的推文下留言，疑似求和", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
@@ -780,128 +835,325 @@
         { date: "2025-12-12", title: "TikTok影片", content: "Emi發佈LINEMAN相關影片，Bonnie喂她吃起司蛋糕還幫忙用手擦嘴。 Bonnie隨後在TikTok直播表示因為Emi最近吃很少，食慾不佳所以要用這樣的方法餵她吃", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
         { date: "2025-12-20", title: "GMMTV Starlympics 2025", content: "開場花車巡迴時，Bonnie被發現在偷看Emi，Emi大方轉身讓她看個夠。 在台下看比賽時，兩人大部分時間都黏在一起、 互相撒嬌，Emi幫Bonnie開水瓶後直接喝同一瓶，Bonnie想玩打鼓就帶她去還拍下來。 接力比賽前，Emi蹲下來幫Bonnie繫鞋帶（兩人穿的是Emi推廣的品牌情侶款，Emi特地從家裡帶的），頒獎也要抱著出場，無時無刻都在牽手摟腰，拿到獎牌還要親獎牌再貼貼。 前一天彩排時，Emi送給Bonnie自己品牌新出的牛仔褲（第一個收到的人）隔天兩人都穿上去運動會現場。", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
         { date: "2025-12-25", title: "聖誕禮物", content: "Bonnie和朋友一起去製作手工薑餅屋，薑餅屋上有一家人的元素，包含手繪的Any、 Emi和Bonnie的名字。 製作完後Bonnie拍了拍立得，和薑餅屋一起送去給Emi作為聖誕禮物，並且傳訊息表示自己要送Emi房子。 粉絲在X上詢問為什麼要送自己的拍立得，Bonnie表示直接給Emi一張獨一無二的，這樣就不用去TikTok買她的拍立得。 ", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
-        { date: "2025-12-26", title: "Emi的新手機螢幕保護畫面", content: "Emi發佈限時動態為新手機的互動式螢幕保護畫面，裡面有🐻🐶❤️。 Any看到說： 🦋 (自己)在哪裡？Emi立刻把❤️改成👻。 Bonnie看到也評論：有米米熊(泰文的熊是mhee)、Choyu(Emi的狗)、 Any，那她呢？Emi回覆：在那裡啊，吐著舌頭睜著大眼睛呢(指明🐶不是指Choyu而是Bonnie)", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
-        { date: "2025-12-29", title: "Emi的TikTok直播", content: "Emi聽了Bonnie晚上剛發的自彈自唱影片，一邊聽一邊微笑並說這是她很喜歡的歌。炫耀自己錢包裡面放著兩人的拍立得。2026的願望：想和Bonnie唱更多雙人歌曲、想去迪士尼。Bonnie在直播裡一直送禮物和留言：強調Plub(Me And Thee的角色)是單身；說Emi的IG粉絲達到100萬她才要去洗澡。", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
-        { date: "2026-01-04", title: "Me And Thee EP8", content: "一整天不見蹤影的Emi 一出現就發了當天Bonnie在《Me And Thee》中的哭戲片段並附上🫳🏻🫳🏻🫳🏻🫳🏻emoji。Bonnie表示：來我家安慰我。Emi回了運動會跑步的影片，表示自己要準備出發了。PS. Emi的More Than Words MV也在同時間破千萬觀看數，但她沒有立刻發感謝推文，而是隔天才發。", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
-        { date: "2026-01-08", title: "Emi 驚喜現身 Me And Thee After Party", content: "當日Emi在孔敬府有站台活動，一早就搭飛機出發並發了一張搭機照，身穿西裝，Bonnie評論想吃恐龍馬卡龍(只有在孔敬才有的限定款)。Me And Thee After Party一開始Bonnie就一直被其他人調侃希望某人能來，Bonnie表示Emi很愛給驚喜，但可能是不來的那種驚喜。在最後感言階段，Phuwin說提詞機上寫著：「Bonnie，Emi來了！」Bonnie連說三次不相信，結果Emi真的活動一結束就趕飛機回首爾出現了，並帶著Bonnie想要的馬卡龍，站起來大喊：「N’Chonlee，Phi來了」（此為Bonnie很喜歡的電視劇台詞）。最後一首歌表演時，Bonnie在自己唱的時候走到了Emi面前牽起手親了一口並對著Emi唱，Emi笑的非常開心。散場時，兩人一起回後台，P’Bear的影片上Emi直接跪下來幫Bonnie脫高跟鞋並幫她提著，回休息室也幫忙拆頭上的髮夾。", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
-        { date: "2026-01-27", title: "Bonnie生日", content: "0點時Any準時發布單曲祝福Nini生日快樂，Emi評論Any是不是把她趕去睡覺才能是第一個祝福的人。Bonnie評論問Emi「Bie*什麼時候祝我生日快樂」，Emi表示自己在挑照片中，最後發了一個抱抱影片。簽售會點名環節，EMI準備一束玫瑰，Any指導單膝下跪，Bonnie表示自己還沒畢業。這次Bonnie鍛鍊後輕鬆把Emi抱起來，並且嘟嘴疑似索吻，多次抱抱牽手，Bonnie甚至Emi靠近時隔著頭髮親了一口，且說如果不是頭髮擋住就親下去了。", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
-        { date: "2026-01-29", title: "Me and Thee 隱藏卡", content: "粉絲在Coach的站台活動現場把Bonnie的隱藏卡送給Emi，Emi高興收下並親了一口。註：週二書展點名時，粉絲也拿了一張隱藏卡給Bonnie看，Bonnie回覆「給P'mi吧」。", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
-        { date: "2026-02-01", title: "Bonnie生日會", content: "Emi帶著馬卡龍蛋糕和吉他來參加Bonnie生日會，Bonnie感動到爆哭，沒有想到會收到一把吉他作為生日禮物.Emi表示自己找了很多家才找到，並且吐槽公司把Love Session拍攝花絮裡Bonnie提到很想要吉他的願望剪進去全世界都知道了，怕有其他人也會送一樣的禮物(callback之前Bonnie說想要Switch結果被粉絲搶先送了主機)。Emi當天穿了一件字樣為「Number One Girl」的T-shit。*後續粉絲在活動問這件衣服，Emi 承認Bonnie是她的Number One Girl", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
-        { date: "2026-02-11", title: "Louis Vuitton 活動", content: "Emi在路透影片中非常乖巧，沒有和其他人貼身熱舞。*粉絲在隔日的FENDI站台活動問Emi為什麼沒有跳舞，Emi表示衣服很厚太熱了，但表情耐人尋味。*Bonnie點贊了粉絲的推文，推文內容是調侃Emi沒有摟著其他女人的脖子跳舞了很乖。", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
-        { date: "2026-03-07", title: "EmiBonnie Love Session", content: "第一次雙人演唱會", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
-        { date: "2026-03-20", title: "Fall For You MV 幕後花絮", content: "工作人員要Emi表現的酷一點，結果一看到Bonnie就露出超大笑容。Emi明明就站在前面而已，Bonnie沒看到就喊「P’Mi在哪裡」，工作人員表示就在你前面。Bonnie調侃MV劇情裡Emi飾演的吉他店老闆給了一張集點卡分明是想要賺更多錢，Emi說是自己寫的上面還有xoxo(親親) 買十送一，Bonnie問送什麼，Emi：「送老闆」。吉他店裡的沙發很大但Bonnie直接坐在Emi的大腿上，Emi一邊幫Bonnie壓裙擺防走光手還是時不時抓Bonnie手，兩人維持這個姿勢閒聊很久，Bonnie說想要紅包，各種撒嬌，Emi：「瘋了嗎小孩才要紅包，情侶誰給」並表示送的吉他還在分期付款剩三期。兩人在天台打鬧，Emi說Duo，getResult兩人突然開始說是真情侶？（語境不明）。", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
-        { date: "2026-04-06", title: "深夜遛狗", content: "兩人深夜穿著輕便，帶著Emi家的小狗Choyu去遛狗被P’Nurse拍了下來。Bonnie接著上傳Emi把Choyu塞到她手上的影片，原本兇兇的Choyu沒有亂咬人，乖乖地被Bonnie抱著。Emi也轉發朋友限時動態，她抱著Choyu讓他聞Bonnie氣味。", link: "", linkText: "", videoLink: "", videoText: "", photo: ["https://lh3.googleusercontent.com/d/1A5r7UX5Nhv2q7mqncBDq5qcCYDFatlsA"] },
-        { date: "2026-05-14", title: "Bonnie下廚", content: "Emi發佈TikTok，為Bonnie下廚煎蛋和炒蝦給她吃的Vlog。本日是ANY可以說話的日子", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
-        { date: "2026-05-16", title: "BBFF練舞", content: "Emi發佈BBFF練舞照片，配文：不太好但我沒事，BGM也是很苦的音樂。粉絲表示是不是因為缺「受」來補充能量，Bonnie評論：我們都待在一起了怎麼可能沒有補充到，Emi接著發了練舞影片，Bonnie在影片裡開心吃飯。", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
-        { 
-            date: "2026-06-16", 
-            title: "GMMTV Outing 2026", 
-            content: "", 
-            link: "", 
-            linkText: "", 
-            videoLink: "", 
-            videoText: "", 
-            photo: [
-                "https://lh3.googleusercontent.com/d/1z-TobiHRtduMOmRdnXs6slS2gLucrBCY",
-                "https://lh3.googleusercontent.com/d/1UM715QP98upzxIdiuiOJPGjMFttGesG4",
-                "https://lh3.googleusercontent.com/d/15iDFsWOKSuqpPyqjcf7QNrinP4aT6iAa",
-                "https://lh3.googleusercontent.com/d/15J8a0o6RpLjXDPOFyd6AZY1JujebQxBo",
-                "https://lh3.googleusercontent.com/d/1_jAiNTIPDHoi6PD49S1xqcbz8cDiIy3O",
-                "https://lh3.googleusercontent.com/d/1ExbsgJEIXzF9n93ikTprJ3CPhyjktFs-"
-            ] 
-        },
-        { date: "2026-07-23", title: "Artist DJ 電台", content: "", link: "", linkText: "", videoLink: "", videoText: "", photo: ["https://lh3.googleusercontent.com/d/1pkZjLW9GQI2dmvvN94_ngdgtGp9V1UXY"] },
-        { date: "2026-07-23", title: "EFM LIVE FANDOM LIVE", content: "", link: "", linkText: "", videoLink: "", videoText: "", photo: ["https://lh3.googleusercontent.com/d/1-BL1N5-fMnl7KdxEeqPvFN4VOxfNiMNV", "https://lh3.googleusercontent.com/d/1sbne2wp4Dnuk_I9SoyK5pzPM479e3-oV", "https://lh3.googleusercontent.com/d/1hOW5xa2TKX80g7cW8M8siUq80lvrw-n1", "https://lh3.googleusercontent.com/d/1EgIxRIRvvwmdkt4LlenymflC2_RNDoaf"] },
-        { date: "2026-07-26", title: "書展", content: "", link: "", linkText: "", videoLink: "", videoText: "", photo: ["https://lh3.googleusercontent.com/d/1VxDmOsH1Z68ZMxYVQva5iULbC8Mwnkly", "https://lh3.googleusercontent.com/d/1vj2oqgIHfq541c_liNUJoAvpyoZlv9uI"] }
+        { date: "2025-12-26", title: "Emi的新手機螢幕保護畫面", content: "Emi發佈限時動態為新手機的互動式螢幕保護畫面", link: "", linkText: "", videoLink: "", videoText: "", photo: [] }
     ];
 
-    let currentYear = 2026; let currentMonth = 7; let selectedYearFilter = 'all'; let currentModalEvents = []; let currentModalIndex = 0;
+    let currentYear = 2026;
+    let currentMonth = 8; // 9月 (0-indexed)
 
-    window.onload = function() { renderTimeline(); renderCalendar(); renderGallery(); };
-
-    function createCarouselHtml(photos, carouselId) {
-        if (!photos || photos.length === 0) return '';
-        if (photos.length === 1) return `<img src="${photos[0]}" alt="照片" style="width:100%; height:250px; object-fit:cover; border-radius:14px; cursor:pointer;" onclick="openModal('${photos[0]}')">`;
-        let imgsHtml = '', dotsHtml = '';
-        photos.forEach((p, idx) => { imgsHtml += `<img src="${p}" class="carousel-img ${idx === 0 ? 'active' : ''}" onclick="openModal('${p}')">`; dotsHtml += `<div class="indicator-dot ${idx === 0 ? 'active' : ''}" onclick="event.stopPropagation(); setCarouselSlide('${carouselId}', ${idx})"></div>`; });
-        return `<div class="photo-carousel" id="${carouselId}">${imgsHtml}<button class="carousel-btn carousel-prev" onclick="event.stopPropagation(); moveCarousel('${carouselId}', -1)">❮</button><button class="carousel-btn carousel-next" onclick="event.stopPropagation(); moveCarousel('${carouselId}', 1)">❯</button><div class="carousel-indicators">${dotsHtml}</div></div>`;
+    function initYearSelect() {
+        const yearSelect = document.getElementById('calendar-year-select');
+        yearSelect.innerHTML = '';
+        for (let y = 2023; y <= 2030; y++) {
+            const opt = document.createElement('option');
+            opt.value = y;
+            opt.textContent = y + '年';
+            yearSelect.appendChild(opt);
+        }
+        yearSelect.value = currentYear;
     }
 
-    function moveCarousel(carouselId, direction) {
-        const container = document.getElementById(carouselId); const imgs = container.querySelectorAll('.carousel-img'); const dots = container.querySelectorAll('.indicator-dot');
-        let activeIdx = Array.from(imgs).findIndex(img => img.classList.contains('active'));
-        imgs[activeIdx].classList.remove('active'); dots[activeIdx].classList.remove('active');
-        activeIdx = (activeIdx + direction + imgs.length) % imgs.length;
-        imgs[activeIdx].classList.add('active'); dots[activeIdx].classList.add('active');
+    function updateSelectValues() {
+        document.getElementById('calendar-year-select').value = currentYear;
+        document.getElementById('calendar-month-select').value = currentMonth;
     }
 
-    function setCarouselSlide(carouselId, index) {
-        const container = document.getElementById(carouselId); const imgs = container.querySelectorAll('.carousel-img'); const dots = container.querySelectorAll('.indicator-dot');
-        imgs.forEach(img => img.classList.remove('active')); dots.forEach(dot => dot.classList.remove('active'));
-        imgs[index].classList.add('active'); dots[index].classList.add('active');
+    function onYearSelectChange() {
+        currentYear = parseInt(document.getElementById('calendar-year-select').value);
+        renderCalendar();
     }
 
-    function renderTimeline() {
-        const filterContainer = document.getElementById('year-filter-container'), container = document.getElementById('timeline-container');
-        eventsData.sort((a, b) => new Date(b.date) - new Date(a.date));
-        const yearsSet = new Set(); eventsData.forEach(ev => yearsSet.add(ev.date.split('-')[0]));
-        const sortedYears = Array.from(yearsSet).sort((a, b) => b - a);
-        let filterHtml = `<button class="year-filter-btn ${selectedYearFilter === 'all' ? 'active' : ''}" onclick="filterByYear('all')">全部</button>`;
-        sortedYears.forEach(year => { filterHtml += `<button class="year-filter-btn ${selectedYearFilter === year ? 'active' : ''}" onclick="filterByYear('${year}')">${year}年</button>`; });
-        filterContainer.innerHTML = filterHtml;
-        let filteredEvents = selectedYearFilter === 'all' ? eventsData : eventsData.filter(ev => ev.date.startsWith(selectedYearFilter));
-        container.innerHTML = ""; const groupedByYear = {};
-        filteredEvents.forEach(ev => { const year = ev.date.split('-')[0]; if (!groupedByYear[year]) groupedByYear[year] = []; groupedByYear[year].push(ev); });
-        const activeYears = Object.keys(groupedByYear).sort((a, b) => b - a);
-        let carouselCounter = 0;
-        activeYears.forEach(year => {
-            let yearSectionHtml = `<div class="year-section"><div class="year-title">📅 ${year} 年</div>`;
-            groupedByYear[year].forEach(ev => {
-                carouselCounter++; let cId = `timeline-carousel-${carouselCounter}`;
-                let linkHtml = ev.link ? `<p style="font-size: 0.95rem; margin: 10px 0 5px 0;">🔗 <a href="${ev.link}" target="_blank">${ev.linkText}</a></p>` : '';
-                let videoHtml = ev.videoLink ? `<p style="font-size: 0.95rem; margin: 5px 0;"><a href="${ev.videoLink}" target="_blank">${ev.videoText}</a></p>` : '';
-                let photoHtml = createCarouselHtml(ev.photo, cId);
-                yearSectionHtml += `<div class="timeline-item"><div class="timeline-date">${ev.date.replace(/-/g, '.')}</div><div class="card"><span class="badge-duo">Emi & Bonnie</span><h3 style="margin: 5px 0 10px 0; font-size: 1.15rem; color: var(--text-main);">${ev.title}</h3><p style="font-size: 0.95rem; color: var(--text-sub); line-height: 1.6; margin: 0 0 10px 0;">${ev.content}</p>${linkHtml}${videoHtml}${photoHtml}</div></div>`;
-            });
-            container.innerHTML += yearSectionHtml + `</div>`;
-        });
+    function onMonthSelectChange() {
+        currentMonth = parseInt(document.getElementById('calendar-month-select').value);
+        renderCalendar();
     }
 
-    function filterByYear(year) { selectedYearFilter = year; renderTimeline(); }
+    function goToToday() {
+        const today = new Date();
+        currentYear = today.getFullYear();
+        currentMonth = today.getMonth();
+        initYearSelect();
+        renderCalendar();
+    }
+
+    function changeMonth(direction) {
+        currentMonth += direction;
+        if (currentMonth > 11) {
+            currentMonth = 0;
+            currentYear++;
+        } else if (currentMonth < 0) {
+            currentMonth = 11;
+            currentYear--;
+        }
+        initYearSelect();
+        renderCalendar();
+    }
 
     function renderCalendar() {
-        const monthYearEl = document.getElementById('calendar-month-year'), daysContainer = document.getElementById('calendar-days'); daysContainer.innerHTML = "";
-        monthYearEl.innerText = `${currentYear} 年 ${currentMonth + 1} 月`;
-        const firstDayIndex = new Date(currentYear, currentMonth, 1).getDay(), totalDays = new Date(currentYear, currentMonth + 1, 0).getDate();
-        for (let i = 0; i < firstDayIndex; i++) daysContainer.innerHTML += `<div class="calendar-day empty"></div>`;
+        updateSelectValues();
+        const monthYearEl = document.getElementById('calendar-month-year');
+        monthYearEl.textContent = `${currentYear} 年 ${currentMonth + 1} 月`;
+
+        const daysContainer = document.getElementById('calendar-days');
+        daysContainer.innerHTML = '';
+
+        const firstDayIndex = new Date(currentYear, currentMonth, 1).getDay();
+        const totalDays = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+        const todayObj = new Date();
+        const isCurrentYear = todayObj.getFullYear() === currentYear;
+        const isCurrentMonth = todayObj.getMonth() === currentMonth;
+        const todayDate = todayObj.getDate();
+
+        for (let i = 0; i < firstDayIndex; i++) {
+            const emptyDiv = document.createElement('div');
+            emptyDiv.className = 'calendar-day empty';
+            daysContainer.appendChild(emptyDiv);
+        }
+
         for (let day = 1; day <= totalDays; day++) {
-            const mm = String(currentMonth + 1).padStart(2, '0'), dd = String(day).padStart(2, '0'), dateStr = `${currentYear}-${mm}-${dd}`;
-            let matchedEvents = eventsData.filter(ev => ev.date === dateStr), eventTagsHtml = '';
-            matchedEvents.forEach(ev => eventTagsHtml += `<div class="calendar-event-tag" title="${ev.title}">${ev.title}</div>`);
-            let clickAction = matchedEvents.length > 0 ? `onclick="openEventModal('${dateStr}')"` : '';
-            daysContainer.innerHTML += `<div class="calendar-day" ${clickAction}><span class="day-number">${day}</span>${eventTagsHtml}</div>`;
+            const dayDiv = document.createElement('div');
+            const formattedMonth = String(currentMonth + 1).padStart(2, '0');
+            const formattedDay = String(day).padStart(2, '0');
+            const dateStr = `${currentYear}-${formattedMonth}-${formattedDay}`;
+
+            let className = 'calendar-day';
+            if (isCurrentYear && isCurrentMonth && day === todayDate) {
+                className += ' today';
+            }
+            dayDiv.className = className;
+
+            const dayNumDiv = document.createElement('div');
+            dayNumDiv.className = 'day-number';
+            dayNumDiv.textContent = day;
+            dayDiv.appendChild(dayNumDiv);
+
+            const matchedEvents = eventsData.filter(e => e.date === dateStr);
+            if (matchedEvents.length > 0) {
+                matchedEvents.forEach(ev => {
+                    const tag = document.createElement('div');
+                    tag.className = 'calendar-event-tag';
+                    tag.textContent = ev.title;
+                    dayDiv.appendChild(tag);
+                });
+                dayDiv.onclick = () => openEventsModalByDate(dateStr);
+            }
+
+            daysContainer.appendChild(dayDiv);
         }
     }
 
-    function renderGallery() { const galleryContainer = document.getElementById('gallery-container'); galleryContainer.innerHTML = ""; eventsData.forEach(ev => { if (ev.photo && ev.photo.length > 0) ev.photo.forEach(p => galleryContainer.innerHTML += `<img src="${p}" alt="照片牆" onclick="openModal('${p}')">`); }); }
+    initYearSelect();
+    renderCalendar();
 
-    function openEventModal(dateStr) { currentModalEvents = eventsData.filter(ev => ev.date === dateStr); if (currentModalEvents.length === 0) return; currentModalIndex = 0; updateEventModalContent(); document.getElementById('eventModal').style.display = 'flex'; }
-
-    function updateEventModalContent() {
-        const ev = currentModalEvents[currentModalIndex], bodyContainer = document.getElementById('event-modal-body'), navContainer = document.getElementById('event-modal-nav'), counterEl = document.getElementById('event-counter');
-        let linkHtml = ev.link ? `<p style="font-size: 0.95rem; margin: 10px 0 5px 0;">🔗 <a href="${ev.link}" target="_blank">${ev.linkText}</a></p>` : '', videoHtml = ev.videoLink ? `<p style="font-size: 0.95rem; margin: 5px 0;"><a href="${ev.videoLink}" target="_blank">${ev.videoText}</a></p>` : '', photoHtml = createCarouselHtml(ev.photo, 'modal-carousel');
-        bodyContainer.innerHTML = `<div class="event-modal-left">${photoHtml}</div><div class="event-modal-right"><span class="badge-duo">📅 ${ev.date}</span><h2 style="margin: 5px 0 10px 0; color: var(--text-main); font-size: 1.3rem;">${ev.title}</h2><p style="font-size: 0.95rem; color: var(--text-sub); line-height: 1.6; margin: 0 0 10px 0;">${ev.content}</p>${linkHtml}${videoHtml}</div>`;
-        if (currentModalEvents.length > 1) { navContainer.style.display = 'flex'; counterEl.innerText = `${currentModalIndex + 1} / ${currentModalEvents.length}`; } else { navContainer.style.display = 'none'; }
+    function switchTab(tabId) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        event.currentTarget.classList.add('active');
     }
 
-    function changeModalEvent(direction) { currentModalIndex = (currentModalIndex + direction + currentModalEvents.length) % currentModalEvents.length; updateEventModalContent(); }
-    function closeEventModal() { document.getElementById('eventModal').style.display = 'none'; }
-    function checkCloseEventModal(e) { if (e.target.id === 'eventModal') closeEventModal(); }
-    function changeMonth(direction) { currentMonth += direction; if (currentMonth > 11) { currentMonth = 0; currentYear++; } else if (currentMonth < 0) { currentMonth = 11; currentYear--; } renderCalendar(); }
-    function changeYear(direction) { currentYear += direction; renderCalendar(); }
-    function switchTab(tabId) { document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active')); document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active')); document.getElementById(tabId).classList.add('active'); event.currentTarget.classList.add('active'); }
-    function openModal(imgSrc) { const modal = document.getElementById('imageModal'); document.getElementById('modalImage').src = imgSrc; modal.style.display = 'flex'; }
-    function closeModal() { document.getElementById('imageModal').style.display = 'none'; }
+    function openModal(src) {
+        document.getElementById('modalImage').src = src;
+        document.getElementById('imageModal').style.display = 'flex';
+    }
+    function closeModal() {
+        document.getElementById('imageModal').style.display = 'none';
+    }
+
+    let currentModalEvents = [];
+    let currentModalIndex = 0;
+
+    function openEventsModalByDate(dateStr) {
+        currentModalEvents = eventsData.filter(e => e.date === dateStr);
+        if (currentModalEvents.length === 0) return;
+        currentModalIndex = 0;
+        updateEventModalContent();
+        document.getElementById('eventModal').style.display = 'flex';
+    }
+
+    function updateEventModalContent() {
+        const ev = currentModalEvents[currentModalIndex];
+        const bodyEl = document.getElementById('event-modal-body');
+        const navEl = document.getElementById('event-modal-nav');
+        const counterEl = document.getElementById('event-counter');
+
+        let leftHtml = '';
+        if (ev.photo && ev.photo.length > 0) {
+            if (ev.photo.length === 1) {
+                leftHtml = `<img src="${ev.photo[0]}" style="width:100%; height:240px; object-fit:cover; border-radius:18px; cursor:pointer;" onclick="openModal('${ev.photo[0]}')">`;
+            } else {
+                let imgTags = '';
+                ev.photo.forEach((p, idx) => {
+                    imgTags += `<img src="${p}" class="carousel-img ${idx === 0 ? 'active' : ''}" onclick="openModal('${p}')">`;
+                });
+                let dots = '';
+                ev.photo.forEach((_, idx) => {
+                    dots += `<span class="indicator-dot ${idx === 0 ? 'active' : ''}" onclick="currentCarouselIndex(${idx})"></span>`;
+                });
+                leftHtml = `
+                    <div class="photo-carousel" id="modalCarousel">
+                        ${imgTags}
+                        <button class="carousel-btn carousel-prev" onclick="moveCarousel(-1)">❮</button>
+                        <button class="carousel-btn carousel-next" onclick="moveCarousel(1)">❯</button>
+                        <div class="carousel-indicators">${dots}</div>
+                    </div>`;
+            }
+        } else {
+            leftHtml = `<div style="background:var(--primary-gradient); height:200px; border-radius:18px; display:flex; align-items:center; justify-content:center; color:white; font-size:2.5rem;">📅</div>`;
+        }
+
+        let rightHtml = `
+            <div class="timeline-date">${ev.date}</div>
+            <h3 style="margin:0 0 10px 0; color:var(--text-main); font-size:1.2rem;">${ev.title}</h3>
+            <p style="margin:0 0 14px 0; color:var(--text-sub); font-size:0.95rem; line-height:1.5;">${ev.content || '這天沒有詳細文字記錄 ✨'}</p>
+        `;
+
+        if (ev.link) {
+            rightHtml += `<div><a href="${ev.link}" target="_blank">${ev.linkText || '相關連結'} ↗</a></div>`;
+        }
+        if (ev.videoLink) {
+            rightHtml += `<div><a href="${ev.videoLink}" target="_blank">${ev.videoText || '觀看影片'} ↗</a></div>`;
+        }
+
+        bodyEl.innerHTML = `
+            <div class="event-modal-left">${leftHtml}</div>
+            <div class="event-modal-right">${rightHtml}</div>
+        `;
+
+        if (currentModalEvents.length > 1) {
+            navEl.style.display = 'flex';
+            counterEl.textContent = `${currentModalIndex + 1} / ${currentModalEvents.length}`;
+        } else {
+            navEl.style.display = 'none';
+        }
+    }
+
+    function changeModalEvent(direction) {
+        currentModalIndex += direction;
+        if (currentModalIndex < 0) currentModalIndex = currentModalEvents.length - 1;
+        if (currentModalIndex >= currentModalEvents.length) currentModalIndex = 0;
+        updateEventModalContent();
+    }
+
+    function closeEventModal() {
+        document.getElementById('eventModal').style.display = 'none';
+    }
+
+    function checkCloseEventModal(e) {
+        if (e.target.id === 'eventModal') closeEventModal();
+    }
+
+    function renderTimelineAndGallery() {
+        const years = [...new Set(eventsData.map(e => e.date.split('-')[0]))].sort().reverse();
+        const filterBar = document.getElementById('year-filter-container');
+        filterBar.innerHTML = `<button class="year-filter-btn active" onclick="filterTimeline('all', this)">全部年份</button>`;
+        years.forEach(y => {
+            filterBar.innerHTML += `<button class="year-filter-btn" onclick="filterTimeline('${y}', this)">${y} 年</button>`;
+        });
+        renderTimelineItems('all');
+
+        const galleryContainer = document.getElementById('gallery-container');
+        let galleryHtml = '';
+        eventsData.forEach(ev => {
+            if (ev.photo && ev.photo.length > 0) {
+                ev.photo.forEach(p => {
+                    galleryHtml += `<img src="${p}" alt="${ev.title}" onclick="openModal('${p}')">`;
+                });
+            }
+        });
+        galleryContainer.innerHTML = galleryHtml || '<p style="text-align:center; color:var(--text-sub);">目前還沒有照片唷！</p>';
+    }
+
+    function filterTimeline(year, btn) {
+        document.querySelectorAll('.year-filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderTimelineItems(year);
+    }
+
+    function renderTimelineItems(selectedYear) {
+        const container = document.getElementById('timeline-container');
+        let html = '';
+        const years = [...new Set(eventsData.map(e => e.date.split('-')[0]))].sort().reverse();
+
+        years.forEach(y => {
+            if (selectedYear !== 'all' && y !== selectedYear) return;
+            const yearEvents = eventsData.filter(e => e.date.startsWith(y)).sort((a,b) => new Date(b.date) - new Date(a.date));
+            if (yearEvents.length === 0) return;
+
+            html += `<div class="year-section"><div class="year-title">${y} 年</div>`;
+            yearEvents.forEach(ev => {
+                let photoHtml = '';
+                if (ev.photo && ev.photo.length > 0) {
+                    if (ev.photo.length === 1) {
+                        photoHtml = `<img src="${ev.photo[0]}" style="width:100%; height:180px; object-fit:cover; border-radius:14px; margin-top:12px; cursor:pointer;" onclick="openModal('${ev.photo[0]}')">`;
+                    } else {
+                        let imgTags = '';
+                        ev.photo.forEach((p, idx) => {
+                            imgTags += `<img src="${p}" class="carousel-img ${idx === 0 ? 'active' : ''}" onclick="openModal('${p}')">`;
+                        });
+                        let dots = '';
+                        ev.photo.forEach((_, idx) => {
+                            dots += `<span class="indicator-dot ${idx === 0 ? 'active' : ''}" onclick="event.stopPropagation(); currentTimelineCarouselIndex(this, ${idx})"></span>`;
+                        });
+                        photoHtml = `
+                            <div class="photo-carousel" onclick="event.stopPropagation()">
+                                ${imgTags}
+                                <button class="carousel-btn carousel-prev" onclick="moveTimelineCarousel(this, -1)">❮</button>
+                                <button class="carousel-btn carousel-next" onclick="moveTimelineCarousel(this, 1)">❯</button>
+                                <div class="carousel-indicators">${dots}</div>
+                            </div>`;
+                    }
+                }
+
+                let linkHtml = ev.link ? `<div><a href="${ev.link}" target="_blank">${ev.linkText || '相關連結'} ↗</a></div>` : '';
+                let videoHtml = ev.videoLink ? `<div><a href="${ev.videoLink}" target="_blank">${ev.videoText || '觀看影片'} ↗</a></div>` : '';
+
+                html += `
+                    <div class="timeline-item">
+                        <div class="card" onclick="openEventsModalByDate('${ev.date}')" style="cursor: pointer;">
+                            <div class="timeline-date">${ev.date}</div>
+                            <h3 style="margin:0 0 8px 0; color:var(--text-main); font-size:1.1rem;">${ev.title}</h3>
+                            <p style="margin:0; color:var(--text-sub); font-size:0.9rem; line-height:1.4;">${ev.content}</p>
+                            ${photoHtml}
+                            ${linkHtml}
+                            ${videoHtml}
+                        </div>
+                    </div>
+                `;
+            });
+            html += `</div>`;
+        });
+        container.innerHTML = html;
+    }
+
+    function moveCarousel(dir) {
+        const carousel = document.getElementById('modalCarousel');
+        const imgs = carousel.querySelectorAll('.carousel-img');
+        const dots = carousel.querySelectorAll('.indicator-dot');
+        let activeIdx = Array.from(imgs).findIndex(img => img.classList.contains('active'));
+        imgs[activeIdx].classList.remove('active');
+        dots[activeIdx].classList.remove('active');
+
+        activeIdx += dir;
+        if (activeIdx >= imgs.length) activeIdx = 0;
+        if (activeIdx < 0) activeIdx = imgs.length - 1;
+
+        imgs[activeIdx].classList.add('active');
+        dots[activeIdx].classList.add('active');
+    }
+
+    function currentCarouselIndex(idx) {
+        const carousel = document.getElementById('modalCarousel');
+        const imgs = carousel.querySelectorAll('.carousel-img');
+        const dots = carousel.querySelectorAll('.indicator-dot');
+        imgs.forEach(img => img.classList.remove('active'));
+        dots.forEach(dot => dot.classList.remove('active'));
+        imgs[idx].classList.add('active');
+        dots[idx].classList.add('active');
+    }
+
+    renderTimelineAndGallery();
 </script>
 </body>
 </html>
