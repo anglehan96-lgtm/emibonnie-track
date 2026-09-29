@@ -671,6 +671,72 @@
         }
 
         .event-modal-nav button:hover { transform: scale(1.05); }
+
+        /* ===== 升級版 UI ===== */
+        .header-tools { margin-top: 22px; display:flex; flex-direction:column; gap:14px; }
+        .search-box { position:relative; width:100%; }
+        .search-box input {
+            width:100%; box-sizing:border-box; border:1px solid var(--border-color); background:#fff;
+            border-radius:16px; padding:13px 44px 13px 16px; outline:none; font-size:.95rem; color:var(--text-main);
+            transition:.2s; box-shadow:0 4px 14px rgba(0,0,0,.03);
+        }
+        .search-box input:focus { border-color:#ffb6c1; box-shadow:0 0 0 4px rgba(255,117,140,.10); }
+        .search-box button { position:absolute; right:8px; top:50%; transform:translateY(-50%); border:0; background:transparent; cursor:pointer; font-size:1rem; color:var(--text-sub); }
+        .tag-bar { display:flex; flex-wrap:wrap; gap:7px; align-items:center; }
+        .tag-chip, .filter-chip {
+            border:1px solid var(--border-color); background:#fff; color:var(--text-sub); border-radius:999px;
+            padding:6px 11px; font-size:.76rem; font-weight:700; cursor:pointer; transition:.2s;
+        }
+        .tag-chip:hover, .filter-chip:hover { border-color:#ffb6c1; color:var(--accent-pink); background:#fff6f8; }
+        .tag-chip.active, .filter-chip.active { background:var(--primary-gradient); color:#fff; border-color:transparent; box-shadow:0 4px 10px rgba(255,117,140,.18); }
+        .stats-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:22px; }
+        .stat-card { background:#fff; border:1px solid rgba(255,255,255,.9); border-radius:18px; padding:13px 10px; box-shadow:0 6px 18px rgba(255,154,158,.08); text-align:center; }
+        .stat-icon { font-size:1.15rem; }
+        .stat-number { margin-top:4px; font-size:1.25rem; font-weight:800; color:var(--text-main); }
+        .stat-label { font-size:.68rem; color:var(--text-sub); margin-top:2px; }
+        .timeline-controls { display:flex; flex-direction:column; gap:10px; margin-bottom:10px; }
+        .results-note { font-size:.78rem; color:var(--text-sub); text-align:center; margin-top:-3px; }
+        .event-card { cursor:pointer; }
+        .event-card:focus { outline:3px solid rgba(255,117,140,.16); }
+        .event-top { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; }
+        .favorite-btn { border:0; background:#fff5f7; color:#d49aa9; width:34px; height:34px; border-radius:50%; cursor:pointer; flex:0 0 auto; transition:.2s; font-size:1rem; }
+        .favorite-btn:hover { transform:scale(1.08); background:#ffe8ee; }
+        .favorite-btn.active { background:linear-gradient(135deg,#ff758c,#a18cd1); color:#fff; box-shadow:0 4px 12px rgba(255,117,140,.25); }
+        .event-tags { display:flex; flex-wrap:wrap; gap:5px; margin-top:9px; }
+        .event-tag { font-size:.65rem; padding:3px 7px; border-radius:999px; background:#f7edf5; color:#8f6f86; }
+        .gallery-toolbar { display:flex; flex-direction:column; gap:10px; margin-bottom:14px; }
+        .gallery-item-card { position:relative; }
+        .gallery-item-card .gallery-fav { position:absolute; right:8px; top:8px; z-index:3; }
+        .photo-count-badge { position:absolute; left:8px; bottom:35px; background:rgba(45,35,40,.62); color:#fff; font-size:.66rem; padding:4px 7px; border-radius:999px; backdrop-filter:blur(4px); }
+        .modal-photo-shell { width:100%; }
+        .modal-main-photo { width:100%; max-height:340px; object-fit:contain; border-radius:18px; background:#151515; display:block; cursor:pointer; }
+        .modal-thumbs { display:flex; gap:7px; overflow-x:auto; padding:8px 0 2px; scrollbar-width:thin; }
+        .modal-thumbs img { width:62px; height:62px; object-fit:cover; border-radius:10px; border:2px solid transparent; cursor:pointer; opacity:.75; flex:0 0 auto; }
+        .modal-thumbs img.active { border-color:var(--accent-pink); opacity:1; }
+        .modal-photo-nav { display:flex; justify-content:space-between; align-items:center; gap:8px; margin-top:7px; }
+        .mini-btn { border:0; background:#f6eef2; color:var(--text-main); padding:7px 11px; border-radius:11px; font-weight:700; cursor:pointer; }
+        .mini-btn:hover { background:#ffeef3; color:var(--accent-pink); }
+        .modal-tags { display:flex; flex-wrap:wrap; gap:6px; margin-top:12px; }
+        .modal-tag { font-size:.68rem; padding:4px 8px; border-radius:999px; background:#f8eef6; color:#84667c; }
+        .favorite-list-empty { text-align:center; padding:36px 15px; color:var(--text-sub); }
+        .mobile-bottom-nav { display:none; }
+        .back-top { position:fixed; right:18px; bottom:18px; z-index:1200; width:42px; height:42px; border:0; border-radius:50%; background:linear-gradient(135deg,#ff758c,#a18cd1); color:#fff; cursor:pointer; box-shadow:0 8px 20px rgba(161,140,209,.28); opacity:0; transform:translateY(10px); pointer-events:none; transition:.25s; }
+        .back-top.show { opacity:1; transform:none; pointer-events:auto; }
+        .image-load-failed { background:#f8eef2; min-height:150px; }
+        .load-failed-note { padding:8px 10px; margin-top:8px; border-radius:12px; background:#fff4f6; color:#9b6878; font-size:.72rem; line-height:1.6; }
+        @media (max-width: 600px) {
+            .stats-grid { grid-template-columns:repeat(2,1fr); }
+            .mobile-bottom-nav {
+                display:flex; position:fixed; left:8px; right:8px; bottom:8px; z-index:1800;
+                background:rgba(255,255,255,.94); backdrop-filter:blur(14px); border:1px solid rgba(255,255,255,.8);
+                border-radius:18px; padding:6px; box-shadow:0 12px 35px rgba(60,35,45,.14);
+                padding-bottom:calc(6px + env(safe-area-inset-bottom));
+            }
+            .mobile-bottom-nav button { flex:1; border:0; background:transparent; border-radius:13px; padding:8px 2px; font-size:.64rem; color:var(--text-sub); font-weight:700; }
+            .mobile-bottom-nav button.active { background:#fff1f4; color:var(--accent-pink); }
+            .back-top { bottom:82px; }
+            body { padding-bottom:78px; }
+        }
     </style>
 </head>
 <body>
@@ -678,15 +744,28 @@
     <div class="header-card">
         <h1>EmiBonnie</h1>
         <p>✨ 官宣記得吱我一聲 ✨</p>
+        <div class="header-tools">
+            <div class="search-box">
+                <input id="global-search" type="search" placeholder="搜尋活動、日期、內容……" autocomplete="off" oninput="handleGlobalSearch(this.value)">
+                <button type="button" onclick="clearGlobalSearch()" aria-label="清除搜尋">✕</button>
+            </div>
+            <div id="header-tag-bar" class="tag-bar"></div>
+        </div>
+        <div id="stats-grid" class="stats-grid"></div>
     </div>
     <div class="nav-tabs">
         <button class="nav-btn active" onclick="switchTab('timeline')">⌛ 時間軸</button>
         <button class="nav-btn" onclick="switchTab('calendar')">📅 行事曆</button>
         <button class="nav-btn" onclick="switchTab('profile')">📁 資料</button>
         <button class="nav-btn" onclick="switchTab('gallery')">🖼️ 照片</button>
+        <button class="nav-btn" onclick="switchTab('favorites')">⭐ 收藏</button>
     </div>
     <div id="timeline" class="tab-content active">
-        <div id="year-filter-container" class="year-filter-bar"></div>
+        <div class="timeline-controls">
+            <div id="year-filter-container" class="year-filter-bar"></div>
+            <div id="timeline-tag-container" class="tag-bar"></div>
+            <div id="timeline-result-note" class="results-note"></div>
+        </div>
         <div id="timeline-container" class="timeline-container"></div>
     </div>
     <div id="calendar" class="tab-content">
@@ -764,11 +843,30 @@
     </div>
     <div id="gallery" class="tab-content">
         <div class="card">
-            <h3 style="margin-top: 0; margin-bottom: 20px; color: var(--text-main);">🖼️ 照片收藏庫</h3>
+            <h3 style="margin-top: 0; margin-bottom: 12px; color: var(--text-main);">🖼️ 照片收藏庫</h3>
+            <div class="gallery-toolbar">
+                <div id="gallery-tag-container" class="tag-bar"></div>
+                <div id="gallery-result-note" class="results-note"></div>
+            </div>
             <div class="gallery-grid" id="gallery-container"></div>
         </div>
     </div>
+    <div id="favorites" class="tab-content">
+        <div class="card">
+            <h3 style="margin-top:0; margin-bottom:12px; color:var(--text-main);">⭐ 我的收藏</h3>
+            <div id="favorites-result-note" class="results-note"></div>
+            <div id="favorites-container"></div>
+        </div>
+    </div>
+    <div class="mobile-bottom-nav" id="mobile-bottom-nav">
+        <button data-tab="timeline" onclick="switchTab('timeline')">⌛<br>時間軸</button>
+        <button data-tab="calendar" onclick="switchTab('calendar')">📅<br>行事曆</button>
+        <button data-tab="gallery" onclick="switchTab('gallery')">🖼️<br>照片</button>
+        <button data-tab="favorites" onclick="switchTab('favorites')">⭐<br>收藏</button>
+        <button data-tab="profile" onclick="switchTab('profile')">📁<br>資料</button>
+    </div>
 </div>
+<button class="back-top" id="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="回到頂端">↑</button>
 <div id="imageModal" onclick="closeModal()">
     <div style="display:flex;flex-direction:column;align-items:center;gap:10px;max-width:95vw;max-height:95vh;">
         <img id="modalImage" src="" alt="完整照片" style="display:block;">
@@ -787,8 +885,6 @@
     </div>
 </div>
 <script>
-    // 活動資料：沿用原檔中所有完整事件，並持續加入你提供的 2026 年 9 月活動紀錄。
-    // 原始檔的 2025/12/26 紀錄在貼上時被截斷，因此沒有自行補寫。
     const eventsData = [
         { date: "2026-08-11", title: "Moonshadow Q22", content: "米米拍戲很晚到家 明天還有工作", link: "", linkText: "", videoLink: "", videoText: "", photo: ["https://drive.google.com/thumbnail?id=1hGi_zMIgWH4iFAwAKU2c2WXMigDTx-OM&sz=w1600"] },
         { date: "2026-08-10", title: "Red Kiss 新歌發布", content: "啊好好聽！！！GMMtv一首歌兩用我不接受", link: "https://www.gmm-tv.com", linkText: "GMMTV 官方網站", videoLink: "https://www.youtube.com/watch?v=jad-V_nyvaY", videoText: "📺 Red Kiss - EMIBONNIE [ OFFICIAL MV ]", photo: ["https://drive.google.com/thumbnail?id=139IMGslcvRQerOjhzyyzhaLgF-wTZddN&sz=w1600", "https://drive.google.com/thumbnail?id=1eu3gKii3jiEXxUi-JjeZ8zfwfalYvS0b&sz=w1600", "https://drive.google.com/thumbnail?id=1PnRRFU5kEK2i1rjE8uPiHZLvslWjp8fm&sz=w1600", "https://drive.google.com/thumbnail?id=1j4XYWt3WnHFiTGNv84p_1m9lLEPCRej-&sz=w1600"] },
@@ -884,154 +980,33 @@
         ] },
         { date: "2026-09-27", title: "猜歌節目播出", content: "", link: "", linkText: "", videoLink: "https://www.youtube.com/watch?v=cQ8xwIj2t9o", videoText: "📺 猜歌節目播出", photo: [] },
         { date: "2026-09-30", title: "Moonshadow ep.8", content: "", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
-        { date: "2026-09-30", title: "ARM SHARE Rising Runway Star 2026", content: "any上節目", link: "", linkText: "", videoLink: "", videoText: "", photo: [] }    ];
+        { date: "2026-09-30", title: "ARM SHARE Rising Runway Star 2026", content: "any上節目", link: "", linkText: "", videoLink: "", videoText: "", photo: [] }    
+    ];
 
     let activeYear = 2026;
-    let calendarDate = new Date(2026, 8, 1); // 2026 年 9 月
+    let calendarDate = new Date(2026, 8, 1);
     let modalEvents = [];
     let modalEventIndex = 0;
+    let modalPhotoIndex = 0;
+    let activeTag = '全部';
+    let galleryTag = '全部';
+    let globalSearch = '';
+    const STORAGE_KEY = 'emibonnie-favorites-v2';
 
     function formatDate(dateString) {
         const d = new Date(dateString + 'T00:00:00');
-        return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`;
-    }
-
-    function uniqueYears() {
-        return [...new Set(eventsData.map(e => Number(e.date.slice(0, 4))))].sort((a, b) => b - a);
+        return `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;
     }
 
     function escapeHTML(value) {
         return String(value ?? '')
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;')
-            .replace(/'/g, '&#039;');
-    }
-
-    function switchTab(tabId) {
-        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-        document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
-        const tab = document.getElementById(tabId);
-        const btn = [...document.querySelectorAll('.nav-btn')].find(b => b.getAttribute('onclick')?.includes(`'${tabId}'`));
-        if (tab) tab.classList.add('active');
-        if (btn) btn.classList.add('active');
-        if (tabId === 'gallery') renderGallery();
-        if (tabId === 'calendar') renderCalendar();
-    }
-
-    function renderYearFilters() {
-        const container = document.getElementById('year-filter-container');
-        container.innerHTML = '';
-        uniqueYears().forEach(year => {
-            const btn = document.createElement('button');
-            btn.className = 'year-filter-btn' + (year === activeYear ? ' active' : '');
-            btn.textContent = `${year}`;
-            btn.onclick = () => {
-                activeYear = year;
-                renderYearFilters();
-                renderTimeline();
-            };
-            container.appendChild(btn);
-        });
-    }
-
-    function renderTimeline() {
-        const container = document.getElementById('timeline-container');
-        const filtered = eventsData
-            .filter(e => Number(e.date.slice(0, 4)) === activeYear)
-            .sort((a, b) => b.date.localeCompare(a.date));
-
-        if (!filtered.length) {
-            container.innerHTML = '<div class="card" style="text-align:center;">這一年目前還沒有紀錄 ♡</div>';
-            return;
-        }
-
-        // 以年份作為時間軸標題。
-        container.innerHTML = `<div class="year-section"><div class="year-title">${activeYear} 年</div></div>` +
-            filtered.map((event, index) => {
-                const photos = Array.isArray(event.photo) ? event.photo : [];
-                const carousel = photos.length ? `
-                    <div class="photo-carousel">
-                        ${photos.map((url, i) => `<img class="carousel-img ${i === 0 ? 'active' : ''}" src="${escapeHTML(url)}" data-drive-url="${escapeHTML(toDriveViewUrl(url))}" alt="${escapeHTML(event.title)} 照片 ${i + 1}" loading="lazy" onclick="event.stopPropagation(); openModal(this.src, this.dataset.driveUrl)" onerror="handleImageFallback(this)">`).join('')}
-                        ${photos.length > 1 ? `
-                            <button class="carousel-btn carousel-prev" onclick="changeCarousel(this, -1); event.stopPropagation();" aria-label="上一張">❮</button>
-                            <button class="carousel-btn carousel-next" onclick="changeCarousel(this, 1); event.stopPropagation();" aria-label="下一張">❯</button>
-                            <div class="carousel-indicators">
-                                ${photos.map((_, i) => `<span class="indicator-dot ${i === 0 ? 'active' : ''}" onclick="goCarousel(this, ${i}); event.stopPropagation();"></span>`).join('')}
-                            </div>` : ''}
-                    </div>` : '';
-
-                const links = [
-                    event.link ? `<a href="${escapeHTML(event.link)}" target="_blank" rel="noopener">${escapeHTML(event.linkText || '相關連結')}</a>` : '',
-                    event.videoLink ? `<a href="${escapeHTML(event.videoLink)}" target="_blank" rel="noopener">${escapeHTML(event.videoText || '影片')}</a>` : ''
-                ].filter(Boolean).join('<span style="margin:0 8px; color:#d8c8ce;">•</span>');
-
-                return `
-                    <div class="timeline-item">
-                        <div class="timeline-date">${formatDate(event.date)}</div>
-                        <div class="card event-card" data-event-index="${index}" role="button" tabindex="0" aria-label="查看事件：${escapeHTML(event.title)}">
-                            <div class="badge-duo">EmiBonnie</div>
-                            <h3 style="margin:0 0 8px 0; color:var(--text-main);">${escapeHTML(event.title)}</h3>
-                            ${event.content ? `<p style="margin:0; line-height:1.8; color:var(--text-sub); white-space:pre-line;">${escapeHTML(event.content)}</p>` : ''}
-                            ${links ? `<div style="margin-top:12px; font-size:0.85rem;">${links}</div>` : ''}
-                            ${carousel}
-                        </div>
-                    </div>`;
-            }).join('');
-
-        container.querySelectorAll('.event-card').forEach((card, i) => {
-            const open = () => openEventModal(filtered, i);
-            card.addEventListener('click', open);
-            card.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    open();
-                }
-            });
-            card.querySelectorAll('a, button, img, .indicator-dot').forEach(el => {
-                el.addEventListener('click', (e) => e.stopPropagation());
-            });
-        });
-    }
-
-    function getCarouselItems(container) {
-        return [...container.querySelectorAll('.carousel-img')];
-    }
-
-    function setCarouselIndex(container, index) {
-        const imgs = getCarouselItems(container);
-        if (!imgs.length) return;
-        index = (index + imgs.length) % imgs.length;
-        imgs.forEach((img, i) => img.classList.toggle('active', i === index));
-        const dots = [...container.querySelectorAll('.indicator-dot')];
-        dots.forEach((dot, i) => dot.classList.toggle('active', i === index));
-        container.dataset.index = String(index);
-    }
-
-    function changeCarousel(btn, direction) {
-        const container = btn.closest('.photo-carousel');
-        const index = Number(container.dataset.index || 0);
-        setCarouselIndex(container, index + direction);
-    }
-
-    function goCarousel(dot, index) {
-        const container = dot.closest('.photo-carousel');
-        setCarouselIndex(container, index);
-    }
-
-    function renderGallery() {
-        const container = document.getElementById('gallery-container');
-        const photos = eventsData.flatMap(event => (event.photo || []).map(photo => ({ photo, title: event.title, date: event.date })));
-        container.innerHTML = photos.length ? photos.map(item => `
-            <div style="position:relative;">
-                <img src="${escapeHTML(item.photo)}" data-drive-url="${escapeHTML(toDriveViewUrl(item.photo))}" alt="${escapeHTML(item.title)}" loading="lazy" onclick="openModal(this.src, this.dataset.driveUrl)" onerror="handleImageFallback(this)">
-                <div style="font-size:0.7rem;color:var(--text-sub);padding:5px 2px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHTML(item.date.replaceAll('-', '.'))} · ${escapeHTML(item.title)}</div>
-            </div>`).join('') : '<div style="grid-column:1/-1;text-align:center;color:var(--text-sub);padding:30px;">目前還沒有照片 ♡</div>';
+            .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+            .replace(/"/g,'&quot;').replace(/'/g,'&#039;');
     }
 
     function getDriveId(value) {
-        const match = String(value || '').match(/(?:[?&]id=|\/d\/|drive.google.com\/file\/d\/)([A-Za-z0-9_-]{10,})/);
+        const s = String(value || '');
+        const match = s.match(/(?:[?&]id=|\/d\/|drive\.google\.com\/file\/d\/)([A-Za-z0-9_-]{10,})/);
         return match ? match[1] : '';
     }
 
@@ -1044,153 +1019,326 @@
         const id = getDriveId(value);
         if (!id) return [value];
         return [
-            `https://drive.google.com/thumbnail?id=${id}&sz=w1600`,
-            `https://lh3.googleusercontent.com/d/${id}=w1600`,
+            `https://drive.google.com/thumbnail?id=${id}&sz=w2000`,
             `https://drive.google.com/uc?export=view&id=${id}`,
+            `https://drive.google.com/uc?id=${id}`,
+            `https://lh3.googleusercontent.com/d/${id}=w2000`,
             `https://drive.usercontent.google.com/download?id=${id}&export=view&authuser=0`
         ];
     }
 
+    function applyImageSource(img, value) {
+        const candidates = getImageCandidates(value);
+        img.dataset.candidates = JSON.stringify(candidates);
+        img.dataset.fallbackIndex = '0';
+        img.dataset.driveUrl = toDriveViewUrl(value);
+        img.src = candidates[0] || value;
+    }
+
     function handleImageFallback(img) {
-        const candidates = img.dataset.candidates ? JSON.parse(img.dataset.candidates) : getImageCandidates(img.src);
+        let candidates = [];
+        try { candidates = JSON.parse(img.dataset.candidates || '[]'); } catch {}
         let index = Number(img.dataset.fallbackIndex || 0) + 1;
         if (index < candidates.length) {
-            img.dataset.candidates = JSON.stringify(candidates);
             img.dataset.fallbackIndex = String(index);
             img.src = candidates[index];
             return;
         }
         img.classList.add('image-load-failed');
-        img.title = '圖片目前無法載入。請確認 Google Drive 檔案已設為「知道連結的任何人都可查看」。';
-        img.style.objectFit = 'contain';
-        img.style.opacity = '0.45';
-    }
-
-    function openModal(src, driveUrl = '') {
-        const modal = document.getElementById('imageModal');
-        const image = document.getElementById('modalImage');
-        const candidates = getImageCandidates(src);
-        image.dataset.candidates = JSON.stringify(candidates);
-        image.dataset.fallbackIndex = '0';
-        image.src = candidates[0] || src;
-        image.onerror = function() { handleImageFallback(this); };
-        image.style.opacity = '1';
-        image.style.objectFit = 'contain';
-        const link = document.getElementById('modalDriveLink');
-        if (link) {
-            link.href = driveUrl || toDriveViewUrl(src);
-            link.style.display = (driveUrl || getDriveId(src)) ? 'inline-flex' : 'none';
-        }
-        modal.style.display = 'flex';
-    }
-
-    function closeModal() {
-        const modal = document.getElementById('imageModal');
-        modal.style.display = 'none';
-        const image = document.getElementById('modalImage');
-        image.src = '';
-        image.onerror = null;
-        image.removeAttribute('data-candidates');
-        image.removeAttribute('data-fallback-index');
-        const link = document.getElementById('modalDriveLink');
-        if (link) link.style.display = 'none';
-    }
-
-    function openEventModal(filteredEvents, index = 0) {
-        modalEvents = filteredEvents;
-        modalEventIndex = index;
-        renderEventModal();
-        document.getElementById('eventModal').style.display = 'flex';
-    }
-
-    function renderEventModal() {
-        const event = modalEvents[modalEventIndex];
-        if (!event) return;
-        const body = document.getElementById('event-modal-body');
-        const nav = document.getElementById('event-modal-nav');
-        const photos = event.photo || [];
-        const firstPhoto = photos[0] || '';
-        const eventLinks = [
-            event.link ? `<a href="${escapeHTML(event.link)}" target="_blank" rel="noopener">${escapeHTML(event.linkText || '相關連結')}</a>` : '',
-            event.videoLink ? `<a href="${escapeHTML(event.videoLink)}" target="_blank" rel="noopener">${escapeHTML(event.videoText || '📺 觀看影片')}</a>` : ''
-        ].filter(Boolean).join('<span style="margin:0 8px;color:#d8c8ce;">•</span>');
-        body.innerHTML = `
-            <div class="event-modal-left">
-                ${photos.length ? `<img src="${escapeHTML(firstPhoto)}" data-drive-url="${escapeHTML(toDriveViewUrl(firstPhoto))}" data-candidates="${escapeHTML(JSON.stringify(getImageCandidates(firstPhoto)))}" data-fallback-index="0" style="width:100%;max-height:320px;object-fit:cover;border-radius:18px;cursor:pointer;" alt="${escapeHTML(event.title)}" onclick="event.stopPropagation(); openModal(this.src, this.dataset.driveUrl)" onerror="handleImageFallback(this)">` : '<div style="height:220px;border-radius:18px;background:#faf6f8;display:flex;align-items:center;justify-content:center;color:var(--text-sub);">♡ 暫無照片</div>'}
-                ${firstPhoto ? `<a class="modal-drive-link" href="${escapeHTML(toDriveViewUrl(firstPhoto))}" target="_blank" rel="noopener">↗ 開啟原始照片</a>` : ''}
-            </div>
-            <div class="event-modal-right">
-                <div class="timeline-date">${formatDate(event.date)}</div>
-                <h3 style="margin:4px 0 10px;color:var(--text-main);">${escapeHTML(event.title)}</h3>
-                <p style="margin:0;line-height:1.85;color:var(--text-sub);white-space:pre-line;">${escapeHTML(event.content || '這一天留下了一筆活動紀錄。')}</p>
-                ${eventLinks ? `<div style="margin-top:14px;font-size:0.85rem;line-height:1.8;">${eventLinks}</div>` : ''}
-            </div>`;
-        nav.style.display = modalEvents.length > 1 ? 'flex' : 'none';
-        document.getElementById('event-counter').textContent = `${modalEventIndex + 1} / ${modalEvents.length}`;
-    }
-
-    function closeEventModal() {
-        document.getElementById('eventModal').style.display = 'none';
-    }
-
-    function checkCloseEventModal(event) {
-        if (event.target.id === 'eventModal') closeEventModal();
-    }
-
-    function changeModalEvent(direction) {
-        if (!modalEvents.length) return;
-        modalEventIndex = (modalEventIndex + direction + modalEvents.length) % modalEvents.length;
-        renderEventModal();
-    }
-
-    function renderCalendar() {
-        const year = calendarDate.getFullYear();
-        const month = calendarDate.getMonth();
-        document.getElementById('calendar-month-year').textContent = `${year} 年 ${month + 1} 月`;
-        const container = document.getElementById('calendar-days');
-        container.innerHTML = '';
-        const firstDay = new Date(year, month, 1).getDay();
-        const daysInMonth = new Date(year, month + 1, 0).getDate();
-        for (let i = 0; i < firstDay; i++) {
-            container.insertAdjacentHTML('beforeend', '<div class="calendar-day empty"></div>');
-        }
-        for (let day = 1; day <= daysInMonth; day++) {
-            const iso = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-            const events = eventsData.filter(e => e.date === iso);
-            const tags = events.map(e => `<div class="calendar-event-tag">${escapeHTML(e.title)}</div>`).join('');
-            const cell = document.createElement('div');
-            cell.className = 'calendar-day' + (events.length ? ' has-event' : '');
-            cell.innerHTML = `<div class="day-number">${day}</div>${tags}`;
-            if (events.length) cell.onclick = () => openEventModal(events, 0);
-            container.appendChild(cell);
+        img.style.opacity = '.55';
+        const wrap = img.parentElement;
+        if (wrap && !wrap.querySelector('.load-failed-note')) {
+            const note = document.createElement('div');
+            note.className = 'load-failed-note';
+            note.innerHTML = `照片無法直接載入。請確認 Google Drive 已設定「知道連結的任何人都可查看」。<br><a href="${escapeHTML(img.dataset.driveUrl || '#')}" target="_blank" rel="noopener">↗ 開啟 Drive 檔案</a>`;
+            wrap.appendChild(note);
         }
     }
 
-    function changeMonth(delta) {
-        calendarDate = new Date(calendarDate.getFullYear(), calendarDate.getMonth() + delta, 1);
-        renderCalendar();
+    function getFavorites() {
+        try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch { return []; }
     }
 
-    function changeYear(delta) {
-        calendarDate = new Date(calendarDate.getFullYear() + delta, calendarDate.getMonth(), 1);
-        renderCalendar();
+    function setFavorites(list) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify([...new Set(list)]));
+        updateStats();
+        renderTimeline();
+        renderFavorites();
+        renderGallery();
     }
 
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-            closeModal();
-            closeEventModal();
+    function eventKey(event) { return `${event.date}__${event.title}`; }
+    function isFavorite(event) { return getFavorites().includes(eventKey(event)); }
+
+    function toggleFavorite(event, e) {
+        if (e) e.stopPropagation();
+        const key = eventKey(event);
+        const favs = getFavorites();
+        const index = favs.indexOf(key);
+        if (index >= 0) favs.splice(index,1); else favs.push(key);
+        setFavorites(favs);
+        updateHeaderTagBar();
+    }
+
+    function inferTags(event) {
+        const text = `${event.title} ${event.content} ${event.videoText}`.toLowerCase();
+        const tags = [];
+        if (/moonshadow|月影/.test(text)) tags.push('Moonshadow');
+        if (/mv|official mv|red kiss|glitch|you one/.test(text)) tags.push('MV');
+        if (/直播|live house|賣票/.test(text)) tags.push('直播');
+        if (/演唱會|concert|fan fest|fan party/.test(text)) tags.push('活動');
+        if (/award|awards|頒獎/.test(text)) tags.push('頒獎典禮');
+        if (/gemm house/.test(text)) tags.push('GEMM HOUSE');
+        if (/any/.test(text)) tags.push('Any');
+        if (/emi/.test(text)) tags.push('Emi');
+        if (/bonnie|邦邦|nini/.test(text)) tags.push('Bonnie');
+        if (!tags.length) tags.push('日常');
+        if (!tags.includes('EmiBonnie') && /emi|bonnie|米米|邦邦|mimi|nini/.test(text)) tags.push('EmiBonnie');
+        return [...new Set(tags)];
+    }
+
+    function allTags() {
+        return ['全部', ...new Set(eventsData.flatMap(inferTags))];
+    }
+
+    function matchesSearch(event, search) {
+        if (!search.trim()) return true;
+        const q = search.trim().toLowerCase();
+        return [event.date, event.title, event.content, event.linkText, event.videoText, ...inferTags(event)].join(' ').toLowerCase().includes(q);
+    }
+
+    function matchesTag(event, tag) {
+        return tag === '全部' || inferTags(event).includes(tag);
+    }
+
+    function filteredEvents(yearOnly = true) {
+        return eventsData
+            .filter(e => !yearOnly || Number(e.date.slice(0,4)) === activeYear)
+            .filter(e => matchesSearch(e, globalSearch))
+            .filter(e => matchesTag(e, activeTag))
+            .sort((a,b) => b.date.localeCompare(a.date) || a.title.localeCompare(b.title));
+    }
+
+    function switchTab(tabId) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('#mobile-bottom-nav button').forEach(el => el.classList.toggle('active', el.dataset.tab === tabId));
+        const tab = document.getElementById(tabId);
+        const btn = [...document.querySelectorAll('.nav-btn')].find(b => b.getAttribute('onclick')?.includes(`'${tabId}'`));
+        if (tab) tab.classList.add('active');
+        if (btn) btn.classList.add('active');
+        if (tabId === 'gallery') renderGallery();
+        if (tabId === 'calendar') renderCalendar();
+        if (tabId === 'favorites') renderFavorites();
+        window.scrollTo({top:0,behavior:'smooth'});
+    }
+
+    function handleGlobalSearch(value) {
+        globalSearch = value;
+        renderTimeline();
+        renderGallery();
+        renderFavorites();
+        updateHeaderTagBar();
+    }
+
+    function clearGlobalSearch() {
+        const input = document.getElementById('global-search');
+        input.value = '';
+        handleGlobalSearch('');
+    }
+
+    function renderTagBar(containerId, selected, setterName, limited=false) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        const tags = limited ? allTags().slice(0,9) : allTags();
+        container.innerHTML = tags.map(tag => `<button class="tag-chip ${tag === selected ? 'active' : ''}" onclick="${setterName}('${tag.replace(/'/g,"\\'")}')">${escapeHTML(tag)}</button>`).join('');
+    }
+
+    function setActiveTag(tag) { activeTag = tag; renderTagBar('timeline-tag-container', activeTag, 'setActiveTag'); renderTimeline(); }
+    function setGalleryTag(tag) { galleryTag = tag; renderTagBar('gallery-tag-container', galleryTag, 'setGalleryTag'); renderGallery(); }
+    function updateHeaderTagBar() { renderTagBar('header-tag-bar', activeTag, 'setActiveTag', true); }
+
+    function uniqueYears() { return [...new Set(eventsData.map(e => Number(e.date.slice(0,4))))].sort((a,b)=>b-a); }
+    function renderYearFilters() {
+        const container = document.getElementById('year-filter-container');
+        container.innerHTML = uniqueYears().map(year => `<button class="year-filter-btn ${year===activeYear?'active':''}" onclick="setActiveYear(${year})">${year}</button>`).join('');
+    }
+    function setActiveYear(year) { activeYear = year; renderYearFilters(); renderTimeline(); }
+
+    function updateStats() {
+        const photos = eventsData.reduce((n,e)=>n+(Array.isArray(e.photo)?e.photo.length:0),0);
+        const videos = eventsData.filter(e=>e.videoLink).length;
+        const favs = getFavorites().length;
+        const dates = eventsData.map(e=>e.date).sort();
+        const stats = [
+            ['📅','紀錄事件',eventsData.length],['📸','收藏照片',photos],['🎬','影片連結',videos],['⭐','我的收藏',favs]
+        ];
+        document.getElementById('stats-grid').innerHTML = stats.map(s=>`<div class="stat-card"><div class="stat-icon">${s[0]}</div><div class="stat-number">${s[2]}</div><div class="stat-label">${s[1]}</div></div>`).join('');
+    }
+
+    function photoHTML(url, title, extra='') {
+        const candidates = getImageCandidates(url);
+        return `<img class="carousel-img ${extra}" src="${escapeHTML(candidates[0])}" data-candidates="${escapeHTML(JSON.stringify(candidates))}" data-fallback-index="0" data-drive-url="${escapeHTML(toDriveViewUrl(url))}" alt="${escapeHTML(title)}" loading="lazy" onerror="handleImageFallback(this)">`;
+    }
+
+    function renderTimeline() {
+        const container = document.getElementById('timeline-container');
+        const filtered = filteredEvents(true);
+        document.getElementById('timeline-result-note').textContent = `顯示 ${filtered.length} / ${eventsData.filter(e=>Number(e.date.slice(0,4))===activeYear).length} 筆 ${activeYear} 年紀錄`;
+        if (!filtered.length) { container.innerHTML = '<div class="card" style="text-align:center;">找不到符合條件的紀錄 ♡</div>'; return; }
+        container.innerHTML = `<div class="year-section"><div class="year-title">${activeYear} 年</div></div>` + filtered.map((event,index)=>{
+            const photos = Array.isArray(event.photo)?event.photo:[];
+            const favorite = isFavorite(event);
+            const carousel = photos.length ? `<div class="photo-carousel" data-index="0">
+                ${photos.map((url,i)=>`<img class="carousel-img ${i===0?'active':''}" src="${escapeHTML(getImageCandidates(url)[0])}" data-candidates="${escapeHTML(JSON.stringify(getImageCandidates(url)))}" data-fallback-index="0" data-drive-url="${escapeHTML(toDriveViewUrl(url))}" alt="${escapeHTML(event.title)} 照片 ${i+1}" loading="lazy" onclick="event.stopPropagation(); openPhotoViewer(${JSON.stringify(filtered.indexOf(event))}, ${i})" onerror="handleImageFallback(this)">`).join('')}
+                ${photos.length>1?`<button class="carousel-btn carousel-prev" onclick="changeCarousel(this,-1);event.stopPropagation();">❮</button><button class="carousel-btn carousel-next" onclick="changeCarousel(this,1);event.stopPropagation();">❯</button><div class="carousel-indicators">${photos.map((_,i)=>`<span class="indicator-dot ${i===0?'active':''}" onclick="goCarousel(this,${i});event.stopPropagation();"></span>`).join('')}</div>`:''}
+                ${photos.length>1?`<span class="photo-count-badge">📷 ${photos.length}</span>`:''}
+            </div>` : '';
+            const links = [event.link?`<a href="${escapeHTML(event.link)}" target="_blank" rel="noopener">${escapeHTML(event.linkText||'相關連結')}</a>`:'',event.videoLink?`<a href="${escapeHTML(event.videoLink)}" target="_blank" rel="noopener">${escapeHTML(event.videoText||'觀看影片')}</a>`:''].filter(Boolean).join('<span style="margin:0 8px;color:#d8c8ce;">•</span>');
+            const tags = inferTags(event).map(t=>`<span class="event-tag">${escapeHTML(t)}</span>`).join('');
+            return `<div class="timeline-item"><div class="timeline-date">${formatDate(event.date)}</div><div class="card event-card" data-event-key="${escapeHTML(eventKey(event))}" tabindex="0"><div class="event-top"><div><div class="badge-duo">EmiBonnie</div><h3 style="margin:0;color:var(--text-main);">${escapeHTML(event.title)}</h3></div><button class="favorite-btn ${favorite?'active':''}" aria-label="收藏事件" onclick="toggleFavorite(eventsData.find(e=>eventKey(e)==='${eventKey(event).replace(/'/g,"\\'")}'),event)">${favorite?'♥':'♡'}</button></div>${event.content?`<p style="margin:10px 0 0;line-height:1.8;color:var(--text-sub);white-space:pre-line;">${escapeHTML(event.content)}</p>`:''}${tags?`<div class="event-tags">${tags}</div>`:''}${links?`<div style="margin-top:12px;font-size:.85rem;">${links}</div>`:''}${carousel}</div></div>`;
+        }).join('');
+        container.querySelectorAll('.event-card').forEach(card=>{
+            const key = card.dataset.eventKey;
+            const idx = filtered.findIndex(e=>eventKey(e)===key);
+            const open=()=>openEventModal(filtered,idx);
+            card.addEventListener('click',open);
+            card.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open();}});
+            card.querySelectorAll('a,button,img,.indicator-dot').forEach(el=>el.addEventListener('click',e=>e.stopPropagation()));
+        });
+    }
+
+    function getCarouselItems(container) { return [...container.querySelectorAll('.carousel-img')]; }
+    function setCarouselIndex(container,index) {
+        const imgs=getCarouselItems(container); if(!imgs.length)return;
+        index=(index+imgs.length)%imgs.length;
+        imgs.forEach((img,i)=>img.classList.toggle('active',i===index));
+        container.querySelectorAll('.indicator-dot').forEach((dot,i)=>dot.classList.toggle('active',i===index));
+        container.dataset.index=String(index);
+    }
+    function changeCarousel(btn,direction){const c=btn.closest('.photo-carousel');setCarouselIndex(c,Number(c.dataset.index||0)+direction);}
+    function goCarousel(dot,index){setCarouselIndex(dot.closest('.photo-carousel'),index);}
+
+    function openModal(src, driveUrl='') {
+        const modal=document.getElementById('imageModal');
+        const image=document.getElementById('modalImage');
+        applyImageSource(image,src);
+        image.style.opacity='1';
+        image.onclick=e=>e.stopPropagation();
+        const link=document.getElementById('modalDriveLink');
+        link.href=driveUrl||toDriveViewUrl(src);
+        link.style.display=(driveUrl||getDriveId(src))?'inline-flex':'none';
+        modal.style.display='flex';
+    }
+    function closeModal(){document.getElementById('imageModal').style.display='none';document.getElementById('modalImage').src='';}
+
+    function openPhotoViewer(eventIndex, photoIndex=0) {
+        modalEvents = filteredEvents(true);
+        modalEventIndex = eventIndex;
+        modalPhotoIndex = photoIndex;
+        renderEventModal(true);
+        document.getElementById('eventModal').style.display='flex';
+    }
+
+    function openEventModal(filtered, index=0) {
+        modalEvents=filtered; modalEventIndex=index; modalPhotoIndex=0; renderEventModal(false); document.getElementById('eventModal').style.display='flex';
+    }
+
+    function renderEventModal(photoOnly=false) {
+        const event=modalEvents[modalEventIndex]; if(!event)return;
+        const body=document.getElementById('event-modal-body');
+        const photos=Array.isArray(event.photo)?event.photo:[];
+        if(modalPhotoIndex>=photos.length) modalPhotoIndex=0;
+        const currentPhoto=photos[modalPhotoIndex]||'';
+        const favorite=isFavorite(event);
+        const tags=inferTags(event).map(t=>`<span class="modal-tag">${escapeHTML(t)}</span>`).join('');
+        const eventLinks=[event.link?`<a href="${escapeHTML(event.link)}" target="_blank" rel="noopener">${escapeHTML(event.linkText||'相關連結')}</a>`:'',event.videoLink?`<a href="${escapeHTML(event.videoLink)}" target="_blank" rel="noopener">${escapeHTML(event.videoText||'📺 觀看影片')}</a>`:''].filter(Boolean).join('<span style="margin:0 8px;color:#d8c8ce;">•</span>');
+        const photoBlock = photos.length ? `<div class="modal-photo-shell"><img class="modal-main-photo" id="modal-event-photo" src="${escapeHTML(getImageCandidates(currentPhoto)[0])}" data-candidates="${escapeHTML(JSON.stringify(getImageCandidates(currentPhoto)))}" data-fallback-index="0" data-drive-url="${escapeHTML(toDriveViewUrl(currentPhoto))}" onerror="handleImageFallback(this)" onclick="event.stopPropagation();openModal(this.dataset.driveUrl||this.src,this.dataset.driveUrl)"><div class="modal-photo-nav"><button class="mini-btn" onclick="changeModalPhoto(-1);event.stopPropagation();">❮ 上一張</button><span style="font-size:.72rem;color:var(--text-sub);">${modalPhotoIndex+1} / ${photos.length}</span><button class="mini-btn" onclick="changeModalPhoto(1);event.stopPropagation();">下一張 ❯</button></div><div class="modal-thumbs">${photos.map((p,i)=>`<img src="${escapeHTML(getImageCandidates(p)[0])}" data-candidates="${escapeHTML(JSON.stringify(getImageCandidates(p)))}" data-fallback-index="0" class="${i===modalPhotoIndex?'active':''}" onclick="changeModalPhotoTo(${i});event.stopPropagation();" onerror="handleImageFallback(this)">`).join('')}</div></div>` : '<div style="height:220px;border-radius:18px;background:#faf6f8;display:flex;align-items:center;justify-content:center;color:var(--text-sub);">♡ 暫無照片</div>';
+        body.innerHTML=`<div class="event-modal-left">${photoBlock}</div><div class="event-modal-right"><div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;"><div><div class="timeline-date">${formatDate(event.date)}</div><h3 style="margin:4px 0 8px;color:var(--text-main);">${escapeHTML(event.title)}</h3></div><button class="favorite-btn ${favorite?'active':''}" onclick="toggleFavorite(eventsData.find(e=>eventKey(e)==='${eventKey(event).replace(/'/g,"\\'")}'),event);renderEventModal()">${favorite?'♥':'♡'}</button></div><p style="margin:0;line-height:1.85;color:var(--text-sub);white-space:pre-line;">${escapeHTML(event.content||'這一天留下了一筆活動紀錄。')}</p>${tags?`<div class="modal-tags">${tags}</div>`:''}${eventLinks?`<div style="margin-top:14px;font-size:.85rem;line-height:1.9;">${eventLinks}</div>`:''}</div>`;
+        document.getElementById('event-modal-nav').style.display=modalEvents.length>1?'flex':'none';
+        document.getElementById('event-counter').textContent=`${modalEventIndex+1} / ${modalEvents.length}`;
+    }
+
+    function changeModalPhoto(delta){const e=modalEvents[modalEventIndex];const n=(e?.photo||[]).length;if(!n)return;modalPhotoIndex=(modalPhotoIndex+delta+n)%n;renderEventModal(true);}
+    function changeModalPhotoTo(index){modalPhotoIndex=index;renderEventModal(true);}
+    function closeEventModal(){document.getElementById('eventModal').style.display='none';}
+    function checkCloseEventModal(event){if(event.target.id==='eventModal')closeEventModal();}
+    function changeModalEvent(direction){if(!modalEvents.length)return;modalEventIndex=(modalEventIndex+direction+modalEvents.length)%modalEvents.length;modalPhotoIndex=0;renderEventModal(false);}
+
+    function renderGallery(){
+        const container=document.getElementById('gallery-container');
+        renderTagBar('gallery-tag-container',galleryTag,'setGalleryTag');
+        const photos=[];
+        eventsData.forEach(event=>{
+            if(!matchesSearch(event,globalSearch)||!matchesTag(event,galleryTag))return;
+            (event.photo||[]).forEach((photo,index)=>photos.push({photo,title:event.title,date:event.date,event}));
+        });
+        document.getElementById('gallery-result-note').textContent=`顯示 ${photos.length} 張照片`;
+        container.innerHTML=photos.length?photos.map((item,index)=>`<div class="gallery-item-card"><button class="favorite-btn gallery-fav ${isFavorite(item.event)?'active':''}" onclick="toggleFavorite(eventsData.find(e=>eventKey(e)==='${eventKey(item.event).replace(/'/g,"\\'")}'),event)">${isFavorite(item.event)?'♥':'♡'}</button><img src="${escapeHTML(getImageCandidates(item.photo)[0])}" data-candidates="${escapeHTML(JSON.stringify(getImageCandidates(item.photo)))}" data-fallback-index="0" data-drive-url="${escapeHTML(toDriveViewUrl(item.photo))}" alt="${escapeHTML(item.title)}" loading="lazy" onclick="openGalleryViewer(${index},'gallery')" onerror="handleImageFallback(this)"><div class="photo-count-badge">📷 ${index+1}</div><div style="font-size:.7rem;color:var(--text-sub);padding:5px 2px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHTML(item.date.replaceAll('-','.'))} · ${escapeHTML(item.title)}</div></div>`).join(''):'<div style="grid-column:1/-1;text-align:center;color:var(--text-sub);padding:30px;">找不到符合條件的照片 ♡</div>';
+        window._galleryPhotos=photos;
+    }
+
+    function openGalleryViewer(index){
+        const photos=window._galleryPhotos||[];
+        if(!photos[index])return;
+        modalEvents=photos.map(x=>x.event); modalEventIndex=index; modalPhotoIndex=0;
+        // gallery viewer uses one gallery photo per event entry by temporarily keeping index in a custom field
+        renderGalleryViewer(index);
+        document.getElementById('eventModal').style.display='flex';
+    }
+
+    function renderGalleryViewer(index){
+        const item=(window._galleryPhotos||[])[index]; if(!item)return;
+        const body=document.getElementById('event-modal-body');
+        const candidate=getImageCandidates(item.photo)[0];
+        body.innerHTML=`<div class="event-modal-left"><div class="modal-photo-shell"><img class="modal-main-photo" src="${escapeHTML(candidate)}" data-candidates="${escapeHTML(JSON.stringify(getImageCandidates(item.photo)))}" data-fallback-index="0" data-drive-url="${escapeHTML(toDriveViewUrl(item.photo))}" onerror="handleImageFallback(this)" onclick="event.stopPropagation();openModal(this.dataset.driveUrl||this.src,this.dataset.driveUrl)"><div class="modal-photo-nav"><button class="mini-btn" onclick="changeGalleryPhoto(-1);event.stopPropagation();">❮ 上一張</button><span style="font-size:.72rem;color:var(--text-sub);">${index+1} / ${(window._galleryPhotos||[]).length}</span><button class="mini-btn" onclick="changeGalleryPhoto(1);event.stopPropagation();">下一張 ❯</button></div></div></div><div class="event-modal-right"><div class="timeline-date">${formatDate(item.date)}</div><h3 style="margin:4px 0 10px;color:var(--text-main);">${escapeHTML(item.title)}</h3><p style="margin:0;line-height:1.8;color:var(--text-sub);">照片收藏</p><div style="margin-top:14px;"><button class="mini-btn" onclick="closeEventModal();setTimeout(()=>switchTab('timeline'),80)">↗ 回到時間軸</button></div></div>`;
+        document.getElementById('event-modal-nav').style.display='none';
+        window._galleryViewerIndex=index;
+    }
+    function changeGalleryPhoto(delta){const photos=window._galleryPhotos||[];if(!photos.length)return;let i=Number(window._galleryViewerIndex||0);i=(i+delta+photos.length)%photos.length;renderGalleryViewer(i);}
+
+    function renderFavorites(){
+        const container=document.getElementById('favorites-container'); if(!container)return;
+        let items=eventsData.filter(isFavorite).filter(e=>matchesSearch(e,globalSearch));
+        document.getElementById('favorites-result-note').textContent=`${items.length} 筆收藏事件`;
+        if(!items.length){container.innerHTML='<div class="favorite-list-empty">還沒有收藏事件 ♡<br>在時間軸上的 ♡ 點一下就可以加入收藏。</div>';return;}
+        container.innerHTML=items.sort((a,b)=>b.date.localeCompare(a.date)).map(e=>`<div class="card" style="margin-bottom:12px;cursor:pointer;" onclick="openEventModal(eventsData.filter(isFavorite), eventsData.filter(isFavorite).findIndex(x=>eventKey(x)==='${eventKey(e).replace(/'/g,"\\'")}'))"><div class="event-top"><div><div class="timeline-date">${formatDate(e.date)}</div><h3 style="margin:0;color:var(--text-main);">${escapeHTML(e.title)}</h3><div class="event-tags">${inferTags(e).map(t=>`<span class="event-tag">${escapeHTML(t)}</span>`).join('')}</div></div><button class="favorite-btn active" onclick="toggleFavorite(eventsData.find(x=>eventKey(x)==='${eventKey(e).replace(/'/g,"\\'")}'),event)">♥</button></div></div>`).join('');
+    }
+
+    function renderCalendar(){
+        const year=calendarDate.getFullYear(), month=calendarDate.getMonth();
+        document.getElementById('calendar-month-year').textContent=`${year} 年 ${month+1} 月`;
+        const container=document.getElementById('calendar-days'); container.innerHTML='';
+        const firstDay=new Date(year,month,1).getDay(), daysInMonth=new Date(year,month+1,0).getDate();
+        for(let i=0;i<firstDay;i++)container.insertAdjacentHTML('beforeend','<div class="calendar-day empty"></div>');
+        for(let day=1;day<=daysInMonth;day++){
+            const iso=`${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+            const events=eventsData.filter(e=>e.date===iso);
+            const tags=events.map(e=>`<div class="calendar-event-tag">${escapeHTML(e.title)}</div>`).join('');
+            const cell=document.createElement('div'); cell.className='calendar-day'+(events.length?' has-event':''); cell.innerHTML=`<div class="day-number">${day}</div>${tags}${events.some(isFavorite)?'<div style="position:absolute;right:4px;top:3px;font-size:.65rem;">⭐</div>':''}`;
+            if(events.length)cell.onclick=()=>openEventModal(events,0); container.appendChild(cell);
         }
-        const eventModalVisible = document.getElementById('eventModal').style.display === 'flex';
-        if (eventModalVisible && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) {
-            changeModalEvent(e.key === 'ArrowLeft' ? -1 : 1);
-        }
+    }
+    function changeMonth(delta){calendarDate=new Date(calendarDate.getFullYear(),calendarDate.getMonth()+delta,1);renderCalendar();}
+    function changeYear(delta){calendarDate=new Date(calendarDate.getFullYear()+delta,calendarDate.getMonth(),1);renderCalendar();}
+
+    document.addEventListener('keydown',e=>{
+        if(e.key==='Escape'){closeModal();closeEventModal();}
+        const visible=document.getElementById('eventModal').style.display==='flex';
+        if(visible&&(e.key==='ArrowLeft'||e.key==='ArrowRight')) changeModalEvent(e.key==='ArrowLeft'?-1:1);
     });
+    window.addEventListener('scroll',()=>document.getElementById('back-top').classList.toggle('show',window.scrollY>500));
 
     renderYearFilters();
     renderTimeline();
     renderCalendar();
     renderGallery();
+    renderFavorites();
+    updateStats();
+    renderTagBar('timeline-tag-container',activeTag,'setActiveTag');
+    renderTagBar('gallery-tag-container',galleryTag,'setGalleryTag');
+    updateHeaderTagBar();
+    document.querySelector('#mobile-bottom-nav button[data-tab="timeline"]')?.classList.add('active');
 </script>
 </body>
 </html>
