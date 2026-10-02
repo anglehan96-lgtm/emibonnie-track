@@ -1,4269 +1,1345 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#fff0f3">
+    <title>EmiBonnie 官宣記得吱我一聲</title>
+    <!-- 引入 Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+            --accent-pink: #ff758c;
+            --accent-purple: #a18cd1;
+            --bg-color: #fcf6f7;
+            --card-bg: rgba(255, 255, 255, 0.92);
+            --text-main: #4a4044;
+            --text-sub: #8c7d84;
+            --border-color: #f3e5e8;
+            --shadow: 0 12px 35px rgba(255, 154, 158, 0.12);
+        }
 
-<title>✨ 我們的泰百追劇宇宙</title>
+        body {
+            font-family: 'Noto Sans TC', 'Quicksand', -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(255, 224, 230, 0.4) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(220, 214, 247, 0.4) 0%, transparent 40%);
+            color: var(--text-main);
+            margin: 0;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
 
-<script src="https://cdn.tailwindcss.com"></script>
+        .container {
+            width: 100%;
+            max-width: 720px;
+            animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
 
-<script>
-tailwind.config = {
-    theme: {
-        extend: {
-            colors: {
-                cream: '#FDFBF7',
-                cardBg: 'rgba(255,255,255,.82)',
-                accentPink: '#D88A8A',
-                accentSoft: '#F9E4E4',
-                textDark: '#4A403A'
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            padding: 35px 20px;
+            border-radius: 28px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            margin-bottom: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 5px;
+            background: var(--primary-gradient);
+        }
+
+        .header-card h1 {
+            margin: 0 0 8px 0;
+            background: linear-gradient(135deg, #ff758c, #a18cd1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 2.6rem;
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .header-card p {
+            margin: 0;
+            color: var(--text-sub);
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            background: rgba(240, 235, 238, 0.6);
+            backdrop-filter: blur(10px);
+            padding: 8px;
+            border-radius: 22px;
+            gap: 6px;
+            margin-bottom: 25px;
+            box-shadow: inset 0 2px 6px rgba(0,0,0,0.02);
+        }
+
+        .nav-btn {
+            flex: 1;
+            border: none;
+            background: transparent;
+            padding: 12px 0;
+            border-radius: 16px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-sub);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-btn:hover {
+            color: var(--accent-pink);
+        }
+
+        .nav-btn.active {
+            background: #ffffff;
+            color: var(--accent-pink);
+            box-shadow: 0 6px 20px rgba(255, 117, 140, 0.18);
+            transform: scale(1.02);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeInTab 0.4s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeInTab {
+            from { opacity: 0; transform: scale(0.98); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .year-filter-bar {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 12px;
+            margin-bottom: 25px;
+            justify-content: center;
+            scrollbar-width: none;
+        }
+        .year-filter-bar::-webkit-scrollbar { display: none; }
+
+        .year-filter-btn {
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid var(--border-color);
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text-sub);
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+
+        .year-filter-btn:hover {
+            background: #fff0f3;
+            border-color: #ffb6c1;
+            color: var(--accent-pink);
+        }
+
+        .year-filter-btn.active {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            box-shadow: 0 6px 18px rgba(255, 117, 140, 0.3);
+        }
+
+        .timeline-container {
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            top: 0; bottom: 0; left: 24px;
+            width: 3px;
+            background: linear-gradient(to bottom, #ff9a9e, #a18cd1, #f0ebf0);
+            border-radius: 4px;
+        }
+
+        @media (min-width: 600px) {
+            .timeline-container::before { left: 50%; transform: translateX(-50%); }
+        }
+
+        .year-section { margin-bottom: 40px; }
+
+        .year-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #fff;
+            background: linear-gradient(135deg, #ff9a9e, #a18cd1);
+            padding: 8px 22px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 25px;
+            box-shadow: 0 6px 15px rgba(161, 140, 209, 0.25);
+            position: relative;
+            left: 48px;
+            letter-spacing: 0.5px;
+        }
+
+        @media (min-width: 600px) {
+            .year-title { left: 50%; transform: translateX(-50%); display: table; }
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 35px;
+            padding-left: 55px;
+        }
+
+        @media (min-width: 600px) {
+            .timeline-item { padding-left: 0; width: 46%; margin-left: 4%; }
+            .timeline-item:nth-child(odd) { margin-left: 54%; }
+        }
+
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            left: 17px; top: 18px;
+            width: 14px; height: 14px;
+            background: #ffffff;
+            border: 4px solid var(--accent-pink);
+            border-radius: 50%;
+            box-shadow: 0 0 0 5px rgba(255, 117, 140, 0.15);
+            z-index: 2;
+            transition: transform 0.3s;
+        }
+
+        .timeline-item:hover::after {
+            transform: scale(1.2);
+            background: var(--accent-pink);
+        }
+
+        @media (min-width: 600px) {
+            .timeline-item:nth-child(odd)::after { left: -31.5px; }
+            .timeline-item:nth-child(even)::after { left: auto; right: -31.5px; }
+        }
+
+        .timeline-date {
+            font-size: 0.85rem;
+            color: var(--accent-pink);
+            font-weight: 700;
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            padding: 26px;
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            margin-bottom: 0;
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            position: relative;
+            box-sizing: border-box;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 16px 40px rgba(255, 117, 140, 0.16);
+            border-color: rgba(255, 117, 140, 0.3);
+        }
+
+        .badge-duo {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 5px 14px;
+            border-radius: 14px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            display: inline-block;
+            margin-bottom: 12px;
+            box-shadow: 0 4px 12px rgba(255, 117, 140, 0.2);
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 15px auto;
+            display: block;
+            border: 4px solid #fff;
+            box-shadow: 0 8px 25px rgba(255, 117, 140, 0.2);
+            cursor: pointer;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .profile-avatar:hover { transform: scale(1.08) rotate(3deg); }
+
+        .profile-info { text-align: center; margin-bottom: 18px; }
+        
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px dashed rgba(140, 125, 132, 0.2);
+            font-size: 0.95rem;
+        }
+        .info-row span { color: var(--text-sub); }
+        .info-row strong { color: var(--text-main); }
+
+        .photo-carousel {
+            position: relative;
+            width: 100%;
+            border-radius: 18px;
+            overflow: hidden;
+            margin-top: 16px;
+            background: #1a1a1a;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+        }
+
+        .carousel-img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            display: none;
+            cursor: pointer;
+            transition: transform 0.4s ease;
+        }
+
+        .carousel-img:hover { transform: scale(1.03); }
+        .carousel-img.active { display: block; animation: fadeIn 0.4s ease; }
+
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(4px);
+            color: var(--text-main);
+            border: none;
+            width: 38px; height: 38px;
+            cursor: pointer;
+            font-size: 1rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            z-index: 10;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .carousel-btn:hover { background: #ffffff; color: var(--accent-pink); transform: translateY(-50%) scale(1.1); }
+        .carousel-prev { left: 12px; }
+        .carousel-next { right: 12px; }
+
+        .carousel-indicators {
+            position: absolute;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 6px;
+            background: rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(4px);
+            padding: 5px 10px;
+            border-radius: 12px;
+        }
+
+        .indicator-dot {
+            width: 7px; height: 7px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .indicator-dot.active { background: white; width: 20px; border-radius: 4px; }
+
+        a { color: var(--accent-pink); font-weight: 700; text-decoration: none; transition: opacity 0.2s; }
+        a:hover { opacity: 0.8; text-decoration: underline; }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 12px;
+        }
+
+        .gallery-grid img {
+            height: 150px;
+            width: 100%;
+            margin-top: 0;
+            border-radius: 16px;
+            object-fit: cover;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+        }
+
+        .gallery-grid img:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 25px rgba(255, 117, 140, 0.25);
+        }
+
+        .image-load-failed::after {
+            content: '圖片無法載入，請檢查 Google Drive 分享權限';
+            display: block;
+            padding: 12px;
+            text-align: center;
+            color: var(--text-sub);
+            font-size: 0.75rem;
+            background: #faf6f8;
+        }
+
+
+        /* 重新設計的行事曆切換按鈕排版（上方年份、下方月份） */
+        .calendar-header {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .calendar-nav-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .calendar-header button {
+            background: #fff;
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            color: var(--text-main);
+            font-size: 0.85rem;
+            transition: all 0.2s;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+        }
+
+        .calendar-header button:hover {
+            background: #fff0f3;
+            border-color: #ffb6c1;
+            color: var(--accent-pink);
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, minmax(0, 1fr));
+            gap: 4px;
+            text-align: center;
+            width: 100%;
+        }
+
+        .calendar-weekdays {
+            font-weight: 700;
+            color: var(--text-sub);
+            font-size: 0.75rem;
+            padding-bottom: 6px;
+        }
+
+        .calendar-day {
+            background: #ffffff;
+            min-height: 75px;
+            border-radius: 12px;
+            padding: 4px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            font-size: 0.75rem;
+            position: relative;
+            border: 1px solid var(--border-color);
+            box-sizing: border-box;
+            cursor: pointer;
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+
+        .calendar-day:hover {
+            background: #fff5f7;
+            border-color: #ffb6c1;
+            transform: translateY(-2px);
+        }
+
+        .calendar-day.empty {
+            background: transparent;
+            border: none;
+            cursor: default;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .day-number {
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 2px;
+            font-size: 0.8rem;
+        }
+
+        .calendar-event-tag {
+            background: var(--primary-gradient);
+            color: white;
+            font-size: 0.55rem;
+            padding: 1px 4px;
+            border-radius: 6px;
+            margin-top: 2px;
+            width: 100%;
+            text-align: left;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            box-sizing: border-box;
+        }
+
+        @media (max-width: 600px) {
+            body { padding: 8px; }
+            .header-card { padding: 22px 12px; border-radius: 18px; margin-bottom: 15px; }
+            .header-card h1 { font-size: 1.8rem; }
+            .card { padding: 14px; border-radius: 16px; }
+            .nav-tabs { padding: 6px; margin-bottom: 18px; border-radius: 16px; }
+            .nav-btn { padding: 10px 0; font-size: 0.85rem; }
+            
+            .calendar-header h3 { font-size: 1rem !important; }
+            .calendar-header button { padding: 6px 12px; font-size: 0.8rem; border-radius: 10px; }
+            
+            .calendar-grid { gap: 3px; }
+            .calendar-weekdays { font-size: 0.65rem; }
+            .calendar-day {
+                min-height: 52px;
+                padding: 3px;
+                border-radius: 8px;
+            }
+            .day-number { font-size: 0.7rem; margin-bottom: 1px; }
+            .calendar-event-tag {
+                font-size: 0.5rem;
+                padding: 1px 2px;
+                border-radius: 4px;
+                margin-top: 1px;
             }
         }
-    }
-}
-</script>
 
-<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+        #imageModal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(45, 35, 40, 0.85);
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+            backdrop-filter: blur(8px);
+            animation: fadeIn 0.3s ease;
+        }
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+        #modalImage {
+            max-width: 90%;
+            max-height: 85vh;
+            object-fit: contain;
+            border-radius: 16px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+            background: #111;
+        }
 
-<style>
+        .modal-drive-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 10px;
+            padding: 8px 14px;
+            border-radius: 12px;
+            background: #fff0f3;
+            color: var(--accent-pink);
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-decoration: none;
+        }
 
-* {
-    box-sizing: border-box;
-}
+        .modal-drive-link:hover { background: #ffe2e8; text-decoration: none; }
+        .event-card { cursor: pointer; }
+        .event-card:focus-visible { outline: 3px solid rgba(255,117,140,0.35); outline-offset: 3px; }
+        .image-load-failed { background: #faf6f8; }
 
-html {
-    scroll-behavior: smooth;
-}
+        #eventModal {
+            display: none;
+            position: fixed;
+            z-index: 1500;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(45, 35, 40, 0.6);
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            box-sizing: border-box;
+            backdrop-filter: blur(6px);
+            animation: fadeIn 0.3s ease;
+        }
 
-body {
-    margin: 0;
-    background:
-        radial-gradient(circle at 10% 10%, rgba(249,228,228,.65), transparent 25%),
-        radial-gradient(circle at 90% 20%, rgba(235,225,245,.45), transparent 25%),
-        #FDFBF7;
-    color: #4A403A;
-    font-family:
-        system-ui,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        "Noto Sans TC",
-        sans-serif;
-}
+        .event-modal-content {
+            background: #ffffff;
+            width: 100%;
+            max-width: 680px;
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
 
-button,
-input,
-select {
-    font: inherit;
-}
+        .event-modal-body {
+            display: flex;
+            flex-direction: row;
+            gap: 24px;
+            padding: 30px;
+            align-items: center;
+        }
 
-.glass-card {
-    background: rgba(255,255,255,.80);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    border: 1px solid rgba(232,165,165,.25);
-}
+        @media (max-width: 600px) {
+            .event-modal-body { flex-direction: column; padding: 18px; gap: 12px; }
+        }
 
-.soft-shadow {
-    box-shadow:
-        0 8px 30px rgba(92,64,51,.06);
-}
+        .event-modal-left { flex: 1; width: 100%; }
+        .event-modal-right { flex: 1; width: 100%; display: flex; flex-direction: column; justify-content: center; }
 
-.poster {
-    background:
-        linear-gradient(135deg,#f3eeee,#e9e3e0);
-}
+        .event-modal-close {
+            position: absolute;
+            top: 18px; right: 20px;
+            background: #f0ebf0;
+            border: none;
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            font-weight: 700;
+            cursor: pointer;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-sub);
+            transition: all 0.2s;
+        }
 
-.no-scroll {
-    overflow: hidden;
-}
+        .event-modal-close:hover { background: var(--accent-pink); color: white; transform: scale(1.1); }
 
-/* =========================
-   Scrollbar
-========================= */
+        .event-modal-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #faf6f8;
+            padding: 16px 24px;
+            border-top: 1px solid var(--border-color);
+        }
 
-::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-}
+        .event-modal-nav button {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 0.85rem;
+            box-shadow: 0 4px 12px rgba(255, 117, 140, 0.25);
+            transition: all 0.2s;
+        }
 
-::-webkit-scrollbar-thumb {
-    background: #dfb2b2;
-    border-radius: 999px;
-}
+        .event-modal-nav button:hover { transform: scale(1.05); }
 
-::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-/* =========================
-   Modal
-========================= */
-
-.modal-backdrop {
-    background: rgba(55,42,36,.55);
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
-}
-
-.modal-panel {
-    animation: modalIn .22s ease-out;
-}
-
-@keyframes modalIn {
-    from {
-        opacity: 0;
-        transform: translateY(18px) scale(.98);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-}
-
-/* =========================
-   Timeline
-========================= */
-
-.timeline-line {
-    position: absolute;
-    left: 22px;
-    top: 0;
-    bottom: 0;
-    width: 3px;
-    background: linear-gradient(
-        to bottom,
-        #e8a5a5,
-        #e9c9c9,
-        #ddd1dc
-    );
-    border-radius: 999px;
-}
-
-.timeline-dot {
-    position: absolute;
-    left: 14px;
-    top: 20px;
-    width: 19px;
-    height: 19px;
-    border-radius: 50%;
-    background: #D88A8A;
-    border: 4px solid #FDFBF7;
-    box-shadow: 0 0 0 2px #e9c2c2;
-    z-index: 2;
-}
-
-.timeline-item {
-    position: relative;
-    padding-left: 55px;
-}
-
-/* Desktop timeline */
-
-@media (min-width: 768px) {
-
-    .timeline-line {
-        left: 50%;
-        transform: translateX(-50%);
-    }
-
-    .timeline-dot {
-        left: 50%;
-        transform: translateX(-50%);
-    }
-
-    .timeline-item {
-        width: 50%;
-        padding-left: 0;
-        padding-right: 55px;
-    }
-
-    .timeline-item.right {
-        margin-left: 50%;
-        padding-left: 55px;
-        padding-right: 0;
-    }
-
-}
-
-/* =========================
-   Mobile
-========================= */
-
-@media (max-width: 767px) {
-
-    body {
-        padding-bottom: 75px;
-    }
-
-    .mobile-bottom-nav {
-        display: flex;
-    }
-
-    .desktop-nav {
-        display: none;
-    }
-
-    .mobile-title {
-        font-size: 19px;
-    }
-
-    .modal-mobile {
-        height: 100%;
-        max-height: 100%;
-        border-radius: 0;
-    }
-
-}
-
-@media (min-width: 768px) {
-
-    .mobile-bottom-nav {
-        display: none;
-    }
-
-}
-
-/* =========================
-   Toast
-========================= */
-
-.toast {
-    animation: toastIn .25s ease-out;
-}
-
-@keyframes toastIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-</style>
+        /* ===== 升級版 UI ===== */
+        .header-tools { margin-top: 22px; display:flex; flex-direction:column; gap:14px; }
+        .search-box { position:relative; width:100%; }
+        .search-box input {
+            width:100%; box-sizing:border-box; border:1px solid var(--border-color); background:#fff;
+            border-radius:16px; padding:13px 44px 13px 16px; outline:none; font-size:.95rem; color:var(--text-main);
+            transition:.2s; box-shadow:0 4px 14px rgba(0,0,0,.03);
+        }
+        .search-box input:focus { border-color:#ffb6c1; box-shadow:0 0 0 4px rgba(255,117,140,.10); }
+        .search-box button { position:absolute; right:8px; top:50%; transform:translateY(-50%); border:0; background:transparent; cursor:pointer; font-size:1rem; color:var(--text-sub); }
+        .tag-bar { display:flex; flex-wrap:wrap; gap:7px; align-items:center; }
+        .tag-chip, .filter-chip {
+            border:1px solid var(--border-color); background:#fff; color:var(--text-sub); border-radius:999px;
+            padding:6px 11px; font-size:.76rem; font-weight:700; cursor:pointer; transition:.2s;
+        }
+        .tag-chip:hover, .filter-chip:hover { border-color:#ffb6c1; color:var(--accent-pink); background:#fff6f8; }
+        .tag-chip.active, .filter-chip.active { background:var(--primary-gradient); color:#fff; border-color:transparent; box-shadow:0 4px 10px rgba(255,117,140,.18); }
+        .stats-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:22px; }
+        .stat-card { background:#fff; border:1px solid rgba(255,255,255,.9); border-radius:18px; padding:13px 10px; box-shadow:0 6px 18px rgba(255,154,158,.08); text-align:center; }
+        .stat-icon { font-size:1.15rem; }
+        .stat-number { margin-top:4px; font-size:1.25rem; font-weight:800; color:var(--text-main); }
+        .stat-label { font-size:.68rem; color:var(--text-sub); margin-top:2px; }
+        .timeline-controls { display:flex; flex-direction:column; gap:10px; margin-bottom:10px; }
+        .results-note { font-size:.78rem; color:var(--text-sub); text-align:center; margin-top:-3px; }
+        .event-card { cursor:pointer; }
+        .event-card:focus { outline:3px solid rgba(255,117,140,.16); }
+        .event-top { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; }
+        .favorite-btn { border:0; background:#fff5f7; color:#d49aa9; width:34px; height:34px; border-radius:50%; cursor:pointer; flex:0 0 auto; transition:.2s; font-size:1rem; }
+        .favorite-btn:hover { transform:scale(1.08); background:#ffe8ee; }
+        .favorite-btn.active { background:linear-gradient(135deg,#ff758c,#a18cd1); color:#fff; box-shadow:0 4px 12px rgba(255,117,140,.25); }
+        .event-tags { display:flex; flex-wrap:wrap; gap:5px; margin-top:9px; }
+        .event-tag { font-size:.65rem; padding:3px 7px; border-radius:999px; background:#f7edf5; color:#8f6f86; }
+        .gallery-toolbar { display:flex; flex-direction:column; gap:10px; margin-bottom:14px; }
+        .gallery-item-card { position:relative; }
+        .gallery-item-card .gallery-fav { position:absolute; right:8px; top:8px; z-index:3; }
+        .photo-count-badge { position:absolute; left:8px; bottom:35px; background:rgba(45,35,40,.62); color:#fff; font-size:.66rem; padding:4px 7px; border-radius:999px; backdrop-filter:blur(4px); }
+        .modal-photo-shell { width:100%; }
+        .modal-main-photo { width:100%; max-height:340px; object-fit:contain; border-radius:18px; background:#151515; display:block; cursor:pointer; }
+        .modal-thumbs { display:flex; gap:7px; overflow-x:auto; padding:8px 0 2px; scrollbar-width:thin; }
+        .modal-thumbs img { width:62px; height:62px; object-fit:cover; border-radius:10px; border:2px solid transparent; cursor:pointer; opacity:.75; flex:0 0 auto; }
+        .modal-thumbs img.active { border-color:var(--accent-pink); opacity:1; }
+        .modal-photo-nav { display:flex; justify-content:space-between; align-items:center; gap:8px; margin-top:7px; }
+        .mini-btn { border:0; background:#f6eef2; color:var(--text-main); padding:7px 11px; border-radius:11px; font-weight:700; cursor:pointer; }
+        .mini-btn:hover { background:#ffeef3; color:var(--accent-pink); }
+        .modal-tags { display:flex; flex-wrap:wrap; gap:6px; margin-top:12px; }
+        .modal-tag { font-size:.68rem; padding:4px 8px; border-radius:999px; background:#f8eef6; color:#84667c; }
+        .favorite-list-empty { text-align:center; padding:36px 15px; color:var(--text-sub); }
+        .mobile-bottom-nav { display:none; }
+        .back-top { position:fixed; right:18px; bottom:18px; z-index:1200; width:42px; height:42px; border:0; border-radius:50%; background:linear-gradient(135deg,#ff758c,#a18cd1); color:#fff; cursor:pointer; box-shadow:0 8px 20px rgba(161,140,209,.28); opacity:0; transform:translateY(10px); pointer-events:none; transition:.25s; }
+        .back-top.show { opacity:1; transform:none; pointer-events:auto; }
+        .image-load-failed { background:#f8eef2; min-height:150px; }
+        .load-failed-note { padding:8px 10px; margin-top:8px; border-radius:12px; background:#fff4f6; color:#9b6878; font-size:.72rem; line-height:1.6; }
+        @media (max-width: 600px) {
+            .stats-grid { grid-template-columns:repeat(2,1fr); }
+            .mobile-bottom-nav {
+                display:flex; position:fixed; left:8px; right:8px; bottom:8px; z-index:1800;
+                background:rgba(255,255,255,.94); backdrop-filter:blur(14px); border:1px solid rgba(255,255,255,.8);
+                border-radius:18px; padding:6px; box-shadow:0 12px 35px rgba(60,35,45,.14);
+                padding-bottom:calc(6px + env(safe-area-inset-bottom));
+            }
+            .mobile-bottom-nav button { flex:1; border:0; background:transparent; border-radius:13px; padding:8px 2px; font-size:.64rem; color:var(--text-sub); font-weight:700; }
+            .mobile-bottom-nav button.active { background:#fff1f4; color:var(--accent-pink); }
+            .back-top { bottom:82px; }
+            body { padding-bottom:78px; }
+        }
+    </style>
 </head>
-
 <body>
-
-<div id="root"></div>
-
-<script type="text/babel">
-
-const {
-    useState,
-    useEffect,
-    useMemo
-} = React;
-
-
-/* =========================================================
-   Google Sheet
-========================================================= */
-
-const SHEET_URLS = {
-
-    dramas:
-    'https://docs.google.com/spreadsheets/d/e/2PACX-1vQMZ47PrJewiLmvkOtVLSWaupYPuClWLjnJWTaMTaFtwKUreh4xOaRPVBnGs3t2lqcx32AEESztOn1e/pub?gid=0&single=true&output=csv',
-
-    wishlist:
-    'https://docs.google.com/spreadsheets/d/e/2PACX-1vQMZ47PrJewiLmvkOtVLSWaupYPuClWLjnJWTaMTaFtwKUreh4xOaRPVBnGs3t2lqcx32AEESztOn1e/pub?gid=216341491&single=true&output=csv',
-
-    actors:
-    'https://docs.google.com/spreadsheets/d/e/2PACX-1vQMZ47PrJewiLmvkOtVLSWaupYPuClWLjnJWTaMTaFtwKUreh4xOaRPVBnGs3t2lqcx32AEESztOn1e/pub?gid=832417858&single=true&output=csv'
-};
-
-
-/* =========================================================
-   預設圖片
-========================================================= */
-
-const DEFAULT_POSTER =
-'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=800';
-
-const DEFAULT_ACTOR =
-'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=500';
-
-
-/* =========================================================
-   工具函式
-========================================================= */
-
-function safeText(value) {
-    if (
-        value === undefined ||
-        value === null ||
-        value === ''
-    ) {
-        return '';
-    }
-
-    return String(value).trim();
-}
-
-
-function normalizeStatus(status) {
-
-    const s = safeText(status);
-
-    if (
-        s.includes('跟播') ||
-        s.includes('播放中') ||
-        s.toLowerCase().includes('airing')
-    ) {
-        return '正在跟播';
-    }
-
-    if (
-        s.includes('待播') ||
-        s.includes('未播') ||
-        s.toLowerCase().includes('upcoming')
-    ) {
-        return '待播中';
-    }
-
-    if (
-        s.includes('完結') ||
-        s.includes('已完') ||
-        s.toLowerCase().includes('completed')
-    ) {
-        return '已完結';
-    }
-
-    return s || '未分類';
-}
-
-
-function statusClass(status) {
-
-    if (status === '正在跟播') {
-        return 'bg-emerald-100 text-emerald-700';
-    }
-
-    if (status === '待播中') {
-        return 'bg-blue-100 text-blue-700';
-    }
-
-    if (status === '已完結') {
-        return 'bg-stone-100 text-stone-600';
-    }
-
-    return 'bg-rose-100 text-rose-600';
-}
-
-
-function parseNumber(value) {
-
-    if (
-        value === undefined ||
-        value === null ||
-        value === ''
-    ) {
-        return 0;
-    }
-
-    const n = parseInt(
-        String(value).replace(/[^\d]/g,''),
-        10
-    );
-
-    return Number.isNaN(n) ? 0 : n;
-}
-
-
-/* =========================================================
-   日期
-========================================================= */
-
-function parseDate(value) {
-
-    if (!value) return null;
-
-    const text = String(value).trim();
-
-    /*
-       支援：
-
-       2026-09-15
-       2026/09/15
-       2026.09.15
-       2026-09-15T00:00:00
-    */
-
-    const match = text.match(
-        /(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})/
-    );
-
-    if (!match) return null;
-
-    const year = Number(match[1]);
-    const month = Number(match[2]);
-    const day = Number(match[3]);
-
-    const date = new Date(
-        year,
-        month - 1,
-        day
-    );
-
-    if (Number.isNaN(date.getTime())) {
-        return null;
-    }
-
-    return date;
-}
-
-
-function formatDate(date) {
-
-    if (!date) return '-';
-
-    const y = date.getFullYear();
-    const m = String(date.getMonth()+1).padStart(2,'0');
-    const d = String(date.getDate()).padStart(2,'0');
-
-    return `${y}/${m}/${d}`;
-}
-
-
-function formatMonthDay(date) {
-
-    if (!date) return '-';
-
-    const m = String(date.getMonth()+1).padStart(2,'0');
-    const d = String(date.getDate()).padStart(2,'0');
-
-    return `${m}/${d}`;
-}
-
-
-function getYear(date) {
-
-    if (!date) return '未知年份';
-
-    return String(date.getFullYear());
-}
-
-
-/*
-    根據 premiere_date + air_day_of_week
-    自動計算下一集日期。
-
-    如果試算表有 air_day_of_week：
-    週一 / 週二 / ... / 週日
-
-    就會優先使用。
-
-    如果沒有：
-    預設每 7 天一集。
-*/
-
-function getWeekDayNumber(text) {
-
-    if (!text) return null;
-
-    const s = String(text);
-
-    const map = {
-        '週一': 1,
-        '周一': 1,
-        '星期一': 1,
-        '週二': 2,
-        '周二': 2,
-        '星期二': 2,
-        '週三': 3,
-        '周三': 3,
-        '星期三': 3,
-        '週四': 4,
-        '周四': 4,
-        '星期四': 4,
-        '週五': 5,
-        '周五': 5,
-        '星期五': 5,
-        '週六': 6,
-        '周六': 6,
-        '星期六': 6,
-        '週日': 0,
-        '周日': 0,
-        '星期日': 0
-    };
-
-    for (const key in map) {
-
-        if (s.includes(key)) {
-            return map[key];
-        }
-
-    }
-
-    return null;
-}
-
-
-/*
-   計算某一集的日期
-
-   EP1 = premiere_date
-
-   如果有播出星期：
-   從 premiere_date 對齊該星期
-
-   例如：
-   首播 2026/09/15
-   每週二
-
-   EP1 = 09/15
-   EP2 = 09/22
-   EP3 = 09/29
-*/
-
-function calculateEpisodeDate(
-    premiereDate,
-    episode,
-    airDay
-) {
-
-    if (!premiereDate) return null;
-
-    const date = new Date(premiereDate);
-
-    const targetDay =
-        getWeekDayNumber(airDay);
-
-    if (
-        targetDay !== null &&
-        episode === 1
-    ) {
-
-        const currentDay = date.getDay();
-
-        let diff =
-            targetDay - currentDay;
-
-        if (diff < 0) {
-            diff += 7;
-        }
-
-        date.setDate(
-            date.getDate() + diff
-        );
-    }
-
-    if (episode > 1) {
-
-        /*
-          最穩定做法：
-          每集 +7 天。
-
-          如果你的劇是一天播兩集，
-          可以在 Google Sheet 增加
-          episodes_per_week / air_interval
-          再擴充。
-        */
-
-        date.setDate(
-            date.getDate() +
-            ((episode - 1) * 7)
-        );
-    }
-
-    return date;
-}
-
-
-/*
-   計算下一集
-*/
-
-function calculateNextAirDate(drama) {
-
-    const status =
-        normalizeStatus(drama.ststus_type);
-
-    if (status !== '正在跟播') {
-        return null;
-    }
-
-    const premiere =
-        parseDate(drama.premiere_date);
-
-    if (!premiere) return null;
-
-    const total =
-        parseNumber(drama.total_episodes);
-
-    let progress =
-        parseNumber(
-            drama.my_progress ||
-            drama.my_propress ||
-            drama.friend_progress
-        );
-
-    /*
-      如果自己的進度與朋友不同，
-      取比較大的進度作為「下一集」
-      顯示依照整體追劇進度推算。
-    */
-
-    const myProgress =
-        parseNumber(
-            drama.my_progress ||
-            drama.my_propress
-        );
-
-    const friendProgress =
-        parseNumber(
-            drama.friend_progress
-        );
-
-    progress =
-        Math.max(
-            myProgress,
-            friendProgress
-        );
-
-    if (total && progress >= total) {
-        return null;
-    }
-
-    const nextEpisode =
-        progress + 1;
-
-    return calculateEpisodeDate(
-        premiere,
-        nextEpisode,
-        drama.air_day_of_week
-    );
-}
-
-
-/*
-   產生所有集數日期
-*/
-
-function generateEpisodeSchedule(drama) {
-
-    const premiere =
-        parseDate(drama.premiere_date);
-
-    const total =
-        parseNumber(drama.total_episodes);
-
-    if (!premiere || !total) {
-        return [];
-    }
-
-    const list = [];
-
-    for (
-        let ep = 1;
-        ep <= total;
-        ep++
-    ) {
-
-        list.push({
-            episode: ep,
-            date: calculateEpisodeDate(
-                premiere,
-                ep,
-                drama.air_day_of_week
-            )
-        });
-
-    }
-
-    return list;
-}
-
-
-/* =========================================================
-   OST
-========================================================= */
-
-/*
-   Google Sheet 欄位格式：
-
-   song_1_name
-   song_1_link
-
-   song_2_name
-   song_2_link
-
-   song_3_name
-   ...
-
-   不限數量。
-
-   只要欄位按照：
-
-   song_1_name
-   song_1_link
-
-   song_2_name
-   song_2_link
-
-   一直增加即可。
-*/
-
-function getOSTs(drama) {
-
-    const songs = [];
-
-    Object.keys(drama || {})
-        .forEach(key => {
-
-            const match =
-                key.match(
-                    /^song_(\d+)_(name|title|link|url)$/i
-                );
-
-            if (!match) return;
-
-            const number =
-                Number(match[1]);
-
-            const field =
-                match[2].toLowerCase();
-
-            if (!songs[number]) {
-                songs[number] = {};
-            }
-
-            if (
-                field === 'name' ||
-                field === 'title'
-            ) {
-                songs[number].name =
-                    safeText(drama[key]);
-            }
-
-            if (
-                field === 'link' ||
-                field === 'url'
-            ) {
-                songs[number].link =
-                    safeText(drama[key]);
-            }
-        });
-
-    return songs
-        .filter(Boolean)
-        .filter(song =>
-            song.name ||
-            song.link
-        )
-        .map(song => ({
-            ...song
-        }));
-}
-
-
-/* =========================================================
-   圖片
-========================================================= */
-
-function ImageWithFallback({
-    src,
-    fallback,
-    alt,
-    className
-}) {
-
-    const [currentSrc,setCurrentSrc] =
-        useState(src || fallback);
-
-    useEffect(() => {
-
-        setCurrentSrc(
-            src || fallback
-        );
-
-    },[src,fallback]);
-
-    return (
-        <img
-            src={currentSrc}
-            alt={alt || ''}
-            className={className}
-            loading="lazy"
-            onError={() => {
-
-                if (
-                    currentSrc !== fallback
-                ) {
-                    setCurrentSrc(fallback);
-                }
-
-            }}
-        />
-    );
-}
-
-
-/* =========================================================
-   App
-========================================================= */
-
-function App() {
-
-    const [activeTab,setActiveTab] =
-        useState('dramas');
-
-    const [dramas,setDramas] =
-        useState([]);
-
-    const [wishlist,setWishlist] =
-        useState([]);
-
-    const [actors,setActors] =
-        useState([]);
-
-    const [loading,setLoading] =
-        useState(true);
-
-    const [errors,setErrors] =
-        useState([]);
-
-    const [searchTerm,setSearchTerm] =
-        useState('');
-
-    const [selectedYear,setSelectedYear] =
-        useState('全部');
-
-    const [selectedStatus,setSelectedStatus] =
-        useState('全部');
-
-    const [viewMode,setViewMode] =
-        useState('cards');
-
-    const [selectedDrama,setSelectedDrama] =
-        useState(null);
-
-    const [toast,setToast] =
-        useState('');
-
-
-    /* =====================================================
-       讀取 Google Sheet
-    ===================================================== */
-
-    useEffect(() => {
-
-        let completed = 0;
-
-        const results = {
-            dramas: [],
-            wishlist: [],
-            actors: []
-        };
-
-        const newErrors = [];
-
-        function done() {
-
-            completed++;
-
-            if (completed >= 3) {
-
-                setDramas(results.dramas);
-                setWishlist(results.wishlist);
-                setActors(results.actors);
-
-                setErrors(newErrors);
-                setLoading(false);
-            }
-        }
-
-
-        Papa.parse(
-            SHEET_URLS.dramas,
-            {
-                download: true,
-                header: true,
-                skipEmptyLines: true,
-
-                complete: result => {
-
-                    if (
-                        result.errors &&
-                        result.errors.length
-                    ) {
-                        console.warn(
-                            'dramas CSV:',
-                            result.errors
-                        );
-                    }
-
-                    results.dramas =
-                        result.data || [];
-
-                    done();
-                },
-
-                error: error => {
-
-                    console.error(
-                        '劇集資料讀取失敗',
-                        error
-                    );
-
-                    newErrors.push(
-                        '劇集資料讀取失敗'
-                    );
-
-                    done();
-                }
-            }
-        );
-
-
-        Papa.parse(
-            SHEET_URLS.wishlist,
-            {
-                download: true,
-                header: true,
-                skipEmptyLines: true,
-
-                complete: result => {
-
-                    results.wishlist =
-                        result.data || [];
-
-                    done();
-                },
-
-                error: error => {
-
-                    console.error(
-                        'Wishlist 讀取失敗',
-                        error
-                    );
-
-                    newErrors.push(
-                        'Wishlist 讀取失敗'
-                    );
-
-                    done();
-                }
-            }
-        );
-
-
-        Papa.parse(
-            SHEET_URLS.actors,
-            {
-                download: true,
-                header: true,
-                skipEmptyLines: true,
-
-                complete: result => {
-
-                    results.actors =
-                        result.data || [];
-
-                    done();
-                },
-
-                error: error => {
-
-                    console.error(
-                        'CP 資料讀取失敗',
-                        error
-                    );
-
-                    newErrors.push(
-                        'CP 資料讀取失敗'
-                    );
-
-                    done();
-                }
-            }
-        );
-
-    },[]);
-
-
-    /* =====================================================
-       年份
-    ===================================================== */
-
-    const years =
-        useMemo(() => {
-
-            const yearSet =
-                new Set();
-
-            dramas.forEach(drama => {
-
-                const date =
-                    parseDate(
-                        drama.premiere_date
-                    );
-
-                if (date) {
-                    yearSet.add(
-                        date.getFullYear()
-                    );
-                }
-
-            });
-
-            return [
-                '全部',
-                ...Array.from(yearSet)
-                    .sort((a,b) => b-a)
-                    .map(String)
-            ];
-
-        },[dramas]);
-
-
-    /* =====================================================
-       過濾劇集
-    ===================================================== */
-
-    const filteredDramas =
-        useMemo(() => {
-
-            const search =
-                searchTerm
-                    .trim()
-                    .toLowerCase();
-
-            return dramas.filter(drama => {
-
-                const titleZh =
-                    safeText(
-                        drama.title_zh
-                    ).toLowerCase();
-
-                const titleTh =
-                    safeText(
-                        drama.title_th
-                    ).toLowerCase();
-
-                const cp =
-                    safeText(
-                        drama.cp_name
-                    ).toLowerCase();
-
-                const matchesSearch =
-                    !search ||
-                    titleZh.includes(search) ||
-                    titleTh.includes(search) ||
-                    cp.includes(search);
-
-                const date =
-                    parseDate(
-                        drama.premiere_date
-                    );
-
-                const year =
-                    date
-                    ? String(
-                        date.getFullYear()
-                    )
-                    : '未知年份';
-
-                const matchesYear =
-                    selectedYear === '全部' ||
-                    year === selectedYear;
-
-                const status =
-                    normalizeStatus(
-                        drama.ststus_type
-                    );
-
-                const matchesStatus =
-                    selectedStatus === '全部' ||
-                    status === selectedStatus;
-
-                return (
-                    matchesSearch &&
-                    matchesYear &&
-                    matchesStatus
-                );
-
-            });
-
-        },[
-            dramas,
-            searchTerm,
-            selectedYear,
-            selectedStatus
-        ]);
-
-
-    /* =====================================================
-       年份分組
-    ===================================================== */
-
-    const groupedByYear =
-        useMemo(() => {
-
-            const groups = {};
-
-            filteredDramas.forEach(drama => {
-
-                const date =
-                    parseDate(
-                        drama.premiere_date
-                    );
-
-                const year =
-                    date
-                    ? date.getFullYear()
-                    : '未知年份';
-
-                if (!groups[year]) {
-                    groups[year] = [];
-                }
-
-                groups[year].push(drama);
-
-            });
-
-            return Object.entries(groups)
-                .sort((a,b) => {
-
-                    if (
-                        a[0] === '未知年份'
-                    ) return 1;
-
-                    if (
-                        b[0] === '未知年份'
-                    ) return -1;
-
-                    return Number(b[0]) -
-                           Number(a[0]);
-
-                });
-
-        },[filteredDramas]);
-
-
-    /* =====================================================
-       開劇
-    ===================================================== */
-
-    function openDrama(drama) {
-
-        setSelectedDrama(drama);
-
-        document.body.classList.add(
-            'no-scroll'
-        );
-
-    }
-
-
-    function closeDrama() {
-
-        setSelectedDrama(null);
-
-        document.body.classList.remove(
-            'no-scroll'
-        );
-
-    }
-
-
-    /* =====================================================
-       顯示錯誤
-    ===================================================== */
-
-    useEffect(() => {
-
-        if (errors.length) {
-
-            setToast(
-                errors.join('、')
-            );
-
-            const timer =
-                setTimeout(
-                    () => setToast(''),
-                    5000
-                );
-
-            return () =>
-                clearTimeout(timer);
-        }
-
-    },[errors]);
-
-
-    /* =====================================================
-       UI
-    ===================================================== */
-
-    return (
-
-        <div className="min-h-screen pb-20">
-
-
-            {/* =================================================
-                Header
-            ================================================= */}
-
-            <header
-                className="
-                    glass-card
-                    sticky top-0 z-40
-                    border-b border-rose-100
-                    shadow-sm
-                    px-4 md:px-8
-                    py-3 md:py-4
-                "
-            >
-
-                <div
-                    className="
-                        max-w-7xl mx-auto
-                        flex
-                        flex-col
-                        md:flex-row
-                        md:items-center
-                        md:justify-between
-                        gap-3
-                    "
-                >
-
-                    <div className="flex items-center gap-3">
-
-                        <div
-                            className="
-                                w-11 h-11
-                                rounded-2xl
-                                bg-rose-100
-                                flex items-center
-                                justify-center
-                                text-2xl
-                            "
-                        >
-                            ✨
-                        </div>
-
-                        <div>
-
-                            <h1
-                                className="
-                                    mobile-title
-                                    text-xl md:text-2xl
-                                    font-bold
-                                    tracking-wide
-                                    text-[#5C4033]
-                                "
-                            >
-                                我們的泰百追劇宇宙
-                            </h1>
-
-                            <p
-                                className="
-                                    text-xs
-                                    text-rose-400
-                                "
-                            >
-                                雙人進度同步・追劇時間軸・OST
-                            </p>
-
-                        </div>
-
-                    </div>
-
-
-                    {/* Desktop navigation */}
-
-                    <div
-                        className="
-                            desktop-nav
-                            flex
-                            bg-rose-50/80
-                            p-1
-                            rounded-full
-                            border
-                            border-rose-200
-                        "
-                    >
-
-                        <TabButton
-                            active={
-                                activeTab === 'dramas'
-                            }
-                            onClick={() =>
-                                setActiveTab('dramas')
-                            }
-                        >
-                            📺 劇集
-                            <span className="ml-1 opacity-70">
-                                ({dramas.length})
-                            </span>
-                        </TabButton>
-
-                        <TabButton
-                            active={
-                                activeTab === 'wishlist'
-                            }
-                            onClick={() =>
-                                setActiveTab('wishlist')
-                            }
-                        >
-                            🎁 Wishlist
-                            <span className="ml-1 opacity-70">
-                                ({wishlist.length})
-                            </span>
-                        </TabButton>
-
-                        <TabButton
-                            active={
-                                activeTab === 'actors'
-                            }
-                            onClick={() =>
-                                setActiveTab('actors')
-                            }
-                        >
-                            👩‍❤️‍👩 CP
-                            <span className="ml-1 opacity-70">
-                                ({actors.length})
-                            </span>
-                        </TabButton>
-
-                    </div>
-
+<div class="container">
+    <div class="header-card">
+        <h1>EmiBonnie</h1>
+        <p>✨ 官宣記得吱我一聲 ✨</p>
+        <div class="header-tools">
+            <div class="search-box">
+                <input id="global-search" type="search" placeholder="搜尋活動、日期、內容……" autocomplete="off" oninput="handleGlobalSearch(this.value)">
+                <button type="button" onclick="clearGlobalSearch()" aria-label="清除搜尋">✕</button>
+            </div>
+            <div id="header-tag-bar" class="tag-bar"></div>
+        </div>
+        <div id="stats-grid" class="stats-grid"></div>
+    </div>
+    <div class="nav-tabs">
+        <button class="nav-btn active" onclick="switchTab('timeline')">⌛ 時間軸</button>
+        <button class="nav-btn" onclick="switchTab('calendar')">📅 行事曆</button>
+        <button class="nav-btn" onclick="switchTab('profile')">📁 資料</button>
+        <button class="nav-btn" onclick="switchTab('gallery')">🖼️ 照片</button>
+        <button class="nav-btn" onclick="switchTab('favorites')">⭐ 收藏</button>
+    </div>
+    <div id="timeline" class="tab-content active">
+        <div class="timeline-controls">
+            <div id="year-filter-container" class="year-filter-bar"></div>
+            <div id="timeline-tag-container" class="tag-bar"></div>
+            <div id="timeline-result-note" class="results-note"></div>
+        </div>
+        <div id="timeline-container" class="timeline-container"></div>
+    </div>
+    <div id="calendar" class="tab-content">
+        <div class="card">
+            <div class="calendar-header">
+                <!-- 上方：年份切換 -->
+                <div class="calendar-nav-row">
+                    <button onclick="changeYear(-1)">◀ 去年</button>
+                    <button onclick="changeYear(1)">明年 ▶</button>
                 </div>
-
-            </header>
-
-
-            {/* =================================================
-                Main
-            ================================================= */}
-
-            <main
-                className="
-                    max-w-7xl
-                    mx-auto
-                    px-4
-                    md:px-6
-                    mt-5 md:mt-8
-                "
-            >
-
-                {loading ? (
-
-                    <Loading />
-
-                ) : (
-
-                    <>
-
-                        {/* ===============================
-                            DRAMAS
-                        =============================== */}
-
-                        {activeTab === 'dramas' && (
-
-                            <>
-
-                                {/* View switch */}
-
-                                <div
-                                    className="
-                                        flex
-                                        gap-2
-                                        mb-5
-                                        overflow-x-auto
-                                    "
-                                >
-
-                                    <button
-                                        onClick={() =>
-                                            setViewMode('cards')
-                                        }
-                                        className={`
-                                            px-4 py-2
-                                            rounded-full
-                                            text-sm
-                                            whitespace-nowrap
-                                            border
-                                            transition
-                                            ${
-                                                viewMode === 'cards'
-                                                ? 'bg-[#D88A8A] text-white border-[#D88A8A]'
-                                                : 'bg-white/70 text-stone-600 border-rose-100'
-                                            }
-                                        `}
-                                    >
-                                        📺 劇集卡片
-                                    </button>
-
-                                    <button
-                                        onClick={() =>
-                                            setViewMode('timeline')
-                                        }
-                                        className={`
-                                            px-4 py-2
-                                            rounded-full
-                                            text-sm
-                                            whitespace-nowrap
-                                            border
-                                            transition
-                                            ${
-                                                viewMode === 'timeline'
-                                                ? 'bg-[#D88A8A] text-white border-[#D88A8A]'
-                                                : 'bg-white/70 text-stone-600 border-rose-100'
-                                            }
-                                        `}
-                                    >
-                                        🕰️ 時間軸
-                                    </button>
-
-                                </div>
-
-
-                                {/* 本週跟播 */}
-
-                                <WeeklySchedule
-                                    dramas={dramas}
-                                    onOpen={openDrama}
-                                />
-
-
-                                {/* 搜尋與篩選 */}
-
-                                <FilterBar
-                                    searchTerm={searchTerm}
-                                    setSearchTerm={setSearchTerm}
-                                    selectedYear={selectedYear}
-                                    setSelectedYear={setSelectedYear}
-                                    selectedStatus={selectedStatus}
-                                    setSelectedStatus={setSelectedStatus}
-                                    years={years}
-                                />
-
-
-                                {/* 卡片模式 */}
-
-                                {viewMode === 'cards' && (
-
-                                    <DramaCards
-                                        groups={groupedByYear}
-                                        onOpen={openDrama}
-                                    />
-
-                                )}
-
-
-                                {/* 時間軸模式 */}
-
-                                {viewMode === 'timeline' && (
-
-                                    <Timeline
-                                        groups={groupedByYear}
-                                        onOpen={openDrama}
-                                    />
-
-                                )}
-
-                            </>
-
-                        )}
-
-
-                        {/* ===============================
-                            Wishlist
-                        =============================== */}
-
-                        {activeTab === 'wishlist' && (
-
-                            <Wishlist
-                                wishlist={wishlist}
-                            />
-
-                        )}
-
-
-                        {/* ===============================
-                            Actors
-                        =============================== */}
-
-                        {activeTab === 'actors' && (
-
-                            <Actors
-                                actors={actors}
-                            />
-
-                        )}
-
-                    </>
-
-                )}
-
-            </main>
-
-
-            {/* =================================================
-                Mobile Bottom Navigation
-            ================================================= */}
-
-            <nav
-                className="
-                    mobile-bottom-nav
-                    fixed bottom-0 left-0 right-0
-                    z-40
-                    bg-white/95
-                    backdrop-blur-xl
-                    border-t
-                    border-rose-100
-                    px-2 py-2
-                    justify-around
-                "
-            >
-
-                <MobileNav
-                    icon="📺"
-                    label="劇集"
-                    active={
-                        activeTab === 'dramas'
-                    }
-                    onClick={() =>
-                        setActiveTab('dramas')
-                    }
-                />
-
-                <MobileNav
-                    icon="🎁"
-                    label="待看"
-                    active={
-                        activeTab === 'wishlist'
-                    }
-                    onClick={() =>
-                        setActiveTab('wishlist')
-                    }
-                />
-
-                <MobileNav
-                    icon="👩‍❤️‍👩"
-                    label="CP"
-                    active={
-                        activeTab === 'actors'
-                    }
-                    onClick={() =>
-                        setActiveTab('actors')
-                    }
-                />
-
-            </nav>
-
-
-            {/* =================================================
-                Drama Modal
-            ================================================= */}
-
-            {selectedDrama && (
-
-                <DramaModal
-                    drama={selectedDrama}
-                    onClose={closeDrama}
-                />
-
-            )}
-
-
-            {/* =================================================
-                Toast
-            ================================================= */}
-
-            {toast && (
-
-                <div
-                    className="
-                        toast
-                        fixed
-                        bottom-24 md:bottom-8
-                        left-1/2
-                        -translate-x-1/2
-                        z-[100]
-                        bg-stone-800
-                        text-white
-                        px-5 py-3
-                        rounded-2xl
-                        text-sm
-                        shadow-xl
-                        max-w-[90vw]
-                        text-center
-                    "
-                >
-                    ⚠️ {toast}
+                <!-- 下方：月份切換與年月標題 -->
+                <div class="calendar-nav-row">
+                    <button onclick="changeMonth(-1)">❮ 上月</button>
+                    <h3 id="calendar-month-year" style="margin:0; font-size: 1.1rem; color: var(--text-main);">2026 年 8 月</h3>
+                    <button onclick="changeMonth(1)">下月 ❯</button>
                 </div>
-
-            )}
-
+            </div>
+            <div class="calendar-grid calendar-weekdays">
+                <div>日</div><div>一</div><div>二</div><div>三</div><div>四</div><div>五</div><div>六</div>
+            </div>
+            <div id="calendar-days" class="calendar-grid"></div>
+        </div>
+    </div>
+    <div id="profile" class="tab-content">
+        <!-- Emi 資料卡 -->
+        <div class="card">
+            <img src="https://drive.google.com/thumbnail?id=1Rk3UdpY0ncXMjsNxUuSpvkSP9n4z9Yos&sz=w1600" alt="Emi 頭貼" class="profile-avatar" onclick="openModal(this.src)">
+            <div class="profile-info">
+                <h3 style="margin: 5px 0 2px 0; color: var(--accent-pink);">Emi</h3>
+                <span style="font-size: 0.85rem; color: var(--text-sub);">Emi Thasorn Klinnim</span>
+            </div>
+            <div class="info-row"><span>暱稱</span><strong>p'mi、mimi、papa</strong></div>
+            <div class="info-row"><span>生日</span><strong>1998.04.25 (28歲)</strong></div>
+            <div class="info-row"><span>星座</span><strong>金牛座</strong></div>
+            <div class="info-row"><span>性別</span><strong>女</strong></div>
+            <div class="info-row"><span>身高 / 體重</span><strong>165cm / 48kg</strong></div>
+            <div class="info-row"><span>喜好</span><strong>追劇、看演唱會、抱鞋</strong></div>
+            <div class="info-row"><span>寵物</span><strong>博美犬（醬油）</strong></div>
+            <div class="info-row"><span>喜歡的食物</span><strong>生醃鮭魚、抹茶拿鐵（不喜歡 辣的、香菜、香蕉）</strong></div>
         </div>
 
-    );
-
-}
-
-
-/* =========================================================
-   TabButton
-========================================================= */
-
-function TabButton({
-    active,
-    onClick,
-    children
-}) {
-
-    return (
-
-        <button
-            onClick={onClick}
-            className={`
-                px-4 md:px-5
-                py-2
-                rounded-full
-                text-sm
-                font-medium
-                whitespace-nowrap
-                transition
-                ${
-                    active
-                    ? 'bg-[#D88A8A] text-white shadow-sm'
-                    : 'text-[#7C6359] hover:text-[#5C4033]'
-                }
-            `}
-        >
-            {children}
-        </button>
-
-    );
-
-}
-
-
-/* =========================================================
-   Loading
-========================================================= */
-
-function Loading() {
-
-    return (
-
-        <div
-            className="
-                flex flex-col
-                items-center
-                justify-center
-                py-32
-            "
-        >
-
-            <div
-                className="
-                    w-12 h-12
-                    rounded-full
-                    border-4
-                    border-rose-100
-                    border-t-rose-400
-                    animate-spin
-                "
-            />
-
-            <p
-                className="
-                    mt-5
-                    text-stone-500
-                    font-medium
-                "
-            >
-                🌸 正在從 Google 試算表同步資料...
-            </p>
-
+        <!-- Bonnie 資料卡 -->
+        <div class="card" style="margin-top: 20px;">
+            <img src="https://drive.google.com/thumbnail?id=1xwYt2bJspTLGFzxb4Bhm_tdfyGxQP9Py&sz=w1600" alt="Bonnie 頭貼" class="profile-avatar" onclick="openModal(this.src)">
+            <div class="profile-info">
+                <h3 style="margin: 5px 0 2px 0; color: var(--accent-pink);">Bonnie</h3>
+                <span style="font-size: 0.85rem; color: var(--text-sub);">Bonnie Pattraphus Borattasuwan</span>
+            </div>
+            <div class="info-row"><span>暱稱</span><strong>nini、bonbon</strong></div>
+            <div class="info-row"><span>生日</span><strong>2004.01.27 (22歲)</strong></div>
+            <div class="info-row"><span>星座</span><strong>水瓶座</strong></div>
+            <div class="info-row"><span>性別</span><strong>女</strong></div>
+            <div class="info-row"><span>身高 / 體重</span><strong>165cm / 47kg</strong></div>
+            <div class="info-row"><span>喜好</span><strong>動漫、遊戲、畫畫、吉他</strong></div>
+            <div class="info-row"><span>寵物</span><strong>馬爾濟斯 (muju)</strong></div>
+            <div class="info-row"><span>喜歡的食物</span><strong>草莓... (過敏 牛肉、牛奶)</strong></div>
         </div>
 
-    );
+        <!-- Any 資料卡 -->
+        <div class="card" style="margin-top: 20px;">
+            <img src="https://drive.google.com/thumbnail?id=17fD21DSfvEadGqyd_Vvqvx-nkcgnPFf5&sz=w1600" alt="Any 頭貼" class="profile-avatar" onclick="openModal(this.src)">
+            <div class="profile-info">
+                <h3 style="margin: 5px 0 2px 0; color: var(--accent-pink);">Any</h3>
+                <span style="font-size: 0.85rem; color: var(--text-sub);">Any Klinnim Borattasuwan</span>
+            </div>
+            <div class="info-row"><span>暱稱</span><strong>any</strong></div>
+            <div class="info-row"><span>生日</span><strong>2025.03.14 (1歲)</strong></div>
+            <div class="info-row"><span>星座</span><strong>-</strong></div>
+            <div class="info-row"><span>性別</span><strong>女</strong></div>
+            <div class="info-row"><span>身高 / 體重</span><strong>- / -</strong></div>
+            <div class="info-row"><span>喜好</span><strong>唱歌、yellow</strong></div>
+            <div class="info-row"><span>寵物</span><strong>-</strong></div>
+            <div class="info-row"><span>喜歡的食物</span><strong>雞翅、omakase</strong></div>
+        </div>
+    </div>
+    <div id="gallery" class="tab-content">
+        <div class="card">
+            <h3 style="margin-top: 0; margin-bottom: 12px; color: var(--text-main);">🖼️ 照片收藏庫</h3>
+            <div class="gallery-toolbar">
+                <div id="gallery-tag-container" class="tag-bar"></div>
+                <div id="gallery-result-note" class="results-note"></div>
+            </div>
+            <div class="gallery-grid" id="gallery-container"></div>
+        </div>
+    </div>
+    <div id="favorites" class="tab-content">
+        <div class="card">
+            <h3 style="margin-top:0; margin-bottom:12px; color:var(--text-main);">⭐ 我的收藏</h3>
+            <div id="favorites-result-note" class="results-note"></div>
+            <div id="favorites-container"></div>
+        </div>
+    </div>
+    <div class="mobile-bottom-nav" id="mobile-bottom-nav">
+        <button data-tab="timeline" onclick="switchTab('timeline')">⌛<br>時間軸</button>
+        <button data-tab="calendar" onclick="switchTab('calendar')">📅<br>行事曆</button>
+        <button data-tab="gallery" onclick="switchTab('gallery')">🖼️<br>照片</button>
+        <button data-tab="favorites" onclick="switchTab('favorites')">⭐<br>收藏</button>
+        <button data-tab="profile" onclick="switchTab('profile')">📁<br>資料</button>
+    </div>
+</div>
+<button class="back-top" id="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="回到頂端">↑</button>
+<div id="imageModal" onclick="closeModal()">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:10px;max-width:95vw;max-height:95vh;">
+        <img id="modalImage" src="" alt="完整照片" style="display:block;">
+        <a id="modalDriveLink" href="#" target="_blank" rel="noopener" style="display:none;background:rgba(255,255,255,0.92);padding:8px 14px;border-radius:12px;color:#a64c69;font-weight:700;text-decoration:none;" onclick="event.stopPropagation();">↗ 開啟 Google Drive 原圖</a>
+    </div>
+</div>
+<div id="eventModal" onclick="checkCloseEventModal(event)">
+    <div class="event-modal-content">
+        <button class="event-modal-close" onclick="closeEventModal()">✕</button>
+        <div class="event-modal-body" id="event-modal-body"></div>
+        <div class="event-modal-nav" id="event-modal-nav" style="display: none;">
+            <button onclick="changeModalEvent(-1)">◀ 上一個事件</button>
+            <span id="event-counter" style="font-size: 0.85rem; font-weight: 700; color: var(--text-sub);">1 / 1</span>
+            <button onclick="changeModalEvent(1)">下一個事件 ▶</button>
+        </div>
+    </div>
+</div>
+<script>
+    const eventsData = [
+        { date: "2026-08-11", title: "Moonshadow Q22", content: "米米拍戲很晚到家 明天還有工作", link: "", linkText: "", videoLink: "", videoText: "", photo: ["https://drive.google.com/thumbnail?id=1hGi_zMIgWH4iFAwAKU2c2WXMigDTx-OM&sz=w1600"] },
+        { date: "2026-08-10", title: "Red Kiss 新歌發布", content: "啊好好聽！！！GMMtv一首歌兩用我不接受", link: "https://www.gmm-tv.com", linkText: "GMMTV 官方網站", videoLink: "https://www.youtube.com/watch?v=jad-V_nyvaY", videoText: "📺 Red Kiss - EMIBONNIE [ OFFICIAL MV ]", photo: ["https://drive.google.com/thumbnail?id=139IMGslcvRQerOjhzyyzhaLgF-wTZddN&sz=w1600", "https://drive.google.com/thumbnail?id=1eu3gKii3jiEXxUi-JjeZ8zfwfalYvS0b&sz=w1600", "https://drive.google.com/thumbnail?id=1PnRRFU5kEK2i1rjE8uPiHZLvslWjp8fm&sz=w1600", "https://drive.google.com/thumbnail?id=1j4XYWt3WnHFiTGNv84p_1m9lLEPCRej-&sz=w1600"] },
+        { date: "2023-08-03", title: "初見面", content: "和GMM簽約，並拍攝個人公式照。命運的齒輪開始轉動。註：後續採訪中兩人聊起初次見面，Emi主動搭話協助Bonnie拍照時調整姿勢。", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2026-08-12", title: "Moonshadow ep.1 首映", content: "終於等來了", link: "", linkText: "", videoLink: "", videoText: "", photo: ["https://drive.google.com/thumbnail?id=1qoQAZCXnUx7dWiR4bPy36P4DBi1YeYR9&sz=w1600"] },
+        { date: "2024-10-13", title: "Us開拍", content: "", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2025-06-28", title: "Blush Blossom Fan Fest", content: "第一次演唱會", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2025-09-05", title: "404 Not Found 寫真書簽名會", content: "", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2025-09-07", title: "Mint Awards 2025", content: "", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2025-09-13", title: "Infinity Medical Clinic", content: "於TayNew的節目中提到是Emi邀請Bonnie一起去清邁拜拜，同行者還有Bonnie媽媽", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2025-09-23", title: "Y Entertain Awards 2025", content: "兩人合唱More Than Words(Jazz ver.)。Bonnie終於收到Emi的個人品牌IMM ANOTHER衣服。媒體聯訪重點節錄：Bonnie提到喜歡看粉絲剪的Emi迷因影片並按讚；被問到招商會嘴巴閉很緊，Bonnie想當酷女孩被姐姐追，Emi想當開朗又嗆辣的角色；Bonnie說Emi很愛買食物分享但是自己只吃一兩口，所以最後是她空盤。", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2025-09-27", title: "香港FM", content: "", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2025-10-01", title: "Emiamily in Paris: 出席YSL女裝秀", content: "Bonnie作為刷趨勢大隊長，非常認真的幫Emi刷數據", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2025-11-06", title: "Emi亂入賣卡直播間", content: "", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2025-11-23", title: "越南市區逛逛", content: "兩人在越南結束Fanday行程後，隔天一起去逛胡志明市區，逛街時互相幫對方拍照。吃Pho的時候，Bonnie上傳了限時動態，是自己又弄到褲子上，Emi認真幫她擦的片段。", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2025-11-29", title: "下意識的照顧", content: "兩人搭機穿同款勃肯鞋。接機人潮過多，Emi在移動途中不時關注Bonnie的狀態，搭肩、拉手、注意尖角會不會撞到", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2025-11-30", title: "BBFanFest 澳門場", content: "工作人員上傳兩人在後台的影片&照片，Bonnie坐在Emi腿上。花絮採訪的接力問答，June問Emi有沒有哄好Bonnie(前情提要：June發佈了Emi靠在她身上撒嬌的照片）Emi回答問題的時候Bonnie在旁邊一邊吃蛋塔一邊吃醋生氣說那就去找她阿", link: "", linkText: "", videoLink: "", videoText: "", photo: ["https://drive.google.com/thumbnail?id=1OvppU5kp6GGI76_u1FA80Ildvyh_mSDj&sz=w1600"] },
+        { date: "2025-12-01", title: "旅途中的依靠", content: "Love發佈限時動態，為機上Bonnie靠在Emi身上睡的很熟。Emi轉發留言「沒有枕頭比我的懷裡更安心」", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2025-12-07", title: "Seoul Medical Clinic 活動", content: "後台拍照Emi疑似坐在Bonnie腿上。活動結束後，Bonnie和Emi與Emi的朋友們一起去動物園。Bonnie發了限時動態是Emi假裝喂兔子的影片。Emi的朋友(Nurse)在X上轉發Emi泰站表示在旁邊看EB二人很像在看真人版Nick和Judy", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2025-12-09", title: "CPS x IRADA 品牌活動", content: "Emi在活動後的After Party和美女貼身熱舞。Bonnie在粉絲分享的影片下面評論「讓她去過自己的生活吧」。Emi則是到處在Bonnie的推文下留言，疑似求和", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2025-12-09", title: "Kamart 直播帶貨", content: "兩人各有一小時的單人直播。Emi直播時Bonnie在旁邊看，被問到faen的時候，Emi表示「單身，但有一個孩子」。接著是Bonnie首次單人帶貨直播，Bonnie很緊張拉著Emi不放，但是Emi有下一個行程所以要先離開，最後依依不捨摸頭鼓勵Bonnie再離開。Bonnie直播時表示「單身，但有一個faen」。", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2025-12-10", title: "Cute Press 直播帶貨", content: "Bonnie在直播中火力全開，強力回擊昨日Emi的 「單身論」和貼貼熱舞，表示兩人只是partner、 phi-nong、 coworker的關係，為什麼要被哄， 並且逼問Emi為什麼不對她說我愛你。 Emi整場直播瘋狂貼貼，在被說為什麼不說我愛你的時候，長達五分鐘都在拖拖拉拉不好意思，說不是不願意說但是直播太多人了（3500人），一開始先說了日語版，接著說了中文版，最後才看Bonnie氣到要放棄的時候趕快耍帥講了泰語版。", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2025-12-11", title: "Zootopia 2 觀影活動", content: "首次一家人單獨的觀影活動。Emi出場下樓梯絆到，Bonnie立刻上前摟住。Bonnie 直接喊Emi而不是P'Mi。Emi面交了上次在TikTok直播間搶到的小卡", link: "", linkText: "", videoLink: "", videoText: "", photo: ["https://drive.google.com/thumbnail?id=1H6vCMFjsUZpAQJvakC09qZ1r5Gan2FfH&sz=w1600"] },
+        { date: "2025-12-12", title: "TikTok影片", content: "Emi發佈LINEMAN相關影片，Bonnie喂她吃起司蛋糕還幫忙用手擦嘴。 Bonnie隨後在TikTok直播表示因為Emi最近吃很少，食慾不佳所以要用這樣的方法餵她吃", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2025-12-20", title: "GMMTV Starlympics 2025", content: "開場花車巡迴時，Bonnie被發現在偷看Emi，Emi大方轉身讓她看個夠。 在台下看比賽時，兩人大部分時間都黏在一起、 互相撒嬌，Emi幫Bonnie開水瓶後直接喝同一瓶，Bonnie想玩打鼓就帶她去還拍下來。 接力比賽前，Emi蹲下來幫Bonnie繫鞋帶（兩人穿的是Emi推廣的品牌情侶款，Emi特地從家裡帶的），頒獎也要抱著出場，無時無刻都在牽手摟腰，拿到獎牌還要親獎牌再貼貼。 前一天彩排時，Emi送給Bonnie自己品牌新出的牛仔褲（第一個收到的人）隔天兩人都穿上去運動會現場。", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2025-12-25", title: "聖誕禮物", content: "Bonnie和朋友一起去製作手工薑餅屋，薑餅屋上有一家人的元素，包含手繪的Any、 Emi和Bonnie的名字。 製作完後Bonnie拍了拍立得，和薑餅屋一起送去給Emi作為聖誕禮物，並且傳訊息表示自己要送Emi房子。 粉絲在X上詢問為什麼要送自己的拍立得，Bonnie表示直接給Emi一張獨一無二的，這樣就不用去TikTok買她的拍立得。", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
 
-}
+        // 2026/9/2～9/15：依照你這次提供的紀錄加入時間軸；同一天不同活動各自成為獨立事件。
+        { date: "2026-09-02", title: "Moonshadow ep.4", content: "", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2026-09-03", title: "Glitch Official MV (Emi)", content: "", link: "", linkText: "", videoLink: "https://www.youtube.com/watch?v=TNbvfhxCBtQ", videoText: "📺 Glitch Official MV (Emi)", photo: [
+            "https://drive.google.com/thumbnail?id=1CiyKXACfcwiJg7H8QIxDKEMWKQye1aCo&sz=w1600"
+        ] },
+        { date: "2026-09-05", title: "sheep（迪士尼公主系列）", content: "唱了", link: "", linkText: "", videoLink: "", videoText: "", photo: [
+            "https://drive.google.com/thumbnail?id=15m3Z5glENRBA7RNSQp3r4Z62HiNz6w0h&sz=w1600"
+        ] },
+        { date: "2026-09-06", title: "Gemini 演唱會嘉賓", content: "bonnie第一天去gemini說很高興請到p'emi的對象來，bonnie害羞笑沒否認。\n有人剪輯bonnie的這段影片emi轉發，然後第三天emi來就被問，emi也是害羞笑沒否認。", link: "", linkText: "", videoLink: "", videoText: "", photo: [
+            "https://drive.google.com/thumbnail?id=1Y-9iPO8QQvDlrCYNrBMdv198CHQh-viE&sz=w1600",
+            "https://drive.google.com/thumbnail?id=1enf9RkmQXYiBBn9VA5lnoo_6nz2UeHiW&sz=w1600"
+        ] },
+        { date: "2026-09-08", title: "劇集討論直播", content: "兩人角色上身特別是bonnie根本是n'key", link: "", linkText: "", videoLink: "", videoText: "", photo: [
+            "https://drive.google.com/thumbnail?id=1aakeQKUGror6L9HZPFy7TbFA-0LcZ1lQ&sz=w1600",
+            "https://drive.google.com/thumbnail?id=1D2SXqSf1oSxlSq9L-mkjlQsOlDY5UacK&sz=w1600"
+        ] },
+        { date: "2026-09-08", title: "線下點名活動", content: "雖然是工作日但去的人還是非常多。兩人角色上身特別是bonnie根本是n'key", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2026-09-08", title: "GMMTV Live House", content: "junior主持any也在，any根本意外miminini超黏", link: "", linkText: "", videoLink: "https://www.youtube.com/watch?v=JsexJeh4Bf8", videoText: "📺 GMMTV Live House", photo: [
+            "https://drive.google.com/thumbnail?id=17R9zJeqHBUZERySVauBqqOR688CnfGe9&sz=w1600",
+            "https://drive.google.com/thumbnail?id=1karVBZaaSFbS8LniDgXJ6hXssEol5r56&sz=w1600"
+        ] },
+        { date: "2026-09-09", title: "Moonshadow ep.5", content: "", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2026-09-12", title: "You One Official MV (Bonnie)", content: "", link: "", linkText: "", videoLink: "https://www.youtube.com/watch?v=AUPbHx7J8iQ", videoText: "📺 You One Official MV (Bonnie)", photo: [
+            "https://drive.google.com/thumbnail?id=1C1Ev5wXoagEJVVaKh_Yr2kEovLOCVjpu&sz=w1600",
+            "https://drive.google.com/thumbnail?id=1bkW4_Zn6rWfBGdxd0fG_rbTJWSz2kDry&sz=w1600"
+        ] },
+        { date: "2026-09-12", title: "Mint Awards 2026", content: "下午展櫃賣東西，兩人又隔對面但一直在傳情\n晚上出席頒獎活動（mee and thee得獎bonnie一起領獎）", link: "", linkText: "", videoLink: "", videoText: "", photo: [
+            "https://drive.google.com/thumbnail?id=1Jl-Mf8H_NOGupLPKloJyzvdr68newEEg&sz=w1600",
+            "https://drive.google.com/thumbnail?id=1M5FoVKux3Xve-lmlpJAVkI0Qa-aht4iZ&sz=w1600"
+        ] },
+        { date: "2026-09-15", title: "Emi 到 GEMM HOUSE 打工", content: "", link: "", linkText: "", videoLink: "", videoText: "", photo: [
+            "https://drive.google.com/thumbnail?id=11zxxBUUkapeL7H-xVfwXTalI1hdmBM-O&sz=w1600",
+            "https://drive.google.com/thumbnail?id=1yeUR3bgUpF7MR9XxxtNhJ_hZhYEGX_jy&sz=w1600"
+        ] },
+        
+        // 2026/9/20～9/30：延續同樣格式；同日多活動分開顯示。
+        { date: "2026-09-20", title: "ANY 去 SkyNani 演唱會做嘉賓", content: "米米跟邦邦去看小朋友演出", link: "", linkText: "", videoLink: "", videoText: "", photo: [
+            "https://drive.google.com/thumbnail?id=1ZGpTTYF71o-ehqcHSofBKZo9mHIrh8ZV&sz=w1600",
+            "https://drive.google.com/thumbnail?id=1oC2rvKAttvByVoFgNrah5WhbAVNcUn7r&sz=w1600",
+            "https://drive.google.com/thumbnail?id=1Dp_oLL5GxbnMkPklZWZVX8ZTAMSiRv00&sz=w1600",
+            "https://drive.google.com/thumbnail?id=1utd0yeV9hLZeoy9WH7WbeZ7lo73PfSEc&sz=w1600"
+        ] },
+        
+        // 2026/9/16：依照你提供的時間軸資料拆成兩個事件，照片保留在 GEMM HOUSE 那筆。
+        { date: "2026-09-16", title: "GEMM HOUSE", content: "兩人去 GEMM HOUSE（點餐還要黏在一起）", link: "", linkText: "", videoLink: "", videoText: "", photo: [
+            "https://drive.google.com/thumbnail?id=1n8JGF0yde2ILSfRq1a8Whsq-QIG4Hwnt&sz=w1600",
+            "https://drive.google.com/thumbnail?id=1EkegtA0rsTk8lwzG9qmgggjpJGmI6A7c&sz=w1600",
+            "https://drive.google.com/thumbnail?id=15xHpz6fienMCWFzmLoBauBBHcKwkNO2R&sz=w1600"
+        ] },
+        { date: "2026-09-16", title: "Moonshadow ep.6", content: "", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2026-09-23", title: "Moonshadow ep.7", content: "", link: "", linkText: "", videoLink: "", videoText: "", photo: [
+            "https://drive.google.com/thumbnail?id=1Q0DWJbWo5Fp6Mg4NVncc7dQdQA4XPOGm&sz=w1600",
+            "https://drive.google.com/thumbnail?id=1JJbxnLJLEqwq2D4iK1yZwsN9cl-VcaNu&sz=w1600",
+            "https://drive.google.com/thumbnail?id=1OrAysc0aUG5nZKsqDK36_qtR16aA5KDQ&sz=w1600",
+            "https://drive.google.com/thumbnail?id=1fdliUPRH756JPPMMf_RTJ49ffR4xXp7O&sz=w1600",
+            "https://drive.google.com/thumbnail?id=16m6eP_g_7QTYo4qY56E4lBKzOpdaYGQT&sz=w1600"
+        ] }
+,
+        { date: "2026-09-24", title: "月影 Volog part1", content: "", link: "", linkText: "", videoLink: "https://www.youtube.com/watch?v=wO__XKi_eFI", videoText: "📺 月影 Volog part1", photo: [
+            "https://drive.google.com/thumbnail?id=18VmlKFbS_8Vo3_d_lGZpqm1sCY4aTKpD&sz=w1600",
+            "https://drive.google.com/thumbnail?id=16LCQ_gTGMJ8mBNo0H4Cl0vLXluWr28Bt&sz=w1600"
+        ] },
+        { date: "2026-09-24", title: "Fan party and after party 賣票直播", content: "玩遊戲bonnie給mimi挖坑打分GEMM HOUSE的產品,mimi玩到懷疑自己的喜好，自己不知道但邦邦知道。\nmimi口誤場面失控一度跑出螢幕外，笑死p'leo跟bonnie", link: "", linkText: "", videoLink: "https://www.youtube.com/watch?v=AzXx4K2cMZQ", videoText: "📺 Fan party and after party 賣票直播", photo: [
+            "https://drive.google.com/thumbnail?id=1Zfb3QwDx8WnaSYOAXqLonIvra2S_5iGb&sz=w1600",
+            "https://drive.google.com/thumbnail?id=1HU-m1YeDz4LZg-4sXMFI8R2j3-H2Tfgf&sz=w1600"
+        ] },
+        { date: "2026-09-27", title: "猜歌節目播出", content: "", link: "", linkText: "", videoLink: "https://www.youtube.com/watch?v=cQ8xwIj2t9o", videoText: "📺 猜歌節目播出", photo: [] },
+        { date: "2026-09-30", title: "Moonshadow ep.8", content: "", link: "", linkText: "", videoLink: "", videoText: "", photo: [] },
+        { date: "2026-09-30", title: "ARM SHARE Rising Runway Star 2026", content: "any上節目", link: "", linkText: "", videoLink: "", videoText: "", photo: [] }    
+    ];
 
+    let activeYear = 2026;
+    let calendarDate = new Date(2026, 8, 1);
+    let modalEvents = [];
+    let modalEventIndex = 0;
+    let modalPhotoIndex = 0;
+    let activeTag = '全部';
+    let galleryTag = '全部';
+    let globalSearch = '';
+    const STORAGE_KEY = 'emibonnie-favorites-v2';
 
-/* =========================================================
-   Weekly Schedule
-========================================================= */
+    function formatDate(dateString) {
+        const d = new Date(dateString + 'T00:00:00');
+        return `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;
+    }
 
-function WeeklySchedule({
-    dramas,
-    onOpen
-}) {
+    function escapeHTML(value) {
+        return String(value ?? '')
+            .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+            .replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+    }
 
-    const today =
-        new Date();
+    function getDriveId(value) {
+        const s = String(value || '');
+        const match = s.match(/(?:[?&]id=|\/d\/|drive\.google\.com\/file\/d\/)([A-Za-z0-9_-]{10,})/);
+        return match ? match[1] : '';
+    }
 
-    today.setHours(0,0,0,0);
+    function toDriveViewUrl(value) {
+        const id = getDriveId(value);
+        return id ? `https://drive.google.com/file/d/${id}/view?usp=drive_link` : value;
+    }
 
-    const weekStart =
-        new Date(today);
-
-    const day =
-        weekStart.getDay();
-
-    /*
-       週一開始
-    */
-
-    const diff =
-        day === 0
-        ? -6
-        : 1 - day;
-
-    weekStart.setDate(
-        weekStart.getDate() + diff
-    );
-
-
-    const days =
-        Array.from(
-            {length:7},
-            (_,index) => {
-
-                const d =
-                    new Date(weekStart);
-
-                d.setDate(
-                    d.getDate() + index
-                );
-
-                return d;
-
-            }
-        );
-
-
-    const weekNames =
-        [
-            '週一',
-            '週二',
-            '週三',
-            '週四',
-            '週五',
-            '週六',
-            '週日'
+    function getImageCandidates(value) {
+        const id = getDriveId(value);
+        if (!id) return [value];
+        return [
+            `https://drive.google.com/thumbnail?id=${id}&sz=w2000`,
+            `https://drive.google.com/uc?export=view&id=${id}`,
+            `https://drive.google.com/uc?id=${id}`,
+            `https://lh3.googleusercontent.com/d/${id}=w2000`,
+            `https://drive.usercontent.google.com/download?id=${id}&export=view&authuser=0`
         ];
-
-
-    return (
-
-        <section
-            className="
-                glass-card
-                rounded-3xl
-                p-4 md:p-5
-                mb-6
-                soft-shadow
-            "
-        >
-
-            <div
-                className="
-                    flex
-                    flex-col
-                    md:flex-row
-                    md:items-center
-                    md:justify-between
-                    gap-2
-                    mb-4
-                "
-            >
-
-                <div>
-
-                    <span
-                        className="
-                            inline-flex
-                            bg-rose-100
-                            text-rose-700
-                            px-3 py-1
-                            rounded-xl
-                            text-sm
-                            font-bold
-                        "
-                    >
-                        📅 本週跟播鬧鐘
-                    </span>
-
-                    <p
-                        className="
-                            text-xs
-                            text-stone-400
-                            mt-1
-                        "
-                    >
-                        {formatDate(days[0])}
-                        {' ～ '}
-                        {formatDate(days[6])}
-                    </p>
-
-                </div>
-
-            </div>
-
-
-            <div
-                className="
-                    grid
-                    grid-cols-1
-                    sm:grid-cols-2
-                    lg:grid-cols-7
-                    gap-2
-                "
-            >
-
-                {days.map(
-                    (date,index) => {
-
-                        const dateString =
-                            date.toDateString();
-
-                        const shows =
-                            dramas.filter(
-                                drama => {
-
-                                    const status =
-                                        normalizeStatus(
-                                            drama.ststus_type
-                                        );
-
-                                    if (
-                                        status !==
-                                        '正在跟播'
-                                    ) {
-                                        return false;
-                                    }
-
-                                    const schedule =
-                                        generateEpisodeSchedule(
-                                            drama
-                                        );
-
-                                    return schedule.some(
-                                        item =>
-                                            item.date &&
-                                            item.date.toDateString() ===
-                                            dateString
-                                    );
-
-                                }
-                            );
-
-
-                        const isToday =
-                            date.toDateString() ===
-                            today.toDateString();
-
-
-                        return (
-
-                            <div
-                                key={index}
-                                className={`
-                                    rounded-2xl
-                                    p-3
-                                    border
-                                    ${
-                                        isToday
-                                        ? 'bg-rose-100/80 border-rose-300'
-                                        : 'bg-white/70 border-rose-50'
-                                    }
-                                `}
-                            >
-
-                                <div
-                                    className="
-                                        flex
-                                        justify-between
-                                        items-center
-                                    "
-                                >
-
-                                    <span
-                                        className="
-                                            text-xs
-                                            font-bold
-                                            text-rose-400
-                                        "
-                                    >
-                                        {weekNames[index]}
-                                    </span>
-
-                                    <span
-                                        className="
-                                            text-xs
-                                            text-stone-400
-                                        "
-                                    >
-                                        {formatMonthDay(date)}
-                                    </span>
-
-                                </div>
-
-
-                                <div
-                                    className="
-                                        mt-2
-                                        space-y-1.5
-                                    "
-                                >
-
-                                    {shows.length === 0 ? (
-
-                                        <span
-                                            className="
-                                                text-xs
-                                                text-stone-300
-                                            "
-                                        >
-                                            -
-                                        </span>
-
-                                    ) : (
-
-                                        shows.map(
-                                            (drama,index2) => {
-
-                                                const schedule =
-                                                    generateEpisodeSchedule(
-                                                        drama
-                                                    );
-
-                                                const ep =
-                                                    schedule.find(
-                                                        item =>
-                                                            item.date &&
-                                                            item.date.toDateString() ===
-                                                            dateString
-                                                    );
-
-
-                                                return (
-
-                                                    <button
-                                                        key={index2}
-                                                        onClick={() =>
-                                                            onOpen(drama)
-                                                        }
-                                                        className="
-                                                            w-full
-                                                            text-left
-                                                            bg-rose-50
-                                                            hover:bg-rose-100
-                                                            p-2
-                                                            rounded-xl
-                                                            transition
-                                                        "
-                                                    >
-
-                                                        <div
-                                                            className="
-                                                                text-xs
-                                                                font-bold
-                                                                truncate
-                                                            "
-                                                        >
-                                                            {drama.title_zh}
-                                                        </div>
-
-                                                        <div
-                                                            className="
-                                                                text-[10px]
-                                                                text-rose-500
-                                                                mt-0.5
-                                                            "
-                                                        >
-                                                            {ep
-                                                                ? `EP${ep.episode}`
-                                                                : ''
-                                                            }
-
-                                                            {drama.air_time
-                                                                ? ` · ${drama.air_time}`
-                                                                : ''
-                                                            }
-                                                        </div>
-
-                                                    </button>
-
-                                                );
-
-                                            }
-                                        )
-
-                                    )}
-
-                                </div>
-
-                            </div>
-
-                        );
-
-                    }
-                )}
-
-            </div>
-
-        </section>
-
-    );
-
-}
-
-
-/* =========================================================
-   FilterBar
-========================================================= */
-
-function FilterBar({
-    searchTerm,
-    setSearchTerm,
-    selectedYear,
-    setSelectedYear,
-    selectedStatus,
-    setSelectedStatus,
-    years
-}) {
-
-    return (
-
-        <div
-            className="
-                mb-6
-                grid
-                grid-cols-1
-                md:grid-cols-4
-                gap-2
-            "
-        >
-
-            <input
-                type="text"
-                placeholder="🔍 搜尋劇名、泰文名或 CP..."
-                value={searchTerm}
-                onChange={e =>
-                    setSearchTerm(
-                        e.target.value
-                    )
-                }
-                className="
-                    md:col-span-2
-                    w-full
-                    px-4 py-3
-                    rounded-2xl
-                    glass-card
-                    border
-                    border-rose-200
-                    text-sm
-                    focus:outline-none
-                    focus:ring-2
-                    focus:ring-rose-300
-                "
-            />
-
-
-            <select
-                value={selectedYear}
-                onChange={e =>
-                    setSelectedYear(
-                        e.target.value
-                    )
-                }
-                className="
-                    px-4 py-3
-                    rounded-2xl
-                    glass-card
-                    border
-                    border-rose-200
-                    text-sm
-                    bg-white/80
-                    outline-none
-                "
-            >
-
-                {years.map(year => (
-
-                    <option
-                        key={year}
-                        value={year}
-                    >
-                        {year === '全部'
-                            ? '📅 全部年份'
-                            : `📅 ${year}`
-                        }
-                    </option>
-
-                ))}
-
-            </select>
-
-
-            <select
-                value={selectedStatus}
-                onChange={e =>
-                    setSelectedStatus(
-                        e.target.value
-                    )
-                }
-                className="
-                    px-4 py-3
-                    rounded-2xl
-                    glass-card
-                    border
-                    border-rose-200
-                    text-sm
-                    bg-white/80
-                    outline-none
-                "
-            >
-
-                <option value="全部">
-                    🎬 全部狀態
-                </option>
-
-                <option value="正在跟播">
-                    🟢 正在跟播
-                </option>
-
-                <option value="待播中">
-                    🔵 待播中
-                </option>
-
-                <option value="已完結">
-                    ⚪ 已完結
-                </option>
-
-            </select>
-
-        </div>
-
-    );
-
-}
-
-
-/* =========================================================
-   Drama Cards
-========================================================= */
-
-function DramaCards({
-    groups,
-    onOpen
-}) {
-
-    if (!groups.length) {
-
-        return (
-
-            <EmptyState
-                text="找不到符合條件的劇集"
-            />
-
-        );
-
     }
 
-
-    return (
-
-        <div className="space-y-10">
-
-            {groups.map(
-                ([year,dramas]) => (
-
-                    <section key={year}>
-
-                        <div
-                            className="
-                                flex
-                                items-center
-                                gap-3
-                                mb-4
-                            "
-                        >
-
-                            <h2
-                                className="
-                                    text-2xl
-                                    font-bold
-                                    text-[#5C4033]
-                                "
-                            >
-                                {year}
-                            </h2>
-
-                            <div
-                                className="
-                                    h-px
-                                    flex-1
-                                    bg-rose-100
-                                "
-                            />
-
-                            <span
-                                className="
-                                    text-xs
-                                    text-stone-400
-                                "
-                            >
-                                {dramas.length} 部
-                            </span>
-
-                        </div>
-
-
-                        <div
-                            className="
-                                grid
-                                grid-cols-1
-                                md:grid-cols-2
-                                gap-5
-                            "
-                        >
-
-                            {dramas.map(
-                                (drama,index) => (
-
-                                    <DramaCard
-                                        key={
-                                            drama.id ||
-                                            index
-                                        }
-                                        drama={drama}
-                                        onOpen={onOpen}
-                                    />
-
-                                )
-                            )}
-
-                        </div>
-
-                    </section>
-
-                )
-            )}
-
-        </div>
-
-    );
-
-}
-
-
-/* =========================================================
-   Drama Card
-========================================================= */
-
-function DramaCard({
-    drama,
-    onOpen
-}) {
-
-    const status =
-        normalizeStatus(
-            drama.ststus_type
-        );
-
-    const premiere =
-        parseDate(
-            drama.premiere_date
-        );
-
-    const nextDate =
-        calculateNextAirDate(
-            drama
-        );
-
-    const total =
-        parseNumber(
-            drama.total_episodes
-        );
-
-    const myProgress =
-        parseNumber(
-            drama.my_progress ||
-            drama.my_propress
-        );
-
-    const friendProgress =
-        parseNumber(
-            drama.friend_progress
-        );
-
-
-    return (
-
-        <button
-            onClick={() =>
-                onOpen(drama)
-            }
-            className="
-                glass-card
-                rounded-3xl
-                p-4 md:p-5
-                shadow-sm
-                hover:shadow-lg
-                hover:-translate-y-0.5
-                transition
-                text-left
-                w-full
-            "
-        >
-
-            <div
-                className="
-                    flex
-                    gap-4
-                "
-            >
-
-                <ImageWithFallback
-                    src={safeText(
-                        drama.poster_url
-                    )}
-                    fallback={DEFAULT_POSTER}
-                    alt={drama.title_zh}
-                    className="
-                        w-24
-                        sm:w-32
-                        h-36
-                        sm:h-44
-                        object-cover
-                        rounded-2xl
-                        flex-shrink-0
-                        shadow
-                    "
-                />
-
-
-                <div
-                    className="
-                        flex-1
-                        min-w-0
-                    "
-                >
-
-                    <div
-                        className="
-                            flex
-                            justify-between
-                            gap-2
-                        "
-                    >
-
-                        <span
-                            className="
-                                text-[11px]
-                                bg-rose-100
-                                text-rose-600
-                                px-2 py-1
-                                rounded-full
-                                font-medium
-                                truncate
-                            "
-                        >
-                            {drama.cp_name || '未設定 CP'}
-                        </span>
-
-                        <span
-                            className={`
-                                text-[10px]
-                                px-2 py-1
-                                rounded-full
-                                whitespace-nowrap
-                                ${statusClass(status)}
-                            `}
-                        >
-                            {status}
-                        </span>
-
-                    </div>
-
-
-                    <h3
-                        className="
-                            text-lg
-                            font-bold
-                            text-[#4A403A]
-                            mt-2
-                            line-clamp-2
-                        "
-                    >
-                        {drama.title_zh ||
-                         '未命名劇集'}
-                    </h3>
-
-
-                    <p
-                        className="
-                            text-xs
-                            text-stone-400
-                            mt-1
-                        "
-                    >
-                        {drama.title_th || '-'}
-                    </p>
-
-
-                    <div
-                        className="
-                            text-xs
-                            text-stone-500
-                            mt-3
-                            space-y-1
-                        "
-                    >
-
-                        <div>
-                            📅 首播：
-                            {formatDate(premiere)}
-                        </div>
-
-                        <div>
-                            🎬 共 {total || '-'} 集
-                        </div>
-
-                        {status === '正在跟播' &&
-                         nextDate && (
-
-                            <div
-                                className="
-                                    text-rose-500
-                                    font-semibold
-                                "
-                            >
-                                ⏰ 下一集：
-                                {formatDate(nextDate)}
-                            </div>
-
-                        )}
-
-                    </div>
-
-
-                    <div
-                        className="
-                            mt-3
-                            grid
-                            grid-cols-2
-                            gap-2
-                        "
-                    >
-
-                        <div
-                            className="
-                                bg-rose-50
-                                rounded-xl
-                                p-2
-                            "
-                        >
-
-                            <div
-                                className="
-                                    text-[10px]
-                                    text-rose-500
-                                    font-bold
-                                "
-                            >
-                                遙
-                            </div>
-
-                            <div
-                                className="
-                                    text-xs
-                                    font-semibold
-                                "
-                            >
-                                {myProgress}
-                                /
-                                {total || '?'}
-                            </div>
-
-                        </div>
-
-
-                        <div
-                            className="
-                                bg-indigo-50
-                                rounded-xl
-                                p-2
-                            "
-                        >
-
-                            <div
-                                className="
-                                    text-[10px]
-                                    text-indigo-500
-                                    font-bold
-                                "
-                            >
-                                錢
-                            </div>
-
-                            <div
-                                className="
-                                    text-xs
-                                    font-semibold
-                                "
-                            >
-                                {friendProgress}
-                                /
-                                {total || '?'}
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </button>
-
-    );
-
-}
-
-
-/* =========================================================
-   Timeline
-========================================================= */
-
-function Timeline({
-    groups,
-    onOpen
-}) {
-
-    if (!groups.length) {
-
-        return (
-            <EmptyState
-                text="找不到符合條件的劇集"
-            />
-        );
-
+    function applyImageSource(img, value) {
+        const candidates = getImageCandidates(value);
+        img.dataset.candidates = JSON.stringify(candidates);
+        img.dataset.fallbackIndex = '0';
+        img.dataset.driveUrl = toDriveViewUrl(value);
+        img.src = candidates[0] || value;
     }
 
-
-    return (
-
-        <div
-            className="
-                relative
-                max-w-5xl
-                mx-auto
-                pb-10
-            "
-        >
-
-            <div className="timeline-line" />
-
-
-            {groups.map(
-                ([year,dramas]) => (
-
-                    <React.Fragment
-                        key={year}
-                    >
-
-                        <div
-                            className="
-                                relative
-                                z-10
-                                flex
-                                justify-center
-                                mb-6
-                                mt-8
-                            "
-                        >
-
-                            <span
-                                className="
-                                    bg-[#D88A8A]
-                                    text-white
-                                    font-bold
-                                    px-5 py-2
-                                    rounded-full
-                                    shadow
-                                "
-                            >
-                                {year}
-                            </span>
-
-                        </div>
-
-
-                        {dramas.map(
-                            (drama,index) => (
-
-                                <TimelineItem
-                                    key={
-                                        drama.id ||
-                                        index
-                                    }
-                                    drama={drama}
-                                    index={index}
-                                    onOpen={onOpen}
-                                />
-
-                            )
-                        )}
-
-                    </React.Fragment>
-
-                )
-            )}
-
-        </div>
-
-    );
-
-}
-
-
-/* =========================================================
-   Timeline Item
-========================================================= */
-
-function TimelineItem({
-    drama,
-    index,
-    onOpen
-}) {
-
-    const premiere =
-        parseDate(
-            drama.premiere_date
-        );
-
-    const status =
-        normalizeStatus(
-            drama.ststus_type
-        );
-
-    const total =
-        parseNumber(
-            drama.total_episodes
-        );
-
-    const nextDate =
-        calculateNextAirDate(
-            drama
-        );
-
-
-    return (
-
-        <div
-            className={`
-                timeline-item
-                ${index % 2 === 1 ? 'right' : ''}
-                mb-8
-            `}
-        >
-
-            <div className="timeline-dot" />
-
-
-            <button
-                onClick={() =>
-                    onOpen(drama)
-                }
-                className="
-                    w-full
-                    text-left
-                    glass-card
-                    rounded-3xl
-                    p-4
-                    hover:shadow-lg
-                    transition
-                "
-            >
-
-                <div
-                    className="
-                        flex
-                        gap-3
-                    "
-                >
-
-                    <ImageWithFallback
-                        src={safeText(
-                            drama.poster_url
-                        )}
-                        fallback={DEFAULT_POSTER}
-                        alt={drama.title_zh}
-                        className="
-                            w-20 h-28
-                            object-cover
-                            rounded-2xl
-                            flex-shrink-0
-                        "
-                    />
-
-
-                    <div
-                        className="
-                            min-w-0
-                            flex-1
-                        "
-                    >
-
-                        <div
-                            className="
-                                text-xs
-                                text-rose-500
-                                font-bold
-                            "
-                        >
-                            {formatDate(premiere)}
-                        </div>
-
-
-                        <h3
-                            className="
-                                font-bold
-                                text-[#4A403A]
-                                mt-1
-                                line-clamp-2
-                            "
-                        >
-                            {drama.title_zh}
-                        </h3>
-
-
-                        <p
-                            className="
-                                text-xs
-                                text-stone-500
-                                mt-1
-                            "
-                        >
-                            {drama.cp_name}
-                        </p>
-
-
-                        <div
-                            className="
-                                flex
-                                flex-wrap
-                                gap-1.5
-                                mt-3
-                            "
-                        >
-
-                            <span
-                                className={`
-                                    text-[10px]
-                                    px-2 py-1
-                                    rounded-full
-                                    ${statusClass(status)}
-                                `}
-                            >
-                                {status}
-                            </span>
-
-                            <span
-                                className="
-                                    text-[10px]
-                                    px-2 py-1
-                                    rounded-full
-                                    bg-stone-100
-                                    text-stone-500
-                                "
-                            >
-                                {total || '-'} 集
-                            </span>
-
-                        </div>
-
-
-                        {nextDate && (
-
-                            <p
-                                className="
-                                    text-[11px]
-                                    text-rose-500
-                                    mt-2
-                                    font-semibold
-                                "
-                            >
-                                ⏰ 下一集 {formatDate(nextDate)}
-                            </p>
-
-                        )}
-
-                    </div>
-
-                </div>
-
-            </button>
-
-        </div>
-
-    );
-
-}
-
-
-/* =========================================================
-   Drama Modal
-========================================================= */
-
-function DramaModal({
-    drama,
-    onClose
-}) {
-
-    const status =
-        normalizeStatus(
-            drama.ststus_type
-        );
-
-    const premiere =
-        parseDate(
-            drama.premiere_date
-        );
-
-    const total =
-        parseNumber(
-            drama.total_episodes
-        );
-
-    const myProgress =
-        parseNumber(
-            drama.my_progress ||
-            drama.my_propress
-        );
-
-    const friendProgress =
-        parseNumber(
-            drama.friend_progress
-        );
-
-    const nextDate =
-        calculateNextAirDate(
-            drama
-        );
-
-    const schedule =
-        generateEpisodeSchedule(
-            drama
-        );
-
-    const osts =
-        getOSTs(drama);
-
-
-    return (
-
-        <div
-            className="
-                fixed
-                inset-0
-                z-[80]
-                modal-backdrop
-                flex
-                items-end
-                md:items-center
-                justify-center
-            "
-            onMouseDown={e => {
-
-                if (
-                    e.target === e.currentTarget
-                ) {
-                    onClose();
-                }
-
-            }}
-        >
-
-            <div
-                className="
-                    modal-panel
-                    modal-mobile
-                    bg-[#FDFBF7]
-                    w-full
-                    md:max-w-4xl
-                    md:max-h-[92vh]
-                    md:rounded-3xl
-                    overflow-hidden
-                    shadow-2xl
-                    flex
-                    flex-col
-                "
-            >
-
-                {/* Modal Header */}
-
-                <div
-                    className="
-                        sticky top-0 z-10
-                        bg-white/95
-                        backdrop-blur
-                        border-b
-                        border-rose-100
-                        px-4 md:px-6
-                        py-3
-                        flex
-                        justify-between
-                        items-center
-                    "
-                >
-
-                    <div
-                        className="
-                            flex
-                            items-center
-                            gap-2
-                        "
-                    >
-
-                        <span
-                            className={`
-                                text-xs
-                                px-2.5 py-1
-                                rounded-full
-                                ${statusClass(status)}
-                            `}
-                        >
-                            {status}
-                        </span>
-
-                        <span
-                            className="
-                                text-xs
-                                text-stone-400
-                            "
-                        >
-                            {formatDate(premiere)}
-                        </span>
-
-                    </div>
-
-
-                    <button
-                        onClick={onClose}
-                        className="
-                            w-9 h-9
-                            rounded-full
-                            bg-stone-100
-                            hover:bg-stone-200
-                            flex
-                            items-center
-                            justify-center
-                            text-lg
-                        "
-                    >
-                        ×
-                    </button>
-
-                </div>
-
-
-                {/* Modal Content */}
-
-                <div
-                    className="
-                        overflow-y-auto
-                        p-4 md:p-7
-                    "
-                >
-
-                    {/* Hero */}
-
-                    <div
-                        className="
-                            flex
-                            flex-col
-                            sm:flex-row
-                            gap-5
-                        "
-                    >
-
-                        <ImageWithFallback
-                            src={safeText(
-                                drama.poster_url
-                            )}
-                            fallback={DEFAULT_POSTER}
-                            alt={drama.title_zh}
-                            className="
-                                w-full
-                                sm:w-40
-                                md:w-48
-                                h-64
-                                sm:h-56
-                                md:h-64
-                                object-cover
-                                rounded-3xl
-                                shadow-lg
-                                flex-shrink-0
-                            "
-                        />
-
-
-                        <div className="flex-1">
-
-                            <span
-                                className="
-                                    inline-block
-                                    bg-rose-100
-                                    text-rose-600
-                                    px-3 py-1
-                                    rounded-full
-                                    text-xs
-                                    font-medium
-                                "
-                            >
-                                {drama.cp_name ||
-                                 '未設定 CP'}
-                            </span>
-
-
-                            <h1
-                                className="
-                                    text-2xl
-                                    md:text-3xl
-                                    font-bold
-                                    text-[#4A403A]
-                                    mt-2
-                                "
-                            >
-                                {drama.title_zh}
-                            </h1>
-
-
-                            <p
-                                className="
-                                    text-sm
-                                    text-stone-400
-                                    mt-1
-                                "
-                            >
-                                {drama.title_th}
-                            </p>
-
-
-                            <div
-                                className="
-                                    grid
-                                    grid-cols-2
-                                    md:grid-cols-3
-                                    gap-2
-                                    mt-5
-                                "
-                            >
-
-                                <InfoBox
-                                    label="首播"
-                                    value={formatDate(
-                                        premiere
-                                    )}
-                                />
-
-                                <InfoBox
-                                    label="集數"
-                                    value={`${total || '-'} 集`}
-                                />
-
-                                <InfoBox
-                                    label="播出時間"
-                                    value={
-                                        drama.air_time ||
-                                        '-'
-                                    }
-                                />
-
-                            </div>
-
-
-                            {nextDate && (
-
-                                <div
-                                    className="
-                                        mt-3
-                                        bg-rose-50
-                                        border
-                                        border-rose-100
-                                        rounded-2xl
-                                        p-3
-                                        text-sm
-                                        text-rose-600
-                                        font-semibold
-                                    "
-                                >
-                                    ⏰ 下一集預計：
-                                    {formatDate(nextDate)}
-                                </div>
-
-                            )}
-
-                        </div>
-
-                    </div>
-
-
-                    {/* Synopsis */}
-
-                    <section className="mt-7">
-
-                        <SectionTitle>
-                            📖 劇情簡介
-                        </SectionTitle>
-
-                        <div
-                            className="
-                                bg-white
-                                rounded-2xl
-                                p-4
-                                border
-                                border-rose-50
-                                text-sm
-                                leading-7
-                                text-stone-600
-                            "
-                        >
-                            {drama.synopsis ||
-                             drama.description ||
-                             '目前尚未填寫劇情簡介。'}
-                        </div>
-
-                    </section>
-
-
-                    {/* Double progress */}
-
-                    <section className="mt-7">
-
-                        <SectionTitle>
-                            👭 雙人追劇進度
-                        </SectionTitle>
-
-                        <div
-                            className="
-                                grid
-                                grid-cols-1
-                                sm:grid-cols-2
-                                gap-3
-                            "
-                        >
-
-                            <ProgressBox
-                                name="遙"
-                                progress={
-                                    myProgress
-                                }
-                                total={total}
-                                rating={
-                                    drama.my_rating
-                                }
-                                review={
-                                    drama.my_review
-                                }
-                                color="rose"
-                            />
-
-                            <ProgressBox
-                                name="錢"
-                                progress={
-                                    friendProgress
-                                }
-                                total={total}
-                                rating={
-                                    drama.friend_rating
-                                }
-                                review={
-                                    drama.friend_review
-                                }
-                                color="indigo"
-                            />
-
-                        </div>
-
-                    </section>
-
-
-                    {/* Episode Schedule */}
-
-                    {schedule.length > 0 && (
-
-                        <section className="mt-7">
-
-                            <SectionTitle>
-                                📅 播出日期
-                            </SectionTitle>
-
-                            <div
-                                className="
-                                    grid
-                                    grid-cols-2
-                                    sm:grid-cols-3
-                                    md:grid-cols-4
-                                    gap-2
-                                "
-                            >
-
-                                {schedule.map(
-                                    item => (
-
-                                        <div
-                                            key={
-                                                item.episode
-                                            }
-                                            className="
-                                                bg-white
-                                                border
-                                                border-rose-50
-                                                rounded-2xl
-                                                p-3
-                                            "
-                                        >
-
-                                            <div
-                                                className="
-                                                    text-xs
-                                                    font-bold
-                                                    text-rose-500
-                                                "
-                                            >
-                                                EP
-                                                {item.episode}
-                                            </div>
-
-                                            <div
-                                                className="
-                                                    text-sm
-                                                    font-semibold
-                                                    mt-1
-                                                "
-                                            >
-                                                {formatDate(
-                                                    item.date
-                                                )}
-                                            </div>
-
-                                        </div>
-
-                                    )
-                                )}
-
-                            </div>
-
-                        </section>
-
-                    )}
-
-
-                    {/* OST */}
-
-                    <section className="mt-7">
-
-                        <SectionTitle>
-                            🎵 OST
-                        </SectionTitle>
-
-
-                        {osts.length === 0 ? (
-
-                            <div
-                                className="
-                                    bg-white
-                                    rounded-2xl
-                                    p-4
-                                    border
-                                    border-rose-50
-                                    text-sm
-                                    text-stone-400
-                                "
-                            >
-                                尚未新增 OST。
-                            </div>
-
-                        ) : (
-
-                            <div
-                                className="
-                                    space-y-2
-                                "
-                            >
-
-                                {osts.map(
-                                    (song,index) => (
-
-                                        <div
-                                            key={index}
-                                            className="
-                                                bg-white
-                                                border
-                                                border-rose-50
-                                                rounded-2xl
-                                                p-3
-                                                flex
-                                                items-center
-                                                justify-between
-                                                gap-3
-                                            "
-                                        >
-
-                                            <div
-                                                className="
-                                                    flex
-                                                    items-center
-                                                    gap-3
-                                                    min-w-0
-                                                "
-                                            >
-
-                                                <div
-                                                    className="
-                                                        w-9 h-9
-                                                        rounded-xl
-                                                        bg-rose-50
-                                                        flex
-                                                        items-center
-                                                        justify-center
-                                                        flex-shrink-0
-                                                    "
-                                                >
-                                                    🎵
-                                                </div>
-
-
-                                                <div
-                                                    className="
-                                                        min-w-0
-                                                    "
-                                                >
-
-                                                    <div
-                                                        className="
-                                                            text-sm
-                                                            font-semibold
-                                                            truncate
-                                                        "
-                                                    >
-                                                        {song.name ||
-                                                         `第 ${index+1} 首`}
-                                                    </div>
-
-                                                </div>
-
-                                            </div>
-
-
-                                            {song.link && (
-
-                                                <a
-                                                    href={
-                                                        song.link
-                                                    }
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="
-                                                        bg-stone-800
-                                                        text-white
-                                                        px-3 py-2
-                                                        rounded-xl
-                                                        text-xs
-                                                        whitespace-nowrap
-                                                        hover:bg-stone-700
-                                                    "
-                                                    onClick={e =>
-                                                        e.stopPropagation()
-                                                    }
-                                                >
-                                                    ▶ 聽歌
-                                                </a>
-
-                                            )}
-
-                                        </div>
-
-                                    )
-                                )}
-
-                            </div>
-
-                        )}
-
-                    </section>
-
-
-                    {/* External links */}
-
-                    <section className="mt-7">
-
-                        <SectionTitle>
-                            🔗 相關連結
-                        </SectionTitle>
-
-                        <div
-                            className="
-                                flex
-                                flex-wrap
-                                gap-2
-                            "
-                        >
-
-                            {drama.ott_link && (
-
-                                <ExternalLink
-                                    href={
-                                        drama.ott_link
-                                    }
-                                >
-                                    ▶ {drama.ott_platform ||
-                                       drama.ott_plaform ||
-                                       '觀看平台'}
-                                </ExternalLink>
-
-                            )}
-
-
-                            {drama.source_link && (
-
-                                <ExternalLink
-                                    href={
-                                        drama.source_link
-                                    }
-                                >
-                                    🔗 資料來源
-                                </ExternalLink>
-
-                            )}
-
-                        </div>
-
-                    </section>
-
-
-                    <div className="h-5" />
-
-                </div>
-
-            </div>
-
-        </div>
-
-    );
-
-}
-
-
-/* =========================================================
-   InfoBox
-========================================================= */
-
-function InfoBox({
-    label,
-    value
-}) {
-
-    return (
-
-        <div
-            className="
-                bg-white
-                border
-                border-rose-50
-                rounded-2xl
-                p-3
-            "
-        >
-
-            <div
-                className="
-                    text-[10px]
-                    text-stone-400
-                "
-            >
-                {label}
-            </div>
-
-            <div
-                className="
-                    text-sm
-                    font-semibold
-                    mt-1
-                "
-            >
-                {value}
-            </div>
-
-        </div>
-
-    );
-
-}
-
-
-/* =========================================================
-   ProgressBox
-========================================================= */
-
-function ProgressBox({
-    name,
-    progress,
-    total,
-    rating,
-    review,
-    color
-}) {
-
-    const percentage =
-        total
-        ? Math.min(
-            100,
-            Math.round(
-                progress / total * 100
-            )
-        )
-        : 0;
-
-
-    return (
-
-        <div
-            className={`
-                rounded-2xl
-                p-4
-                ${
-                    color === 'rose'
-                    ? 'bg-rose-50'
-                    : 'bg-indigo-50'
-                }
-            `}
-        >
-
-            <div
-                className="
-                    flex
-                    justify-between
-                    items-center
-                "
-            >
-
-                <span
-                    className="
-                        font-bold
-                    "
-                >
-                    {name}
-                </span>
-
-                <span
-                    className="
-                        text-xs
-                        text-amber-500
-                        font-bold
-                    "
-                >
-                    ⭐ {rating || '-'}
-                </span>
-
-            </div>
-
-
-            <div
-                className="
-                    flex
-                    justify-between
-                    text-xs
-                    mt-2
-                "
-            >
-
-                <span>
-                    已看 {progress}
-                    {total ? ` / ${total}` : ''}
-                </span>
-
-                <span>
-                    {percentage}%
-                </span>
-
-            </div>
-
-
-            <div
-                className="
-                    h-2
-                    bg-white/70
-                    rounded-full
-                    overflow-hidden
-                    mt-2
-                "
-            >
-
-                <div
-                    className={`
-                        h-full
-                        rounded-full
-                        ${
-                            color === 'rose'
-                            ? 'bg-rose-400'
-                            : 'bg-indigo-400'
-                        }
-                    `}
-                    style={{
-                        width:
-                            `${percentage}%`
-                    }}
-                />
-
-            </div>
-
-
-            {review && (
-
-                <p
-                    className="
-                        text-xs
-                        text-stone-600
-                        italic
-                        mt-3
-                        leading-5
-                    "
-                >
-                    「{review}」
-                </p>
-
-            )}
-
-        </div>
-
-    );
-
-}
-
-
-/* =========================================================
-   SectionTitle
-========================================================= */
-
-function SectionTitle({
-    children
-}) {
-
-    return (
-
-        <h2
-            className="
-                text-base
-                font-bold
-                text-[#5C4033]
-                mb-3
-            "
-        >
-            {children}
-        </h2>
-
-    );
-
-}
-
-
-/* =========================================================
-   ExternalLink
-========================================================= */
-
-function ExternalLink({
-    href,
-    children
-}) {
-
-    /*
-      修正一些 Google Sheet 裡
-      常見的空白網址問題。
-    */
-
-    const clean =
-        String(href || '').trim();
-
-    if (!clean) return null;
-
-
-    return (
-
-        <a
-            href={clean}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="
-                bg-stone-800
-                text-white
-                px-4 py-2.5
-                rounded-xl
-                text-xs
-                hover:bg-stone-700
-                transition
-            "
-        >
-            {children}
-        </a>
-
-    );
-
-}
-
-
-/* =========================================================
-   Wishlist
-========================================================= */
-
-function Wishlist({
-    wishlist
-}) {
-
-    return (
-
-        <section
-            className="
-                glass-card
-                rounded-3xl
-                p-5 md:p-7
-                soft-shadow
-            "
-        >
-
-            <div
-                className="
-                    flex
-                    flex-col
-                    sm:flex-row
-                    sm:justify-between
-                    gap-2
-                    mb-6
-                "
-            >
-
-                <div>
-
-                    <h2
-                        className="
-                            text-xl
-                            font-bold
-                            text-[#5C4033]
-                        "
-                    >
-                        🎁 雙人待看與許願清單
-                    </h2>
-
-                    <p
-                        className="
-                            text-xs
-                            text-stone-400
-                            mt-1
-                        "
-                    >
-                        想看的先放這裡，下次不用重新找
-                    </p>
-
-                </div>
-
-                <span
-                    className="
-                        text-xs
-                        text-stone-400
-                    "
-                >
-                    共 {wishlist.length} 項
-                </span>
-
-            </div>
-
-
-            {!wishlist.length ? (
-
-                <EmptyState
-                    text="目前沒有 Wishlist"
-                />
-
-            ) : (
-
-                <div
-                    className="
-                        grid
-                        grid-cols-1
-                        sm:grid-cols-2
-                        lg:grid-cols-3
-                        gap-4
-                    "
-                >
-
-                    {wishlist.map(
-                        (item,index) => {
-
-                            const owner =
-                                safeText(
-                                    item.owner
-                                );
-
-                            return (
-
-                                <div
-                                    key={
-                                        item.id ||
-                                        index
-                                    }
-                                    className="
-                                        bg-white/80
-                                        p-4
-                                        rounded-2xl
-                                        border
-                                        border-rose-100
-                                        shadow-sm
-                                    "
-                                >
-
-                                    <span
-                                        className={`
-                                            text-[10px]
-                                            px-2.5 py-1
-                                            rounded-full
-                                            font-medium
-                                            ${
-                                                owner === '遙' ||
-                                                owner === '我'
-                                                ? 'bg-rose-100 text-rose-600'
-                                                : 'bg-indigo-100 text-indigo-600'
-                                            }
-                                        `}
-                                    >
-                                        {owner || '許願人未設定'}
-                                    </span>
-
-
-                                    <h3
-                                        className="
-                                            font-bold
-                                            mt-3
-                                        "
-                                    >
-                                        {item.titles ||
-                                         item.title ||
-                                         '未命名'}
-                                    </h3>
-
-
-                                    <p
-                                        className="
-                                            text-xs
-                                            text-stone-500
-                                            mt-2
-                                            leading-5
-                                        "
-                                    >
-                                        {item.note ||
-                                         ''}
-                                    </p>
-
-
-                                    {(item.source_link ||
-                                      item.ource_link) && (
-
-                                        <ExternalLink
-                                            href={
-                                                item.source_link ||
-                                                item.ource_link
-                                            }
-                                        >
-                                            🔗 相關連結
-                                        </ExternalLink>
-
-                                    )}
-
-                                </div>
-
-                            );
-
-                        }
-                    )}
-
-                </div>
-
-            )}
-
-        </section>
-
-    );
-
-}
-
-
-/* =========================================================
-   Actors
-========================================================= */
-
-function Actors({
-    actors
-}) {
-
-    return (
-
-        <section>
-
-            <div
-                className="
-                    mb-5
-                "
-            >
-
-                <h2
-                    className="
-                        text-xl
-                        font-bold
-                        text-[#5C4033]
-                    "
-                >
-                    👩‍❤️‍👩 CP 專區
-                </h2>
-
-                <p
-                    className="
-                        text-xs
-                        text-stone-400
-                        mt-1
-                    "
-                >
-                    泰百 CP 與雙人收藏
-                </p>
-
-            </div>
-
-
-            {!actors.length ? (
-
-                <EmptyState
-                    text="目前沒有 CP 資料"
-                />
-
-            ) : (
-
-                <div
-                    className="
-                        grid
-                        grid-cols-1
-                        sm:grid-cols-2
-                        md:grid-cols-3
-                        lg:grid-cols-4
-                        gap-5
-                    "
-                >
-
-                    {actors.map(
-                        (actor,index) => {
-
-                            const myFavorite =
-                                String(
-                                    actor.my_favorite ||
-                                    ''
-                                ).toUpperCase()
-                                === 'TRUE';
-
-                            const friendFavorite =
-                                String(
-                                    actor.friend_favorite ||
-                                    ''
-                                ).toUpperCase()
-                                === 'TRUE';
-
-
-                            return (
-
-                                <div
-                                    key={index}
-                                    className="
-                                        glass-card
-                                        rounded-3xl
-                                        overflow-hidden
-                                        shadow-sm
-                                        text-center
-                                        p-5
-                                    "
-                                >
-
-                                    <ImageWithFallback
-                                        src={
-                                            safeText(
-                                                actor.photo_url
-                                            )
-                                        }
-                                        fallback={
-                                            DEFAULT_ACTOR
-                                        }
-                                        alt={
-                                            actor.cp_name
-                                        }
-                                        className="
-                                            w-28 h-28
-                                            mx-auto
-                                            rounded-full
-                                            object-cover
-                                            shadow-md
-                                            border-2
-                                            border-white
-                                        "
-                                    />
-
-
-                                    <h3
-                                        className="
-                                            text-lg
-                                            font-bold
-                                            text-[#5C4033]
-                                            mt-4
-                                        "
-                                    >
-                                        {actor.cp_name}
-                                    </h3>
-
-
-                                    <p
-                                        className="
-                                            text-xs
-                                            text-stone-500
-                                            mt-1
-                                        "
-                                    >
-                                        {actor.actor_1}
-                                        {' & '}
-                                        {actor.actor_2}
-                                    </p>
-
-
-                                    <div
-                                        className="
-                                            mt-5
-                                            grid
-                                            grid-cols-2
-                                            gap-2
-                                        "
-                                    >
-
-                                        <span
-                                            className={`
-                                                px-2
-                                                py-2
-                                                rounded-xl
-                                                text-[10px]
-                                                font-medium
-                                                ${
-                                                    myFavorite
-                                                    ? 'bg-rose-100 text-rose-600'
-                                                    : 'bg-stone-100 text-stone-400'
-                                                }
-                                            `}
-                                        >
-                                            {myFavorite
-                                                ? '💖 遙喜歡'
-                                                : '🤍 遙未加入'
-                                            }
-                                        </span>
-
-
-                                        <span
-                                            className={`
-                                                px-2
-                                                py-2
-                                                rounded-xl
-                                                text-[10px]
-                                                font-medium
-                                                ${
-                                                    friendFavorite
-                                                    ? 'bg-indigo-100 text-indigo-600'
-                                                    : 'bg-stone-100 text-stone-400'
-                                                }
-                                            `}
-                                        >
-                                            {friendFavorite
-                                                ? '💙 錢喜歡'
-                                                : '🤍 錢未加入'
-                                            }
-                                        </span>
-
-                                    </div>
-
-                                </div>
-
-                            );
-
-                        }
-                    )}
-
-                </div>
-
-            )}
-
-        </section>
-
-    );
-
-}
-
-
-/* =========================================================
-   Mobile Nav
-========================================================= */
-
-function MobileNav({
-    icon,
-    label,
-    active,
-    onClick
-}) {
-
-    return (
-
-        <button
-            onClick={onClick}
-            className={`
-                flex
-                flex-col
-                items-center
-                justify-center
-                gap-0.5
-                px-5
-                py-1.5
-                rounded-xl
-                ${
-                    active
-                    ? 'text-rose-500'
-                    : 'text-stone-400'
-                }
-            `}
-        >
-
-            <span className="text-lg">
-                {icon}
-            </span>
-
-            <span className="text-[10px]">
-                {label}
-            </span>
-
-        </button>
-
-    );
-
-}
-
-
-/* =========================================================
-   Empty State
-========================================================= */
-
-function EmptyState({
-    text
-}) {
-
-    return (
-
-        <div
-            className="
-                glass-card
-                rounded-3xl
-                p-12
-                text-center
-                text-stone-400
-            "
-        >
-            🌸 {text}
-        </div>
-
-    );
-
-}
-
-
-/* =========================================================
-   React
-========================================================= */
-
-ReactDOM.createRoot(
-    document.getElementById('root')
-).render(
-    <App />
-);
-
+    function handleImageFallback(img) {
+        let candidates = [];
+        try { candidates = JSON.parse(img.dataset.candidates || '[]'); } catch {}
+        let index = Number(img.dataset.fallbackIndex || 0) + 1;
+        if (index < candidates.length) {
+            img.dataset.fallbackIndex = String(index);
+            img.src = candidates[index];
+            return;
+        }
+        img.classList.add('image-load-failed');
+        img.style.opacity = '.55';
+        const wrap = img.parentElement;
+        if (wrap && !wrap.querySelector('.load-failed-note')) {
+            const note = document.createElement('div');
+            note.className = 'load-failed-note';
+            note.innerHTML = `照片無法直接載入。請確認 Google Drive 已設定「知道連結的任何人都可查看」。<br><a href="${escapeHTML(img.dataset.driveUrl || '#')}" target="_blank" rel="noopener">↗ 開啟 Drive 檔案</a>`;
+            wrap.appendChild(note);
+        }
+    }
+
+    function getFavorites() {
+        try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch { return []; }
+    }
+
+    function setFavorites(list) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify([...new Set(list)]));
+        updateStats();
+        renderTimeline();
+        renderFavorites();
+        renderGallery();
+    }
+
+    function eventKey(event) { return `${event.date}__${event.title}`; }
+    function isFavorite(event) { return getFavorites().includes(eventKey(event)); }
+
+    function toggleFavorite(event, e) {
+        if (e) e.stopPropagation();
+        const key = eventKey(event);
+        const favs = getFavorites();
+        const index = favs.indexOf(key);
+        if (index >= 0) favs.splice(index,1); else favs.push(key);
+        setFavorites(favs);
+        updateHeaderTagBar();
+    }
+
+    function inferTags(event) {
+        const text = `${event.title} ${event.content} ${event.videoText}`.toLowerCase();
+        const tags = [];
+        if (/moonshadow|月影/.test(text)) tags.push('Moonshadow');
+        if (/mv|official mv|red kiss|glitch|you one/.test(text)) tags.push('MV');
+        if (/直播|live house|賣票/.test(text)) tags.push('直播');
+        if (/演唱會|concert|fan fest|fan party/.test(text)) tags.push('活動');
+        if (/award|awards|頒獎/.test(text)) tags.push('頒獎典禮');
+        if (/gemm house/.test(text)) tags.push('GEMM HOUSE');
+        if (/any/.test(text)) tags.push('Any');
+        if (/emi/.test(text)) tags.push('Emi');
+        if (/bonnie|邦邦|nini/.test(text)) tags.push('Bonnie');
+        if (!tags.length) tags.push('日常');
+        if (!tags.includes('EmiBonnie') && /emi|bonnie|米米|邦邦|mimi|nini/.test(text)) tags.push('EmiBonnie');
+        return [...new Set(tags)];
+    }
+
+    function allTags() {
+        return ['全部', ...new Set(eventsData.flatMap(inferTags))];
+    }
+
+    function matchesSearch(event, search) {
+        if (!search.trim()) return true;
+        const q = search.trim().toLowerCase();
+        return [event.date, event.title, event.content, event.linkText, event.videoText, ...inferTags(event)].join(' ').toLowerCase().includes(q);
+    }
+
+    function matchesTag(event, tag) {
+        return tag === '全部' || inferTags(event).includes(tag);
+    }
+
+    function filteredEvents(yearOnly = true) {
+        return eventsData
+            .filter(e => !yearOnly || Number(e.date.slice(0,4)) === activeYear)
+            .filter(e => matchesSearch(e, globalSearch))
+            .filter(e => matchesTag(e, activeTag))
+            .sort((a,b) => b.date.localeCompare(a.date) || a.title.localeCompare(b.title));
+    }
+
+    function switchTab(tabId) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('#mobile-bottom-nav button').forEach(el => el.classList.toggle('active', el.dataset.tab === tabId));
+        const tab = document.getElementById(tabId);
+        const btn = [...document.querySelectorAll('.nav-btn')].find(b => b.getAttribute('onclick')?.includes(`'${tabId}'`));
+        if (tab) tab.classList.add('active');
+        if (btn) btn.classList.add('active');
+        if (tabId === 'gallery') renderGallery();
+        if (tabId === 'calendar') renderCalendar();
+        if (tabId === 'favorites') renderFavorites();
+        window.scrollTo({top:0,behavior:'smooth'});
+    }
+
+    function handleGlobalSearch(value) {
+        globalSearch = value;
+        renderTimeline();
+        renderGallery();
+        renderFavorites();
+        updateHeaderTagBar();
+    }
+
+    function clearGlobalSearch() {
+        const input = document.getElementById('global-search');
+        input.value = '';
+        handleGlobalSearch('');
+    }
+
+    function renderTagBar(containerId, selected, setterName, limited=false) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        const tags = limited ? allTags().slice(0,9) : allTags();
+        container.innerHTML = tags.map(tag => `<button class="tag-chip ${tag === selected ? 'active' : ''}" onclick="${setterName}('${tag.replace(/'/g,"\\'")}')">${escapeHTML(tag)}</button>`).join('');
+    }
+
+    function setActiveTag(tag) { activeTag = tag; renderTagBar('timeline-tag-container', activeTag, 'setActiveTag'); renderTimeline(); }
+    function setGalleryTag(tag) { galleryTag = tag; renderTagBar('gallery-tag-container', galleryTag, 'setGalleryTag'); renderGallery(); }
+    function updateHeaderTagBar() { renderTagBar('header-tag-bar', activeTag, 'setActiveTag', true); }
+
+    function uniqueYears() { return [...new Set(eventsData.map(e => Number(e.date.slice(0,4))))].sort((a,b)=>b-a); }
+    function renderYearFilters() {
+        const container = document.getElementById('year-filter-container');
+        container.innerHTML = uniqueYears().map(year => `<button class="year-filter-btn ${year===activeYear?'active':''}" onclick="setActiveYear(${year})">${year}</button>`).join('');
+    }
+    function setActiveYear(year) { activeYear = year; renderYearFilters(); renderTimeline(); }
+
+    function updateStats() {
+        const photos = eventsData.reduce((n,e)=>n+(Array.isArray(e.photo)?e.photo.length:0),0);
+        const videos = eventsData.filter(e=>e.videoLink).length;
+        const favs = getFavorites().length;
+        const dates = eventsData.map(e=>e.date).sort();
+        const stats = [
+            ['📅','紀錄事件',eventsData.length],['📸','收藏照片',photos],['🎬','影片連結',videos],['⭐','我的收藏',favs]
+        ];
+        document.getElementById('stats-grid').innerHTML = stats.map(s=>`<div class="stat-card"><div class="stat-icon">${s[0]}</div><div class="stat-number">${s[2]}</div><div class="stat-label">${s[1]}</div></div>`).join('');
+    }
+
+    function photoHTML(url, title, extra='') {
+        const candidates = getImageCandidates(url);
+        return `<img class="carousel-img ${extra}" src="${escapeHTML(candidates[0])}" data-candidates="${escapeHTML(JSON.stringify(candidates))}" data-fallback-index="0" data-drive-url="${escapeHTML(toDriveViewUrl(url))}" alt="${escapeHTML(title)}" loading="lazy" onerror="handleImageFallback(this)">`;
+    }
+
+    function renderTimeline() {
+        const container = document.getElementById('timeline-container');
+        const filtered = filteredEvents(true);
+        document.getElementById('timeline-result-note').textContent = `顯示 ${filtered.length} / ${eventsData.filter(e=>Number(e.date.slice(0,4))===activeYear).length} 筆 ${activeYear} 年紀錄`;
+        if (!filtered.length) { container.innerHTML = '<div class="card" style="text-align:center;">找不到符合條件的紀錄 ♡</div>'; return; }
+        container.innerHTML = `<div class="year-section"><div class="year-title">${activeYear} 年</div></div>` + filtered.map((event,index)=>{
+            const photos = Array.isArray(event.photo)?event.photo:[];
+            const favorite = isFavorite(event);
+            const carousel = photos.length ? `<div class="photo-carousel" data-index="0">
+                ${photos.map((url,i)=>`<img class="carousel-img ${i===0?'active':''}" src="${escapeHTML(getImageCandidates(url)[0])}" data-candidates="${escapeHTML(JSON.stringify(getImageCandidates(url)))}" data-fallback-index="0" data-drive-url="${escapeHTML(toDriveViewUrl(url))}" alt="${escapeHTML(event.title)} 照片 ${i+1}" loading="lazy" onclick="event.stopPropagation(); openPhotoViewer(${JSON.stringify(filtered.indexOf(event))}, ${i})" onerror="handleImageFallback(this)">`).join('')}
+                ${photos.length>1?`<button class="carousel-btn carousel-prev" onclick="changeCarousel(this,-1);event.stopPropagation();">❮</button><button class="carousel-btn carousel-next" onclick="changeCarousel(this,1);event.stopPropagation();">❯</button><div class="carousel-indicators">${photos.map((_,i)=>`<span class="indicator-dot ${i===0?'active':''}" onclick="goCarousel(this,${i});event.stopPropagation();"></span>`).join('')}</div>`:''}
+                ${photos.length>1?`<span class="photo-count-badge">📷 ${photos.length}</span>`:''}
+            </div>` : '';
+            const links = [event.link?`<a href="${escapeHTML(event.link)}" target="_blank" rel="noopener">${escapeHTML(event.linkText||'相關連結')}</a>`:'',event.videoLink?`<a href="${escapeHTML(event.videoLink)}" target="_blank" rel="noopener">${escapeHTML(event.videoText||'觀看影片')}</a>`:''].filter(Boolean).join('<span style="margin:0 8px;color:#d8c8ce;">•</span>');
+            const tags = inferTags(event).map(t=>`<span class="event-tag">${escapeHTML(t)}</span>`).join('');
+            return `<div class="timeline-item"><div class="timeline-date">${formatDate(event.date)}</div><div class="card event-card" data-event-key="${escapeHTML(eventKey(event))}" tabindex="0"><div class="event-top"><div><div class="badge-duo">EmiBonnie</div><h3 style="margin:0;color:var(--text-main);">${escapeHTML(event.title)}</h3></div><button class="favorite-btn ${favorite?'active':''}" aria-label="收藏事件" onclick="toggleFavorite(eventsData.find(e=>eventKey(e)==='${eventKey(event).replace(/'/g,"\\'")}'),event)">${favorite?'♥':'♡'}</button></div>${event.content?`<p style="margin:10px 0 0;line-height:1.8;color:var(--text-sub);white-space:pre-line;">${escapeHTML(event.content)}</p>`:''}${tags?`<div class="event-tags">${tags}</div>`:''}${links?`<div style="margin-top:12px;font-size:.85rem;">${links}</div>`:''}${carousel}</div></div>`;
+        }).join('');
+        container.querySelectorAll('.event-card').forEach(card=>{
+            const key = card.dataset.eventKey;
+            const idx = filtered.findIndex(e=>eventKey(e)===key);
+            const open=()=>openEventModal(filtered,idx);
+            card.addEventListener('click',open);
+            card.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open();}});
+            card.querySelectorAll('a,button,img,.indicator-dot').forEach(el=>el.addEventListener('click',e=>e.stopPropagation()));
+        });
+    }
+
+    function getCarouselItems(container) { return [...container.querySelectorAll('.carousel-img')]; }
+    function setCarouselIndex(container,index) {
+        const imgs=getCarouselItems(container); if(!imgs.length)return;
+        index=(index+imgs.length)%imgs.length;
+        imgs.forEach((img,i)=>img.classList.toggle('active',i===index));
+        container.querySelectorAll('.indicator-dot').forEach((dot,i)=>dot.classList.toggle('active',i===index));
+        container.dataset.index=String(index);
+    }
+    function changeCarousel(btn,direction){const c=btn.closest('.photo-carousel');setCarouselIndex(c,Number(c.dataset.index||0)+direction);}
+    function goCarousel(dot,index){setCarouselIndex(dot.closest('.photo-carousel'),index);}
+
+    function openModal(src, driveUrl='') {
+        const modal=document.getElementById('imageModal');
+        const image=document.getElementById('modalImage');
+        applyImageSource(image,src);
+        image.style.opacity='1';
+        image.onclick=e=>e.stopPropagation();
+        const link=document.getElementById('modalDriveLink');
+        link.href=driveUrl||toDriveViewUrl(src);
+        link.style.display=(driveUrl||getDriveId(src))?'inline-flex':'none';
+        modal.style.display='flex';
+    }
+    function closeModal(){document.getElementById('imageModal').style.display='none';document.getElementById('modalImage').src='';}
+
+    function openPhotoViewer(eventIndex, photoIndex=0) {
+        modalEvents = filteredEvents(true);
+        modalEventIndex = eventIndex;
+        modalPhotoIndex = photoIndex;
+        renderEventModal(true);
+        document.getElementById('eventModal').style.display='flex';
+    }
+
+    function openEventModal(filtered, index=0) {
+        modalEvents=filtered; modalEventIndex=index; modalPhotoIndex=0; renderEventModal(false); document.getElementById('eventModal').style.display='flex';
+    }
+
+    function renderEventModal(photoOnly=false) {
+        const event=modalEvents[modalEventIndex]; if(!event)return;
+        const body=document.getElementById('event-modal-body');
+        const photos=Array.isArray(event.photo)?event.photo:[];
+        if(modalPhotoIndex>=photos.length) modalPhotoIndex=0;
+        const currentPhoto=photos[modalPhotoIndex]||'';
+        const favorite=isFavorite(event);
+        const tags=inferTags(event).map(t=>`<span class="modal-tag">${escapeHTML(t)}</span>`).join('');
+        const eventLinks=[event.link?`<a href="${escapeHTML(event.link)}" target="_blank" rel="noopener">${escapeHTML(event.linkText||'相關連結')}</a>`:'',event.videoLink?`<a href="${escapeHTML(event.videoLink)}" target="_blank" rel="noopener">${escapeHTML(event.videoText||'📺 觀看影片')}</a>`:''].filter(Boolean).join('<span style="margin:0 8px;color:#d8c8ce;">•</span>');
+        const photoBlock = photos.length ? `<div class="modal-photo-shell"><img class="modal-main-photo" id="modal-event-photo" src="${escapeHTML(getImageCandidates(currentPhoto)[0])}" data-candidates="${escapeHTML(JSON.stringify(getImageCandidates(currentPhoto)))}" data-fallback-index="0" data-drive-url="${escapeHTML(toDriveViewUrl(currentPhoto))}" onerror="handleImageFallback(this)" onclick="event.stopPropagation();openModal(this.dataset.driveUrl||this.src,this.dataset.driveUrl)"><div class="modal-photo-nav"><button class="mini-btn" onclick="changeModalPhoto(-1);event.stopPropagation();">❮ 上一張</button><span style="font-size:.72rem;color:var(--text-sub);">${modalPhotoIndex+1} / ${photos.length}</span><button class="mini-btn" onclick="changeModalPhoto(1);event.stopPropagation();">下一張 ❯</button></div><div class="modal-thumbs">${photos.map((p,i)=>`<img src="${escapeHTML(getImageCandidates(p)[0])}" data-candidates="${escapeHTML(JSON.stringify(getImageCandidates(p)))}" data-fallback-index="0" class="${i===modalPhotoIndex?'active':''}" onclick="changeModalPhotoTo(${i});event.stopPropagation();" onerror="handleImageFallback(this)">`).join('')}</div></div>` : '<div style="height:220px;border-radius:18px;background:#faf6f8;display:flex;align-items:center;justify-content:center;color:var(--text-sub);">♡ 暫無照片</div>';
+        body.innerHTML=`<div class="event-modal-left">${photoBlock}</div><div class="event-modal-right"><div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;"><div><div class="timeline-date">${formatDate(event.date)}</div><h3 style="margin:4px 0 8px;color:var(--text-main);">${escapeHTML(event.title)}</h3></div><button class="favorite-btn ${favorite?'active':''}" onclick="toggleFavorite(eventsData.find(e=>eventKey(e)==='${eventKey(event).replace(/'/g,"\\'")}'),event);renderEventModal()">${favorite?'♥':'♡'}</button></div><p style="margin:0;line-height:1.85;color:var(--text-sub);white-space:pre-line;">${escapeHTML(event.content||'這一天留下了一筆活動紀錄。')}</p>${tags?`<div class="modal-tags">${tags}</div>`:''}${eventLinks?`<div style="margin-top:14px;font-size:.85rem;line-height:1.9;">${eventLinks}</div>`:''}</div>`;
+        document.getElementById('event-modal-nav').style.display=modalEvents.length>1?'flex':'none';
+        document.getElementById('event-counter').textContent=`${modalEventIndex+1} / ${modalEvents.length}`;
+    }
+
+    function changeModalPhoto(delta){const e=modalEvents[modalEventIndex];const n=(e?.photo||[]).length;if(!n)return;modalPhotoIndex=(modalPhotoIndex+delta+n)%n;renderEventModal(true);}
+    function changeModalPhotoTo(index){modalPhotoIndex=index;renderEventModal(true);}
+    function closeEventModal(){document.getElementById('eventModal').style.display='none';}
+    function checkCloseEventModal(event){if(event.target.id==='eventModal')closeEventModal();}
+    function changeModalEvent(direction){if(!modalEvents.length)return;modalEventIndex=(modalEventIndex+direction+modalEvents.length)%modalEvents.length;modalPhotoIndex=0;renderEventModal(false);}
+
+    function renderGallery(){
+        const container=document.getElementById('gallery-container');
+        renderTagBar('gallery-tag-container',galleryTag,'setGalleryTag');
+        const photos=[];
+        eventsData.forEach(event=>{
+            if(!matchesSearch(event,globalSearch)||!matchesTag(event,galleryTag))return;
+            (event.photo||[]).forEach((photo,index)=>photos.push({photo,title:event.title,date:event.date,event}));
+        });
+        document.getElementById('gallery-result-note').textContent=`顯示 ${photos.length} 張照片`;
+        container.innerHTML=photos.length?photos.map((item,index)=>`<div class="gallery-item-card"><button class="favorite-btn gallery-fav ${isFavorite(item.event)?'active':''}" onclick="toggleFavorite(eventsData.find(e=>eventKey(e)==='${eventKey(item.event).replace(/'/g,"\\'")}'),event)">${isFavorite(item.event)?'♥':'♡'}</button><img src="${escapeHTML(getImageCandidates(item.photo)[0])}" data-candidates="${escapeHTML(JSON.stringify(getImageCandidates(item.photo)))}" data-fallback-index="0" data-drive-url="${escapeHTML(toDriveViewUrl(item.photo))}" alt="${escapeHTML(item.title)}" loading="lazy" onclick="openGalleryViewer(${index},'gallery')" onerror="handleImageFallback(this)"><div class="photo-count-badge">📷 ${index+1}</div><div style="font-size:.7rem;color:var(--text-sub);padding:5px 2px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHTML(item.date.replaceAll('-','.'))} · ${escapeHTML(item.title)}</div></div>`).join(''):'<div style="grid-column:1/-1;text-align:center;color:var(--text-sub);padding:30px;">找不到符合條件的照片 ♡</div>';
+        window._galleryPhotos=photos;
+    }
+
+    function openGalleryViewer(index){
+        const photos=window._galleryPhotos||[];
+        if(!photos[index])return;
+        modalEvents=photos.map(x=>x.event); modalEventIndex=index; modalPhotoIndex=0;
+        // gallery viewer uses one gallery photo per event entry by temporarily keeping index in a custom field
+        renderGalleryViewer(index);
+        document.getElementById('eventModal').style.display='flex';
+    }
+
+    function renderGalleryViewer(index){
+        const item=(window._galleryPhotos||[])[index]; if(!item)return;
+        const body=document.getElementById('event-modal-body');
+        const candidate=getImageCandidates(item.photo)[0];
+        body.innerHTML=`<div class="event-modal-left"><div class="modal-photo-shell"><img class="modal-main-photo" src="${escapeHTML(candidate)}" data-candidates="${escapeHTML(JSON.stringify(getImageCandidates(item.photo)))}" data-fallback-index="0" data-drive-url="${escapeHTML(toDriveViewUrl(item.photo))}" onerror="handleImageFallback(this)" onclick="event.stopPropagation();openModal(this.dataset.driveUrl||this.src,this.dataset.driveUrl)"><div class="modal-photo-nav"><button class="mini-btn" onclick="changeGalleryPhoto(-1);event.stopPropagation();">❮ 上一張</button><span style="font-size:.72rem;color:var(--text-sub);">${index+1} / ${(window._galleryPhotos||[]).length}</span><button class="mini-btn" onclick="changeGalleryPhoto(1);event.stopPropagation();">下一張 ❯</button></div></div></div><div class="event-modal-right"><div class="timeline-date">${formatDate(item.date)}</div><h3 style="margin:4px 0 10px;color:var(--text-main);">${escapeHTML(item.title)}</h3><p style="margin:0;line-height:1.8;color:var(--text-sub);">照片收藏</p><div style="margin-top:14px;"><button class="mini-btn" onclick="closeEventModal();setTimeout(()=>switchTab('timeline'),80)">↗ 回到時間軸</button></div></div>`;
+        document.getElementById('event-modal-nav').style.display='none';
+        window._galleryViewerIndex=index;
+    }
+    function changeGalleryPhoto(delta){const photos=window._galleryPhotos||[];if(!photos.length)return;let i=Number(window._galleryViewerIndex||0);i=(i+delta+photos.length)%photos.length;renderGalleryViewer(i);}
+
+    function renderFavorites(){
+        const container=document.getElementById('favorites-container'); if(!container)return;
+        let items=eventsData.filter(isFavorite).filter(e=>matchesSearch(e,globalSearch));
+        document.getElementById('favorites-result-note').textContent=`${items.length} 筆收藏事件`;
+        if(!items.length){container.innerHTML='<div class="favorite-list-empty">還沒有收藏事件 ♡<br>在時間軸上的 ♡ 點一下就可以加入收藏。</div>';return;}
+        container.innerHTML=items.sort((a,b)=>b.date.localeCompare(a.date)).map(e=>`<div class="card" style="margin-bottom:12px;cursor:pointer;" onclick="openEventModal(eventsData.filter(isFavorite), eventsData.filter(isFavorite).findIndex(x=>eventKey(x)==='${eventKey(e).replace(/'/g,"\\'")}'))"><div class="event-top"><div><div class="timeline-date">${formatDate(e.date)}</div><h3 style="margin:0;color:var(--text-main);">${escapeHTML(e.title)}</h3><div class="event-tags">${inferTags(e).map(t=>`<span class="event-tag">${escapeHTML(t)}</span>`).join('')}</div></div><button class="favorite-btn active" onclick="toggleFavorite(eventsData.find(x=>eventKey(x)==='${eventKey(e).replace(/'/g,"\\'")}'),event)">♥</button></div></div>`).join('');
+    }
+
+    function renderCalendar(){
+        const year=calendarDate.getFullYear(), month=calendarDate.getMonth();
+        document.getElementById('calendar-month-year').textContent=`${year} 年 ${month+1} 月`;
+        const container=document.getElementById('calendar-days'); container.innerHTML='';
+        const firstDay=new Date(year,month,1).getDay(), daysInMonth=new Date(year,month+1,0).getDate();
+        for(let i=0;i<firstDay;i++)container.insertAdjacentHTML('beforeend','<div class="calendar-day empty"></div>');
+        for(let day=1;day<=daysInMonth;day++){
+            const iso=`${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+            const events=eventsData.filter(e=>e.date===iso);
+            const tags=events.map(e=>`<div class="calendar-event-tag">${escapeHTML(e.title)}</div>`).join('');
+            const cell=document.createElement('div'); cell.className='calendar-day'+(events.length?' has-event':''); cell.innerHTML=`<div class="day-number">${day}</div>${tags}${events.some(isFavorite)?'<div style="position:absolute;right:4px;top:3px;font-size:.65rem;">⭐</div>':''}`;
+            if(events.length)cell.onclick=()=>openEventModal(events,0); container.appendChild(cell);
+        }
+    }
+    function changeMonth(delta){calendarDate=new Date(calendarDate.getFullYear(),calendarDate.getMonth()+delta,1);renderCalendar();}
+    function changeYear(delta){calendarDate=new Date(calendarDate.getFullYear()+delta,calendarDate.getMonth(),1);renderCalendar();}
+
+    document.addEventListener('keydown',e=>{
+        if(e.key==='Escape'){closeModal();closeEventModal();}
+        const visible=document.getElementById('eventModal').style.display==='flex';
+        if(visible&&(e.key==='ArrowLeft'||e.key==='ArrowRight')) changeModalEvent(e.key==='ArrowLeft'?-1:1);
+    });
+    window.addEventListener('scroll',()=>document.getElementById('back-top').classList.toggle('show',window.scrollY>500));
+
+    renderYearFilters();
+    renderTimeline();
+    renderCalendar();
+    renderGallery();
+    renderFavorites();
+    updateStats();
+    renderTagBar('timeline-tag-container',activeTag,'setActiveTag');
+    renderTagBar('gallery-tag-container',galleryTag,'setGalleryTag');
+    updateHeaderTagBar();
+    document.querySelector('#mobile-bottom-nav button[data-tab="timeline"]')?.classList.add('active');
 </script>
-
 </body>
 </html>
-```
 
-### Google 試算表欄位也要配合這版
-
-你目前的 `dramas` 工作表，建議至少有：
-
-```text
-id
-title_zh
-title_th
-cp_name
-poster_url
-premiere_date
-ststus_type
-total_episodes
-air_day_of_week
-air_time
-synopsis
-ott_link
-ott_platform
-
-my_progress
-my_status
-my_rating
-my_review
-
-friend_progress
-friend_status
-friend_rating
-friend_review
-```
-
-其中：
-
-- `premiere_date` → `2026-09-15`
-- `ststus_type` → `已完結` / `正在跟播` / `待播中`
-- `total_episodes` → `12`
-- `air_day_of_week` → `週二`
-- `air_time` → `20:30`
-- `my_progress` → 遙目前看到第幾集
-- `friend_progress` → 錢目前看到第幾集
-
-### OST 不限數量
-
-這版會自動找：
-
-```text
-song_1_name
-song_1_link
-
-song_2_name
-song_2_link
-
-song_3_name
-song_3_link
-
-song_4_name
-song_4_link
-
-song_5_name
-song_5_link
