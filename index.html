@@ -959,13 +959,14 @@
     let galleryTag = '全部';
     let globalSearch = '';
     const STORAGE_KEY = 'emibonnie-favorites-v2';
-    const GAS_URL = 'YOUR_EMIBONNIE_GAS_WEB_APP_URL'; // 只填 EmiBonnie 自己的 Apps Script /exec，不要填泰百劇宇宙的網址
+    const GAS_URL = 'https://script.google.com/macros/s/AKfycbw4_H1mak2yFjt2WdswhgDu-ofF3bxOVKX1V2gSknNLxHoOPgSI459HGT7nzGXEmOVU6w/exec';
     let membersData = [];
     let sheetLoading = false;
     let sheetError = '';
 
     function jsonpSheet(action,params={}){
         return new Promise((resolve,reject)=>{
+            if (!GAS_URL) { reject(new Error('EmiBonnie Apps Script Web App 網址未設定。')); return; }
             const cb='__EmiBonnieCB_'+Date.now()+'_'+Math.random().toString(36).slice(2);
             const sc=document.createElement('script');
             sc.type='text/javascript';
@@ -994,7 +995,7 @@
     }
     function normalizeSheetEvent(r){const photos=Array.from({length:10},(_,i)=>r[`phone_${String(i+1).padStart(2,'0')}_link`]).filter(Boolean);return Object.assign({},r,{date:normalizeSheetDate(r.date),title:String(r.title||''),content:String(r.description||''),photo:photos,link:r.dramas_link||'',linkText:'🎬 劇集連結',videoLink:r.mv_link||r.vlog_link||r['GMMtv LIVE HOUSE_link']||r.LIVE_link||r['short video_link']||'',videoText:'相關連結'});}
     function normalizeSheetDate(v){const s=String(v??'').trim();const m=s.match(/^(\d{4})[-\/.](\d{1,2})[-\/.](\d{1,2})/);return m?`${m[1]}-${String(m[2]).padStart(2,'0')}-${String(m[3]).padStart(2,'0')}`:s;}
-    async function loadSheetData(){if(sheetLoading)return;sheetLoading=true;sheetError='';try{const ev=await jsonpSheet('getEmiEvents');const mem=await jsonpSheet('getEmiMembers');const evData=ev&&ev.data?ev.data:[];const memData=mem&&mem.data?mem.data:[];eventsData=Array.isArray(evData)?evData.map(normalizeSheetEvent):[];membersData=Array.isArray(memData)?memData:[];renderYearFilters();renderTimeline();renderCalendar();renderGallery();renderFavorites();updateStats();renderTagBar('timeline-tag-container',activeTag,'setActiveTag');renderTagBar('gallery-tag-container',galleryTag,'setGalleryTag');updateHeaderTagBar();renderProfile();}catch(e){sheetError=e.message||String(e);renderProfile();const note=document.getElementById('timeline-result-note');if(note)note.innerHTML='<span style="color:#A35F6D;">'+escapeHTML(sheetError)+'</span> <button class="mini-btn" onclick="loadSheetData()">重新連線</button>';}finally{sheetLoading=false;}}
+    async function loadSheetData(){if(sheetLoading)return;sheetLoading=true;sheetError='';try{let ev,mem;try{ev=await jsonpSheet('getEmiEvents');mem=await jsonpSheet('getEmiMembers');}catch(primary){ev=await jsonpSheet('getEvents');mem=await jsonpSheet('getMembers');}const evData=ev&&ev.data?ev.data:[];const memData=mem&&mem.data?mem.data:[];eventsData=Array.isArray(evData)?evData.map(normalizeSheetEvent):[];membersData=Array.isArray(memData)?memData.map(normalizeMember):[];renderYearFilters();renderTimeline();renderCalendar();renderGallery();renderFavorites();updateStats();renderTagBar('timeline-tag-container',activeTag,'setActiveTag');renderTagBar('gallery-tag-container',galleryTag,'setGalleryTag');updateHeaderTagBar();renderProfile();}catch(e){sheetError=e.message||String(e);renderProfile();const note=document.getElementById('timeline-result-note');if(note)note.innerHTML='<span style="color:#A35F6D;">'+escapeHTML(sheetError)+'</span> <button class="mini-btn" onclick="loadSheetData()">重新連線</button>';}finally{sheetLoading=false;}}
     function renderProfile(){const c=document.getElementById('profile-container');if(!c)return;if(!membersData.length){c.innerHTML=sheetError?`<div class="sheet-status error">${escapeHTML(sheetError)}</div>`:'<div class="card"><div class="results-note">目前沒有從 Google Sheets 取得 members 資料。</div></div>';return;}c.innerHTML=membersData.map(m=>{const name=m.nickname||m['暱稱']||m.name_en||m.display_name||m.m_id||'未命名';const photo=memberPhotoHTML(m);const visible=Object.entries(m).filter(([k,v])=>v!==undefined&&v!==null&&String(v).trim()!==''&&!MEMBER_PHOTO_KEYS.has(k)&&!['instagram','x','tiktok','youtube','facebook'].includes(k));return `<div class="card" style="margin-bottom:20px">${photo}<div class="profile-info"><h3 style="margin:5px 0 2px;color:var(--accent-pink);">${escapeHTML(name)}</h3><span style="font-size:.85rem;color:var(--text-sub);">${escapeHTML(m.name_en||m.display_name||'')}</span>${memberAccountsHTML(m)}</div><div class="all-data-grid">${visible.map(([k,v])=>`<div class="all-data-item full"><span class="all-data-label">${escapeHTML(k)}</span><span class="all-data-value">${fieldValueHTML(v)}</span></div>`).join('')}</div></div>`;}).join('');}
 
     function formatDate(dateString) {
@@ -1194,7 +1195,7 @@
         const raw=String(value).trim();
         if(!raw)return '';
         // 一格中若有多個 URL，全部分開變成可點連結；非 URL 內容維持純文字。
-        const parts=raw.split(/[\s,，、]+/).filter(Boolean);
+        const parts=raw.split(/\s+/).filter(Boolean);
         if(parts.length>1 && parts.every(isUrlValue)){
             return parts.map(function(url){const u=normalizeUrl(url);return '<a href="'+escapeHTML(u)+'" target="_blank" rel="noopener noreferrer">'+escapeHTML(url)+' ↗</a>';}).join('<br>');
         }
@@ -1228,7 +1229,7 @@
             return '<div class="all-data-item full"><span class="all-data-label">'+escapeHTML(k)+'</span><span class="all-data-value">'+html+'</span></div>';
         }).join('')+'</div></section>';
     }
-    function accountUrl(platform,value){const raw=String(value??'').trim();if(!raw)return '';if(/^https?:\/\//i.test(raw)||/^htps:\/\//i.test(raw)||/^www\./i.test(raw))return normalizeUrl(raw);const u=raw.replace(/^@/,'');const base={instagram:'https://www.instagram.com/',x:'https://x.com/',tiktok:'https://www.tiktok.com/@',youtube:'https://www.youtube.com/@',facebook:'https://www.facebook.com/'};return base[platform]?base[platform]+encodeURIComponent(u):normalizeUrl(raw);}function memberAccountsHTML(m){const out=MEMBER_ACCOUNT_KEYS.filter(([k])=>m&&String(m[k]??'').trim()).map(([k,label])=>`<a href="${escapeHTML(accountUrl(k,m[k]))}" target="_blank" rel="noopener noreferrer">${label} ↗</a>`);return out.length?`<div class="member-socials">${out.join('')}</div>`:'';}
+    function memberAccountsHTML(m){const out=MEMBER_ACCOUNT_KEYS.filter(([k])=>m&&m[k]).map(([k,label])=>`<a href="${escapeHTML(normalizeUrl(m[k]))}" target="_blank" rel="noopener noreferrer">${label} ↗</a>`);return out.length?`<div class="member-socials">${out.join('')}</div>`:'';}
     function memberPhotoHTML(m){
         const keys=['photo_url(大頭照用)','photo_url','photo_url_2','photo_url_3'];
         const photos=[];keys.forEach(k=>{const v=String(m?.[k]||'').trim();if(v&&photos.indexOf(v)===-1)photos.push(v);});
