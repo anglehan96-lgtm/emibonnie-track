@@ -1,318 +1,533 @@
-<!-- ========================================== -->
-<!-- 時間軸表單模組 (CSS + HTML + JS)           -->
-<!-- ========================================== -->
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Emibonnie Track - 時間軸紀錄</title>
+  <style>
+    /* 全域基本樣式 */
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: #f7f8fa;
+      color: #333;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    header h1 {
+      color: #d24ed4;
+      margin-bottom: 8px;
+    }
 
-<style>
-  /* Modal 遮罩層 */
-  .eb-modal-overlay {
-    display: none;
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(4px);
-    z-index: 9999;
-    justify-content: center;
-    align-items: center;
-  }
-  .eb-modal-overlay.active { display: flex; }
+    /* 時間軸列表卡片 */
+    .timeline-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .timeline-card {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      border-left: 5px solid #d24ed4;
+      position: relative;
+    }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .card-date {
+      font-weight: bold;
+      color: #ff8b3d;
+      font-size: 0.95rem;
+    }
+    .card-category {
+      background: #f0e6f5;
+      color: #d24ed4;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    .card-title {
+      font-size: 1.2rem;
+      margin: 0 0 10px 0;
+      color: #222;
+    }
+    .card-desc {
+      color: #666;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      margin-bottom: 12px;
+    }
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+    .tag-badge {
+      background: #eef2f7;
+      color: #555;
+      font-size: 0.75rem;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+    .card-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 10px;
+    }
+    .btn-edit-card {
+      background: #f0f0f0;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      color: #444;
+      transition: background 0.2s;
+    }
+    .btn-edit-card:hover {
+      background: #e0e0e0;
+    }
 
-  /* Modal 主體 */
-  .eb-modal-content {
-    background: #ffffff;
-    width: 90%;
-    max-width: 800px;
-    max-height: 90vh;
-    border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    animation: ebModalFadeIn 0.25s ease-out;
-  }
-  @keyframes ebModalFadeIn {
-    from { opacity: 0; transform: translateY(15px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+    /* 載入與空白狀態 */
+    .loading-state, .empty-state {
+      text-align: center;
+      padding: 40px;
+      color: #888;
+      font-size: 1.1rem;
+    }
 
-  .eb-modal-header {
-    padding: 16px 24px;
-    background: #f8f9fa;
-    border-bottom: 1px solid #eee;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .eb-modal-header h3 { margin: 0; color: #333; font-size: 1.25rem; font-weight: 600; }
-  .eb-modal-close {
-    background: none; border: none; font-size: 1.8rem;
-    cursor: pointer; color: #888; line-height: 1;
-  }
-  .eb-modal-close:hover { color: #000; }
+    /* Modal 遮罩層 */
+    .eb-modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+    }
+    .eb-modal-overlay.active { display: flex; }
 
-  #eventForm { padding: 20px 24px; overflow-y: auto; flex: 1; }
+    /* Modal 主體 */
+    .eb-modal-content {
+      background: #ffffff;
+      width: 90%;
+      max-width: 800px;
+      max-height: 90vh;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      animation: ebModalFadeIn 0.25s ease-out;
+    }
+    @keyframes ebModalFadeIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
-  /* 網格排版 */
-  .eb-form-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 14px;
-  }
-  .eb-form-group { display: flex; flex-direction: column; }
-  .eb-form-group.full-width { grid-column: span 2; }
-  .eb-form-section-title {
-    grid-column: span 2;
-    font-weight: bold;
-    color: #d24ed4;
-    margin-top: 15px;
-    padding-bottom: 5px;
-    border-bottom: 2px solid #f0e6f5;
-  }
+    .eb-modal-header {
+      padding: 16px 24px;
+      background: #f8f9fa;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .eb-modal-header h3 { margin: 0; color: #333; font-size: 1.25rem; font-weight: 600; }
+    .eb-modal-close {
+      background: none; border: none; font-size: 1.8rem;
+      cursor: pointer; color: #888; line-height: 1;
+    }
+    .eb-modal-close:hover { color: #000; }
 
-  .eb-form-group label {
-    font-size: 0.85rem;
-    color: #555;
-    margin-bottom: 4px;
-    font-weight: 500;
-  }
-  .eb-form-group input, 
-  .eb-form-group select, 
-  .eb-form-group textarea {
-    padding: 8px 12px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-size: 0.9rem;
-    transition: border-color 0.2s;
-  }
-  .eb-form-group input:focus, 
-  .eb-form-group select:focus, 
-  .eb-form-group textarea:focus {
-    border-color: #d24ed4;
-    outline: none;
-  }
+    #eventForm { padding: 20px 24px; overflow-y: auto; flex: 1; }
 
-  .eb-modal-footer {
-    padding: 16px 24px;
-    background: #f8f9fa;
-    border-top: 1px solid #eee;
-    display: flex;
-    justify-content: flex-end;
-    gap: 12px;
-  }
+    /* 表單網格排版 */
+    .eb-form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+    .eb-form-group { display: flex; flex-direction: column; }
+    .eb-form-group.full-width { grid-column: span 2; }
+    .eb-form-section-title {
+      grid-column: span 2;
+      font-weight: bold;
+      color: #d24ed4;
+      margin-top: 15px;
+      padding-bottom: 5px;
+      border-bottom: 2px solid #f0e6f5;
+    }
 
-  /* 按鈕樣式 */
-  .eb-btn {
-    padding: 9px 20px;
-    border-radius: 8px;
-    border: none;
-    font-weight: 600;
-    cursor: pointer;
-  }
-  .eb-btn-primary { background: #d24ed4; color: white; }
-  .eb-btn-primary:hover { background: #b83eba; }
-  .eb-btn-secondary { background: #e0e0e0; color: #333; }
-  .eb-btn-secondary:hover { background: #d0d0d0; }
+    .eb-form-group label {
+      font-size: 0.85rem;
+      color: #555;
+      margin-bottom: 4px;
+      font-weight: 500;
+    }
+    .eb-form-group input, 
+    .eb-form-group select, 
+    .eb-form-group textarea {
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      transition: border-color 0.2s;
+    }
+    .eb-form-group input:focus, 
+    .eb-form-group select:focus, 
+    .eb-form-group textarea:focus {
+      border-color: #d24ed4;
+      outline: none;
+    }
 
-  /* 右下角懸浮按鈕 */
-  .eb-fab-add {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #ff8b3d, #d24ed4);
-    color: white;
-    border: none;
-    font-size: 32px;
-    cursor: pointer;
-    box-shadow: 0 4px 15px rgba(210, 78, 212, 0.4);
-    z-index: 990;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.2s;
-  }
-  .eb-fab-add:hover { transform: scale(1.08); }
+    .eb-modal-footer {
+      padding: 16px 24px;
+      background: #f8f9fa;
+      border-top: 1px solid #eee;
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
 
-  @media (max-width: 600px) {
-    .eb-form-grid { grid-template-columns: 1fr; }
-    .eb-form-group.full-width, .eb-form-section-title { grid-column: span 1; }
-  }
-</style>
+    /* 按鈕樣式 */
+    .eb-btn {
+      padding: 9px 20px;
+      border-radius: 8px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .eb-btn-primary { background: #d24ed4; color: white; }
+    .eb-btn-primary:hover { background: #b83eba; }
+    .eb-btn-secondary { background: #e0e0e0; color: #333; }
+    .eb-btn-secondary:hover { background: #d0d0d0; }
 
-<!-- Modal 介面 -->
-<div id="eventModal" class="eb-modal-overlay">
-  <div class="eb-modal-content">
-    <div class="eb-modal-header">
-      <h3 id="modalTitle">新增時間軸事件</h3>
-      <button type="button" class="eb-modal-close" onclick="closeEventModal()">&times;</button>
+    /* 右下角懸浮按鈕 */
+    .eb-fab-add {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ff8b3d, #d24ed4);
+      color: white;
+      border: none;
+      font-size: 32px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(210, 78, 212, 0.4);
+      z-index: 990;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s;
+    }
+    .eb-fab-add:hover { transform: scale(1.08); }
+
+    @media (max-width: 600px) {
+      .eb-form-grid { grid-template-columns: 1fr; }
+      .eb-form-group.full-width, .eb-form-section-title { grid-column: span 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>Emibonnie Timeline</h1>
+      <p>Google Sheet 資料即時同步時間軸</p>
+    </header>
+
+    <!-- 時間軸資料顯示區域 -->
+    <div id="timelineContainer" class="timeline-list">
+      <div class="loading-state">資料讀取中，請稍後...</div>
     </div>
-    <form id="eventForm" onsubmit="handleFormSubmit(event)">
-      <input type="hidden" id="field_rowIndex" name="_rowIndex">
-
-      <div class="eb-form-grid">
-        <!-- 基本資訊 -->
-        <div class="eb-form-group">
-          <label>日期 (date) *</label>
-          <input type="date" id="field_date" name="date" required>
-        </div>
-        <div class="eb-form-group">
-          <label>標題 (title) *</label>
-          <input type="text" id="field_title" name="title" placeholder="事件標題" required>
-        </div>
-        <div class="eb-form-group">
-          <label>分類 (category)</label>
-          <select id="field_category" name="category">
-            <option value="記事">記事</option>
-            <option value="劇集">劇集</option>
-            <option value="活動">活動</option>
-            <option value="直播">直播</option>
-            <option value="日常">日常</option>
-            <option value="MV">MV</option>
-            <option value="Vlog">Vlog</option>
-            <option value="節目">節目</option>
-          </select>
-        </div>
-        <div class="eb-form-group">
-          <label>精選事件 (is_featured)</label>
-          <select id="field_is_featured" name="is_featured">
-            <option value="FALSE">否 (FALSE)</option>
-            <option value="TRUE">是 (TRUE)</option>
-          </select>
-        </div>
-
-        <div class="eb-form-group full-width">
-          <label>標籤 (tags，多個用逗號隔開)</label>
-          <input type="text" id="field_tags" name="tags" placeholder="例如：Moonshadow,首映">
-        </div>
-
-        <div class="eb-form-group full-width">
-          <label>內容說明 (description)</label>
-          <textarea id="field_description" name="description" rows="3" placeholder="詳細內容..."></textarea>
-        </div>
-
-        <!-- 影音連結 -->
-        <div class="eb-form-section-title">影音連結 (Video Links)</div>
-        <div class="eb-form-group"><label>劇集連結 (dramas_link)</label><input type="url" id="field_dramas_link" name="dramas_link"></div>
-        <div class="eb-form-group"><label>MV 連結 (mv_link)</label><input type="url" id="field_mv_link" name="mv_link"></div>
-        <div class="eb-form-group"><label>Vlog 連結 (vlog_link)</label><input type="url" id="field_vlog_link" name="vlog_link"></div>
-        <div class="eb-form-group"><label>GMMtv Live 連結</label><input type="url" id="field_GMMtv_LIVE_HOUSE_link" name="GMMtv LIVE HOUSE_link"></div>
-        <div class="eb-form-group"><label>直播連結 (LIVE_link)</label><input type="url" id="field_LIVE_link" name="LIVE_link"></div>
-        <div class="eb-form-group"><label>短影音連結 (short video_link)</label><input type="url" id="field_short_video_link" name="short video_link"></div>
-
-        <!-- 照片連結 -->
-        <div class="eb-form-section-title">Google Drive 圖檔網址 (Photo Links)</div>
-        <div class="eb-form-group"><label>照片 1 (phone_01_link)</label><input type="url" id="field_phone_01_link" name="phone_01_link"></div>
-        <div class="eb-form-group"><label>照片 2 (phone_02_link)</label><input type="url" id="field_phone_02_link" name="phone_02_link"></div>
-        <div class="eb-form-group"><label>照片 3 (phone_03_link)</label><input type="url" id="field_phone_03_link" name="phone_03_link"></div>
-        <div class="eb-form-group"><label>照片 4 (phone_04_link)</label><input type="url" id="field_phone_04_link" name="phone_04_link"></div>
-        <div class="eb-form-group"><label>照片 5 (phone_05_link)</label><input type="url" id="field_phone_05_link" name="phone_05_link"></div>
-        <div class="eb-form-group"><label>照片 6 (phone_06_link)</label><input type="url" id="field_phone_06_link" name="phone_06_link"></div>
-        <div class="eb-form-group"><label>照片 7 (phone_07_link)</label><input type="url" id="field_phone_07_link" name="phone_07_link"></div>
-        <div class="eb-form-group"><label>照片 8 (phone_08_link)</label><input type="url" id="field_phone_08_link" name="phone_08_link"></div>
-        <div class="eb-form-group"><label>照片 9 (phone_09_link)</label><input type="url" id="field_phone_09_link" name="phone_09_link"></div>
-        <div class="eb-form-group"><label>照片 10 (phone_10_link)</label><input type="url" id="field_phone_10_link" name="phone_10_link"></div>
-      </div>
-
-      <div class="eb-modal-footer">
-        <button type="button" class="eb-btn eb-btn-secondary" onclick="closeEventModal()">取消</button>
-        <button type="submit" id="submitBtn" class="eb-btn eb-btn-primary">儲存並同步至 Google Sheet</button>
-      </div>
-    </form>
   </div>
-</div>
 
-<!-- 右下角懸浮按鈕 -->
-<button class="eb-fab-add" onclick="openAddModal()" title="新增時間軸事件">+</button>
+  <!-- Modal 表單介面 -->
+  <div id="eventModal" class="eb-modal-overlay">
+    <div class="eb-modal-content">
+      <div class="eb-modal-header">
+        <h3 id="modalTitle">新增時間軸事件</h3>
+        <button type="button" class="eb-modal-close" onclick="closeEventModal()">&times;</button>
+      </div>
+      <form id="eventForm" onsubmit="handleFormSubmit(event)">
+        <input type="hidden" id="field_rowIndex" name="_rowIndex">
 
-<script>
-  // 已帶入你的正式 API 網址
-  const API_URL = "https://script.google.com/macros/s/AKfycbw4_H1mak2yFjt2WdswhgDu-ofF3bxOVKX1V2gSknNLxHoOPgSI459HGT7nzGXEmOVU6w/exec";
+        <div class="eb-form-grid">
+          <!-- 基本資訊 -->
+          <div class="eb-form-group">
+            <label for="field_date">日期 (date) *</label>
+            <input type="date" id="field_date" name="date" required>
+          </div>
+          <div class="eb-form-group">
+            <label for="field_title">標題 (title) *</label>
+            <input type="text" id="field_title" name="title" placeholder="事件標題" required>
+          </div>
+          <div class="eb-form-group">
+            <label for="field_category">分類 (category)</label>
+            <select id="field_category" name="category">
+              <option value="記事">記事</option>
+              <option value="劇集">劇集</option>
+              <option value="活動">活動</option>
+              <option value="直播">直播</option>
+              <option value="日常">日常</option>
+              <option value="MV">MV</option>
+              <option value="Vlog">Vlog</option>
+              <option value="節目">節目</option>
+            </select>
+          </div>
+          <div class="eb-form-group">
+            <label for="field_is_featured">精選事件 (is_featured)</label>
+            <select id="field_is_featured" name="is_featured">
+              <option value="FALSE">否 (FALSE)</option>
+              <option value="TRUE">是 (TRUE)</option>
+            </select>
+          </div>
 
-  function openAddModal() {
-    document.getElementById('modalTitle').innerText = "新增時間軸事件";
-    document.getElementById('eventForm').reset();
-    document.getElementById('field_rowIndex').value = "";
-    document.getElementById('eventModal').classList.add('active');
-  }
+          <div class="eb-form-group full-width">
+            <label for="field_tags">標籤 (tags，多個用逗號隔開)</label>
+            <input type="text" id="field_tags" name="tags" placeholder="例如：Moonshadow,首映">
+          </div>
 
-  function openEditModal(eventData) {
-    document.getElementById('modalTitle').innerText = "編輯時間軸事件";
-    document.getElementById('eventForm').reset();
+          <div class="eb-form-group full-width">
+            <label for="field_description">內容說明 (description)</label>
+            <textarea id="field_description" name="description" rows="3" placeholder="詳細內容..."></textarea>
+          </div>
 
-    const fields = [
-      '_rowIndex', 'date', 'title', 'category', 'description', 'tags',
-      'dramas_link', 'mv_link', 'vlog_link', 'GMMtv LIVE HOUSE_link',
-      'LIVE_link', 'short video_link', 'is_featured',
-      'phone_01_link', 'phone_02_link', 'phone_03_link', 'phone_04_link',
-      'phone_05_link', 'phone_06_link', 'phone_07_link', 'phone_08_link',
-      'phone_09_link', 'phone_10_link'
-    ];
+          <!-- 影音連結 -->
+          <div class="eb-form-section-title">影音連結 (Video Links)</div>
+          <div class="eb-form-group">
+            <label for="field_dramas_link">劇集連結 (dramas_link)</label>
+            <input type="url" id="field_dramas_link" name="dramas_link">
+          </div>
+          <div class="eb-form-group">
+            <label for="field_mv_link">MV 連結 (mv_link)</label>
+            <input type="url" id="field_mv_link" name="mv_link">
+          </div>
+          <div class="eb-form-group">
+            <label for="field_vlog_link">Vlog 連結 (vlog_link)</label>
+            <input type="url" id="field_vlog_link" name="vlog_link">
+          </div>
+          <div class="eb-form-group">
+            <label for="field_GMMtv_LIVE_HOUSE_link">GMMtv Live 連結</label>
+            <input type="url" id="field_GMMtv_LIVE_HOUSE_link" name="GMMtv LIVE HOUSE_link">
+          </div>
+          <div class="eb-form-group">
+            <label for="field_LIVE_link">直播連結 (LIVE_link)</label>
+            <input type="url" id="field_LIVE_link" name="LIVE_link">
+          </div>
+          <div class="eb-form-group">
+            <label for="field_short_video_link">短影音連結 (short video_link)</label>
+            <input type="url" id="field_short_video_link" name="short video_link">
+          </div>
 
-    fields.forEach(f => {
-      const el = document.getElementById(`field_${f.replace(/ /g, '_')}`) || document.getElementsByName(f)[0];
-      if (el) {
-        if (f === 'date' && eventData[f]) {
-          const d = new Date(eventData[f]);
-          el.value = !isNaN(d) ? d.toISOString().split('T')[0] : eventData[f];
-        } else {
-          el.value = eventData[f] !== undefined ? eventData[f] : '';
-        }
-      }
+          <!-- 照片連結 -->
+          <div class="eb-form-section-title">Google Drive 圖檔網址 (Photo Links)</div>
+          <div class="eb-form-group"><label for="field_phone_01_link">照片 1 (phone_01_link)</label><input type="url" id="field_phone_01_link" name="phone_01_link"></div>
+          <div class="eb-form-group"><label for="field_phone_02_link">照片 2 (phone_02_link)</label><input type="url" id="field_phone_02_link" name="phone_02_link"></div>
+          <div class="eb-form-group"><label for="field_phone_03_link">照片 3 (phone_03_link)</label><input type="url" id="field_phone_03_link" name="phone_03_link"></div>
+          <div class="eb-form-group"><label for="field_phone_04_link">照片 4 (phone_04_link)</label><input type="url" id="field_phone_04_link" name="phone_04_link"></div>
+          <div class="eb-form-group"><label for="field_phone_05_link">照片 5 (phone_05_link)</label><input type="url" id="field_phone_05_link" name="phone_05_link"></div>
+          <div class="eb-form-group"><label for="field_phone_06_link">照片 6 (phone_06_link)</label><input type="url" id="field_phone_06_link" name="phone_06_link"></div>
+          <div class="eb-form-group"><label for="field_phone_07_link">照片 7 (phone_07_link)</label><input type="url" id="field_phone_07_link" name="phone_07_link"></div>
+          <div class="eb-form-group"><label for="field_phone_08_link">照片 8 (phone_08_link)</label><input type="url" id="field_phone_08_link" name="phone_08_link"></div>
+          <div class="eb-form-group"><label for="field_phone_09_link">照片 9 (phone_09_link)</label><input type="url" id="field_phone_09_link" name="phone_09_link"></div>
+          <div class="eb-form-group"><label for="field_phone_10_link">照片 10 (phone_10_link)</label><input type="url" id="field_phone_10_link" name="phone_10_link"></div>
+        </div>
+
+        <div class="eb-modal-footer">
+          <button type="button" class="eb-btn eb-btn-secondary" onclick="closeEventModal()">取消</button>
+          <button type="submit" id="submitBtn" class="eb-btn eb-btn-primary">儲存並同步至 Google Sheet</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 右下角懸浮按鈕 -->
+  <button class="eb-fab-add" onclick="openAddModal()" title="新增時間軸事件">+</button>
+
+  <script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbw4_H1mak2yFjt2WdswhgDu-ofF3bxOVKX1V2gSknNLxHoOPgSI459HGT7nzGXEmOVU6w/exec";
+    let globalTimelineData = [];
+
+    // 頁面載入時自動拉取 Google Sheet 資料
+    document.addEventListener('DOMContentLoaded', () => {
+      fetchTimelineData();
     });
 
-    document.getElementById('eventModal').classList.add('active');
-  }
+    // 從 GAS 讀取 Timeline 資料並渲染至畫面
+    async function fetchTimelineData() {
+      const container = document.getElementById('timelineContainer');
+      container.innerHTML = '<div class="loading-state">資料讀取中，請稍後...</div>';
 
-  function closeEventModal() {
-    document.getElementById('eventModal').classList.remove('active');
-  }
+      try {
+        const response = await fetch(`${API_URL}?sheet=Timeline`);
+        globalTimelineData = await response.json();
 
-  async function handleFormSubmit(e) {
-    e.preventDefault();
-    
-    const submitBtn = document.getElementById('submitBtn');
-    submitBtn.disabled = true;
-    submitBtn.innerText = "同步中...";
+        if (!globalTimelineData || globalTimelineData.length === 0) {
+          container.innerHTML = '<div class="empty-state">目前還沒有任何時間軸資料，點擊右下角「+」新增第一筆吧！</div>';
+          return;
+        }
 
-    const form = document.getElementById('eventForm');
-    const formData = new FormData(form);
-    const payloadData = {};
+        renderTimeline(globalTimelineData);
+      } catch (err) {
+        console.error("載入時間軸失敗:", err);
+        container.innerHTML = '<div class="empty-state" style="color:red;">資料載入失敗，請確認網路連線或 API 狀態。</div>';
+      }
+    }
 
-    formData.forEach((value, key) => { payloadData[key] = value; });
+    // 將資料轉為 HTML 卡片
+    function renderTimeline(dataList) {
+      const container = document.getElementById('timelineContainer');
+      container.innerHTML = '';
 
-    const isEdit = Boolean(payloadData._rowIndex);
-    const actionType = isEdit ? 'edit' : 'add';
+      dataList.forEach((item, index) => {
+        const card = document.createElement('div');
+        card.className = 'timeline-card';
 
-    try {
-      const response = await fetch(API_URL, {
-        method: 'POST',
-        body: JSON.stringify({
-          sheet: 'Timeline',
-          action: actionType,
-          data: payloadData
-        })
+        // 格式化日期
+        let dateStr = item.date || '';
+        if (dateStr && !isNaN(Date.parse(dateStr))) {
+          dateStr = new Date(dateStr).toISOString().split('T')[0];
+        }
+
+        // 處理標籤
+        let tagsHtml = '';
+        if (item.tags) {
+          const tagsArr = String(item.tags).split(',');
+          tagsHtml = tagsArr.map(t => `<span class="tag-badge">#${t.trim()}</span>`).join('');
+        }
+
+        card.innerHTML = `
+          <div class="card-header">
+            <span class="card-date">${dateStr}</span>
+            <span class="card-category">${item.category || '記事'}</span>
+          </div>
+          <h3 class="card-title">${item.title || '無標題'}</h3>
+          ${item.description ? `<div class="card-desc">${item.description}</div>` : ''}
+          ${tagsHtml ? `<div class="card-tags">${tagsHtml}</div>` : ''}
+          <div class="card-actions">
+            <button class="btn-edit-card" onclick="triggerEdit(${index})">編輯事件</button>
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    // 點擊卡片編輯按鈕
+    function triggerEdit(index) {
+      if (globalTimelineData[index]) {
+        openEditModal(globalTimelineData[index]);
+      }
+    }
+
+    // 開啟新增 Modal
+    function openAddModal() {
+      document.getElementById('modalTitle').innerText = "新增時間軸事件";
+      document.getElementById('eventForm').reset();
+      document.getElementById('field_rowIndex').value = "";
+      document.getElementById('eventModal').classList.add('active');
+    }
+
+    // 開啟編輯 Modal
+    function openEditModal(eventData) {
+      document.getElementById('modalTitle').innerText = "編輯時間軸事件";
+      document.getElementById('eventForm').reset();
+
+      const fields = [
+        '_rowIndex', 'date', 'title', 'category', 'description', 'tags',
+        'dramas_link', 'mv_link', 'vlog_link', 'GMMtv LIVE HOUSE_link',
+        'LIVE_link', 'short video_link', 'is_featured',
+        'phone_01_link', 'phone_02_link', 'phone_03_link', 'phone_04_link',
+        'phone_05_link', 'phone_06_link', 'phone_07_link', 'phone_08_link',
+        'phone_09_link', 'phone_10_link'
+      ];
+
+      fields.forEach(f => {
+        const el = document.getElementById(`field_${f.replace(/ /g, '_')}`) || document.getElementsByName(f)[0];
+        if (el) {
+          if (f === 'date' && eventData[f]) {
+            const d = new Date(eventData[f]);
+            el.value = !isNaN(d) ? d.toISOString().split('T')[0] : eventData[f];
+          } else {
+            el.value = eventData[f] !== undefined ? eventData[f] : '';
+          }
+        }
       });
 
-      const result = await response.json();
-
-      if (result.status === 'success') {
-        alert(isEdit ? "修改成功！" : "新增成功！");
-        closeEventModal();
-        if (typeof fetchTimelineData === 'function') {
-          fetchTimelineData();
-        } else {
-          location.reload();
-        }
-      } else {
-        alert("儲存失敗：" + result.message);
-      }
-    } catch (err) {
-      console.error("提交失敗:", err);
-      alert("提交失敗，請確認網路連線狀態。");
-    } finally {
-      submitBtn.disabled = false;
-      submitBtn.innerText = "儲存並同步至 Google Sheet";
+      document.getElementById('eventModal').classList.add('active');
     }
-  }
-</script>
+
+    // 關閉 Modal
+    function closeEventModal() {
+      document.getElementById('eventModal').classList.remove('active');
+    }
+
+    // 提交表單至 Google Sheet
+    async function handleFormSubmit(e) {
+      e.preventDefault();
+      
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.disabled = true;
+      submitBtn.innerText = "同步中...";
+
+      const form = document.getElementById('eventForm');
+      const formData = new FormData(form);
+      const payloadData = {};
+
+      formData.forEach((value, key) => { payloadData[key] = value; });
+
+      const isEdit = Boolean(payloadData._rowIndex);
+      const actionType = isEdit ? 'edit' : 'add';
+
+      try {
+        const response = await fetch(API_URL, {
+          method: 'POST',
+          body: JSON.stringify({
+            sheet: 'Timeline',
+            action: actionType,
+            data: payloadData
+          })
+        });
+
+        const result = await response.json();
+
+        if (result.status === 'success') {
+          alert(isEdit ? "修改成功！" : "新增成功！");
+          closeEventModal();
+          fetchTimelineData(); // 儲存成功後自動重新載入時間軸
+        } else {
+          alert("儲存失敗：" + result.message);
+        }
+      } catch (err) {
+        console.error("提交失敗:", err);
+        alert("提交失敗，請確認網路狀態。");
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerText = "儲存並同步至 Google Sheet";
+      }
+    }
+  </script>
+</body>
+</html>
