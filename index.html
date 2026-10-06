@@ -749,6 +749,7 @@
         .sheet-status{margin:10px 0;padding:10px 12px;border-radius:12px;background:#fff7f8;color:#9b6878;font-size:.76rem;line-height:1.6}.sheet-status.error{background:#fff0f1;color:#a35f6d}
         .all-data-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:14px}.all-data-item{padding:9px 10px;border:1px solid var(--border-color);border-radius:12px;background:#fff}.all-data-item.full{grid-column:1/-1}.all-data-label{display:block;font-size:.68rem;color:var(--text-sub);margin-bottom:3px}.all-data-value{display:block;font-size:.8rem;white-space:pre-wrap;word-break:break-word}.all-data-value a{color:var(--accent-pink);text-decoration:underline}.account-links{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.account-link{display:inline-flex;align-items:center;gap:4px;padding:6px 9px;border-radius:999px;background:#fff5f7;color:#b35f74;border:1px solid #f4dfe5;font-size:.72rem;text-decoration:none}.account-link:hover{background:#ffe9ef}.sheet-photo-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin-top:9px}.sheet-photo-grid img{width:100%;aspect-ratio:1;border-radius:12px;object-fit:cover;display:block}.member-socials{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.member-socials a{padding:6px 9px;border-radius:999px;background:#fff5f7;color:#b35f74;border:1px solid #f4dfe5;font-size:.72rem;text-decoration:none}.member-socials a:hover{background:#ffe9ef}
         @media(max-width:600px){.all-data-grid{grid-template-columns:1fr}.all-data-item.full{grid-column:auto}.sheet-photo-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+        .member-photo-gallery{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:12px}.member-photo-gallery .profile-avatar{margin:0;width:120px;height:120px}.account-links{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;margin-top:9px}.account-links a{display:inline-flex;align-items:center;padding:6px 9px;border-radius:10px;background:#fff5f7;color:#b55f78;border:1px solid #f2d6dc;font-size:.72rem;font-weight:700}
     </style>
 </head>
 <body>
@@ -963,11 +964,38 @@
     let sheetLoading = false;
     let sheetError = '';
 
-    function jsonpSheet(action,params={}){return new Promise((resolve,reject)=>{const cb='EB_'+Date.now()+'_'+Math.random().toString(36).slice(2);const sc=document.createElement('script');const q=new URLSearchParams(Object.assign({action:action,callback:cb,t:Date.now()},params));let timer=null,done=false;window[cb]=d=>{if(done)return;done=true;if(timer)clearTimeout(timer);sc.remove();delete window[cb];if(d&&d.success===false)reject(new Error(d.message||'API 失敗'));else resolve(d||{});};sc.onerror=()=>{if(done)return;done=true;if(timer)clearTimeout(timer);sc.remove();delete window[cb];reject(new Error('無法載入 Google Apps Script'));};sc.src=GAS_URL+'?'+q.toString();document.head.appendChild(sc);timer=setTimeout(()=>{if(done)return;done=true;sc.remove();setTimeout(()=>delete window[cb],60000);reject(new Error('Google Sheets 回應逾時'));},30000);});}
+    function jsonpSheet(action,params={}){
+        return new Promise((resolve,reject)=>{
+            const cb='__EmiBonnieCB_'+Date.now()+'_'+Math.random().toString(36).slice(2);
+            const sc=document.createElement('script');
+            sc.type='text/javascript';
+            const q=new URLSearchParams(Object.assign({action:action,callback:cb,t:Date.now(),cbust:Math.random().toString(36).slice(2)},params));
+            let timer=null,finished=false;
+            const cleanup=()=>{if(timer)clearTimeout(timer);if(sc.parentNode)sc.parentNode.removeChild(sc);};
+            window[cb]=(data)=>{
+                if(finished)return; finished=true; cleanup();
+                try{delete window[cb];}catch(e){}
+                if(data&&data.success===false)reject(new Error(data.message||'Google Apps Script API 回傳錯誤'));
+                else resolve(data||{});
+            };
+            sc.onerror=()=>{
+                if(finished)return; finished=true; cleanup();
+                setTimeout(()=>{try{delete window[cb];}catch(e){}},60000);
+                reject(new Error('Google Apps Script Web App 無法載入。請確認部署權限為「任何人」、執行身分為「我」，並重新部署最新版本。'));
+            };
+            sc.src=GAS_URL+'?'+q.toString();
+            document.head.appendChild(sc);
+            timer=setTimeout(()=>{
+                if(finished)return; finished=true; cleanup();
+                setTimeout(()=>{try{delete window[cb];}catch(e){}},60000);
+                reject(new Error('Google Apps Script 回應逾時。請確認 Web App 已重新部署最新版本。'));
+            },30000);
+        });
+    }
     function normalizeSheetEvent(r){const photos=Array.from({length:10},(_,i)=>r[`phone_${String(i+1).padStart(2,'0')}_link`]).filter(Boolean);return Object.assign({},r,{date:normalizeSheetDate(r.date),title:String(r.title||''),content:String(r.description||''),photo:photos,link:r.dramas_link||'',linkText:'🎬 劇集連結',videoLink:r.mv_link||r.vlog_link||r['GMMtv LIVE HOUSE_link']||r.LIVE_link||r['short video_link']||'',videoText:'相關連結'});}
     function normalizeSheetDate(v){const s=String(v??'').trim();const m=s.match(/^(\d{4})[-\/.](\d{1,2})[-\/.](\d{1,2})/);return m?`${m[1]}-${String(m[2]).padStart(2,'0')}-${String(m[3]).padStart(2,'0')}`:s;}
-    async function loadSheetData(){if(sheetLoading)return;sheetLoading=true;sheetError='';try{const result=await jsonpSheet('getEmiAll');const payload=result&&result.data?result.data:result;if(Array.isArray(payload.events))eventsData=payload.events.map(normalizeSheetEvent);membersData=Array.isArray(payload.members)?payload.members:[];renderYearFilters();renderTimeline();renderCalendar();renderGallery();renderFavorites();updateStats();renderTagBar('timeline-tag-container',activeTag,'setActiveTag');renderTagBar('gallery-tag-container',galleryTag,'setGalleryTag');updateHeaderTagBar();renderProfile();}catch(e){sheetError=e.message||String(e);renderProfile();}finally{sheetLoading=false;}}
-    function renderProfile(){const c=document.getElementById('profile-container');if(!c)return;if(!membersData.length){c.innerHTML=sheetError?`<div class="sheet-status error">${escapeHTML(sheetError)}</div>`:'<div class="card"><div class="results-note">目前沒有從 Google Sheets 取得 members 資料。</div></div>';return;}c.innerHTML=membersData.map(m=>{const name=m.nickname||m['暱稱']||m.name_en||m.display_name||m.m_id||'未命名';const photo=memberPhotoHTML(m);const visible=Object.entries(m).filter(([k,v])=>v!==undefined&&v!==null&&String(v).trim()!==''&&!MEMBER_PHOTO_KEYS.has(k)&&!['instagram','x','tiktok','youtube'].includes(k));return `<div class="card" style="margin-bottom:20px">${photo}<div class="profile-info"><h3 style="margin:5px 0 2px;color:var(--accent-pink);">${escapeHTML(name)}</h3><span style="font-size:.85rem;color:var(--text-sub);">${escapeHTML(m.name_en||m.display_name||'')}</span>${memberAccountsHTML(m)}</div><div class="all-data-grid">${visible.map(([k,v])=>`<div class="all-data-item full"><span class="all-data-label">${escapeHTML(k)}</span><span class="all-data-value">${fieldValueHTML(v)}</span></div>`).join('')}</div></div>`;}).join('');}
+    async function loadSheetData(){if(sheetLoading)return;sheetLoading=true;sheetError='';try{const ev=await jsonpSheet('getEmiEvents');const mem=await jsonpSheet('getEmiMembers');const evData=ev&&ev.data?ev.data:[];const memData=mem&&mem.data?mem.data:[];eventsData=Array.isArray(evData)?evData.map(normalizeSheetEvent):[];membersData=Array.isArray(memData)?memData:[];renderYearFilters();renderTimeline();renderCalendar();renderGallery();renderFavorites();updateStats();renderTagBar('timeline-tag-container',activeTag,'setActiveTag');renderTagBar('gallery-tag-container',galleryTag,'setGalleryTag');updateHeaderTagBar();renderProfile();}catch(e){sheetError=e.message||String(e);renderProfile();const note=document.getElementById('timeline-result-note');if(note)note.innerHTML='<span style="color:#A35F6D;">'+escapeHTML(sheetError)+'</span> <button class="mini-btn" onclick="loadSheetData()">重新連線</button>';}finally{sheetLoading=false;}}
+    function renderProfile(){const c=document.getElementById('profile-container');if(!c)return;if(!membersData.length){c.innerHTML=sheetError?`<div class="sheet-status error">${escapeHTML(sheetError)}</div>`:'<div class="card"><div class="results-note">目前沒有從 Google Sheets 取得 members 資料。</div></div>';return;}c.innerHTML=membersData.map(m=>{const name=m.nickname||m['暱稱']||m.name_en||m.display_name||m.m_id||'未命名';const photo=memberPhotoHTML(m);const visible=Object.entries(m).filter(([k,v])=>v!==undefined&&v!==null&&String(v).trim()!==''&&!MEMBER_PHOTO_KEYS.has(k)&&!['instagram','x','tiktok','youtube','facebook'].includes(k));return `<div class="card" style="margin-bottom:20px">${photo}<div class="profile-info"><h3 style="margin:5px 0 2px;color:var(--accent-pink);">${escapeHTML(name)}</h3><span style="font-size:.85rem;color:var(--text-sub);">${escapeHTML(m.name_en||m.display_name||'')}</span>${memberAccountsHTML(m)}</div><div class="all-data-grid">${visible.map(([k,v])=>`<div class="all-data-item full"><span class="all-data-label">${escapeHTML(k)}</span><span class="all-data-value">${fieldValueHTML(v)}</span></div>`).join('')}</div></div>`;}).join('');}
 
     function formatDate(dateString) {
         const d = new Date(dateString + 'T00:00:00');
@@ -1157,6 +1185,27 @@
         return `<img class="carousel-img ${extra}" src="${escapeHTML(candidates[0])}" data-candidates="${escapeHTML(JSON.stringify(candidates))}" data-fallback-index="0" data-drive-url="${escapeHTML(toDriveViewUrl(url))}" alt="${escapeHTML(title)}" loading="lazy" onerror="handleImageFallback(this)">`;
     }
 
+    function fieldValueHTML(value){
+        if(value===undefined||value===null)return '';
+        if(Array.isArray(value)||typeof value==='object'){
+            const raw=JSON.stringify(value,null,2);
+            return escapeHTML(raw);
+        }
+        const raw=String(value).trim();
+        if(!raw)return '';
+        // 一格中若有多個 URL，全部分開變成可點連結；非 URL 內容維持純文字。
+        const parts=raw.split(/\s+/).filter(Boolean);
+        if(parts.length>1 && parts.every(isUrlValue)){
+            return parts.map(function(url){const u=normalizeUrl(url);return '<a href="'+escapeHTML(u)+'" target="_blank" rel="noopener noreferrer">'+escapeHTML(url)+' ↗</a>';}).join('<br>');
+        }
+        if(isUrlValue(raw)){
+            const u=normalizeUrl(raw);
+            return '<a href="'+escapeHTML(u)+'" target="_blank" rel="noopener noreferrer">'+escapeHTML(raw)+' ↗</a>';
+        }
+        // 帳號欄位可能只有 @username，不是完整網址；依欄位值本身不猜測平台。
+        return escapeHTML(raw);
+    }
+
     function normalizeUrl(value) {
         let s=String(value??'').trim();
         if(!s)return '';
@@ -1180,31 +1229,11 @@
         }).join('')+'</div></section>';
     }
     function memberAccountsHTML(m){const out=MEMBER_ACCOUNT_KEYS.filter(([k])=>m&&m[k]).map(([k,label])=>`<a href="${escapeHTML(normalizeUrl(m[k]))}" target="_blank" rel="noopener noreferrer">${label} ↗</a>`);return out.length?`<div class="member-socials">${out.join('')}</div>`:'';}
-    function memberPhotoHTML(m){const raw=[m?.['photo_url(大頭照用)'],m?.photo_url,m?.photo_url_2,m?.photo_url_3].filter(Boolean);if(!raw.length)return '';return `<div class="sheet-photo-grid">${raw.map(u=>`<img src="${escapeHTML(getImageCandidates(u)[0])}" alt="" loading="lazy" onerror="handleImageFallback(this)">`).join('')}</div>`;}
-    function eventLinkEntries(event) {
-        const definitions = [
-            ['dramas_link','🎬 劇集連結'],['mv_link','🎵 MV'],['vlog_link','📹 Vlog'],
-            ['GMMtv LIVE HOUSE_link','🏠 GMMTV LIVE HOUSE'],['LIVE_link','🔴 LIVE'],['short video_link','🎞️ 短影音'],
-            ['link','🔗 相關連結'],['videoLink','📺 影片']
-        ];
-        const out=[]; const seen=new Set();
-        definitions.forEach(([key,label])=>{
-            const raw=event?.[key];
-            const vals=Array.isArray(raw)?raw:String(raw??'').split(/[\n,，]/).map(x=>x.trim()).filter(Boolean);
-            vals.forEach((v,i)=>{
-                const url=normalizeUrl(v); if(!url||seen.has(url))return; seen.add(url);
-                let text=label; if(vals.length>1) text += ` ${i+1}`;
-                if(key==='link' && event?.linkText) text=event.linkText;
-                if(key==='videoLink' && event?.videoText) text=event.videoText;
-                out.push({url,text,key});
-            });
-        });
-        Object.entries(event||{}).forEach(([key,raw])=>{
-            if(!key||EVENT_PHOTO_KEYS.has(key)||definitions.some(x=>x[0]===key)||key.startsWith('_')||key==='photo'||raw==null||String(raw).trim()==='')return;
-            const vals=Array.isArray(raw)?raw:String(raw).split(/[\n,，]/).map(x=>x.trim()).filter(Boolean);
-            vals.forEach((v,i)=>{if(!isUrlValue(v))return;const url=normalizeUrl(v);if(seen.has(url))return;seen.add(url);out.push({url,text:(key+(vals.length>1?' '+(i+1):'')),key});});
-        });
-        return out;
+    function memberPhotoHTML(m){
+        const keys=['photo_url(大頭照用)','photo_url','photo_url_2','photo_url_3'];
+        const photos=[];keys.forEach(k=>{const v=String(m?.[k]||'').trim();if(v&&photos.indexOf(v)===-1)photos.push(v);});
+        if(!photos.length)return '';
+        return '<div class="member-photo-gallery">'+photos.map((u,i)=>'<img class="profile-avatar" src="'+escapeHTML(getImageCandidates(u)[0])+'" alt="" onerror="handleImageFallback(this)" />').join('')+'</div>';
     }
 
     function renderEventLinks(event) {
