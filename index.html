@@ -738,12 +738,17 @@
             body { padding-bottom:78px; }
         }
 
+        .event-link-list { display:flex; flex-wrap:wrap; gap:7px; margin-top:12px; }
+        .event-link-btn { display:inline-flex; align-items:center; gap:5px; padding:7px 10px; border-radius:11px; background:#fff5f7; color:#a55f70; border:1px solid #f1d7de; font-size:.78rem; font-weight:700; line-height:1.2; text-decoration:none; transition:.2s ease; }
+        .event-link-btn:hover { background:#ffe8ee; border-color:#eabcc9; transform:translateY(-1px); box-shadow:0 5px 14px rgba(165,95,112,.10); }
+        .event-link-btn.primary { background:linear-gradient(135deg,#fff0f3,#f1ecfa); }
+        .photo-open-btn { margin-top:6px; display:inline-flex; align-items:center; gap:4px; padding:5px 8px; border-radius:9px; border:1px solid #ecdfe4; background:#fff; color:#866f79; font-size:.7rem; cursor:pointer; }
+        .photo-open-btn:hover { background:#fff5f7; }
+
         .profile-manage-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;background:rgba(255,255,255,.92);border:1px solid var(--border-color);border-radius:18px;padding:12px 14px;margin-bottom:14px;box-shadow:0 6px 20px rgba(255,154,158,.08)}
-        .manage-edit-btn{border:0;background:#fff5f7;color:#c66b84;border-radius:10px;padding:6px 10px;font-weight:700;cursor:pointer;font-size:.72rem}
-        .manage-edit-btn:hover{background:#ffe7ed}.sheet-status{margin:10px 0;padding:10px 12px;border-radius:12px;background:#fff7f8;color:#9b6878;font-size:.76rem;line-height:1.6}.sheet-status.error{background:#fff0f1;color:#a35f6d}
-        .edit-overlay{position:fixed;inset:0;z-index:3000;background:rgba(45,35,40,.62);display:flex;align-items:center;justify-content:center;padding:14px;backdrop-filter:blur(6px)}
-        .edit-box{width:100%;max-width:760px;max-height:92vh;overflow:auto;background:#fff;border-radius:24px;padding:18px;box-shadow:0 20px 60px rgba(0,0,0,.22);box-sizing:border-box}.edit-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:14px}.edit-grid .full{grid-column:1/-1}.edit-field{display:flex;flex-direction:column;gap:5px}.edit-field label{font-size:.72rem;font-weight:700;color:var(--text-sub)}.edit-field input,.edit-field textarea,.edit-field select{width:100%;box-sizing:border-box;border:1px solid var(--border-color);border-radius:11px;padding:8px 9px;outline:none;color:var(--text-main);background:#fff;font:inherit}.edit-field textarea{min-height:100px;resize:vertical}.edit-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px;padding-top:12px;border-top:1px solid var(--border-color)}.edit-actions button{border:0;border-radius:11px;padding:8px 13px;font-weight:700;cursor:pointer}.save-btn{background:linear-gradient(135deg,#ff758c,#a18cd1);color:#fff}.cancel-btn{background:#f5edf1;color:var(--text-main)}.delete-btn{background:#fff0f1;color:#ad5e6c;margin-right:auto}
-        @media(max-width:600px){.edit-grid{grid-template-columns:1fr}.edit-grid .full{grid-column:auto}.profile-manage-bar{align-items:flex-start}}
+        .sheet-status{margin:10px 0;padding:10px 12px;border-radius:12px;background:#fff7f8;color:#9b6878;font-size:.76rem;line-height:1.6}.sheet-status.error{background:#fff0f1;color:#a35f6d}
+        .all-data-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:14px}.all-data-item{padding:9px 10px;border:1px solid var(--border-color);border-radius:12px;background:#fff}.all-data-item.full{grid-column:1/-1}.all-data-label{display:block;font-size:.68rem;color:var(--text-sub);margin-bottom:3px}.all-data-value{display:block;font-size:.8rem;white-space:pre-wrap;word-break:break-word}.all-data-value a{color:var(--accent-pink);text-decoration:underline}.account-links{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.account-link{display:inline-flex;align-items:center;gap:4px;padding:6px 9px;border-radius:999px;background:#fff5f7;color:#b35f74;border:1px solid #f4dfe5;font-size:.72rem;text-decoration:none}.account-link:hover{background:#ffe9ef}.sheet-photo-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin-top:9px}.sheet-photo-grid img{width:100%;aspect-ratio:1;border-radius:12px;object-fit:cover;display:block}.member-socials{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.member-socials a{padding:6px 9px;border-radius:999px;background:#fff5f7;color:#b35f74;border:1px solid #f4dfe5;font-size:.72rem;text-decoration:none}.member-socials a:hover{background:#ffe9ef}
+        @media(max-width:600px){.all-data-grid{grid-template-columns:1fr}.all-data-item.full{grid-column:auto}.sheet-photo-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
     </style>
 </head>
 <body>
@@ -771,7 +776,7 @@
         <div class="timeline-controls">
             <div id="year-filter-container" class="year-filter-bar"></div>
             <div id="timeline-tag-container" class="tag-bar"></div>
-            <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;"><div id="timeline-result-note" class="results-note"></div><button class="mini-btn" onclick="openEventForm()">＋ 新增紀錄</button></div>
+            <div id="timeline-result-note" class="results-note"></div>
         </div>
         <div id="timeline-container" class="timeline-container"></div>
     </div>
@@ -798,8 +803,7 @@
     </div>
     <div id="profile" class="tab-content">
         <div class="profile-manage-bar">
-            <div><h3 style="margin:0;color:var(--text-main);">📁 成員資料</h3><div class="results-note" style="text-align:left;margin-top:4px;">資料來自 Google Sheets，可新增與編輯</div></div>
-            <button class="mini-btn" onclick="openMemberForm()">＋ 新增成員</button>
+            <div><h3 style="margin:0;color:var(--text-main);">📁 成員資料</h3><div class="results-note" style="text-align:left;margin-top:4px;">Google Sheets 有資料的欄位都會顯示</div></div>
         </div>
         <div id="profile-container"></div>
     </div>
@@ -955,35 +959,15 @@
     let globalSearch = '';
     const STORAGE_KEY = 'emibonnie-favorites-v2';
     const GAS_URL = 'https://script.google.com/macros/s/AKfycbw4_H1mak2yFjt2WdswhgDu-ofF3bxOVKX1V2gSknNLxHoOPgSI459HGT7nzGXEmOVU6w/exec';
-    const GAS_LIBRARY_ID = '1i8O_45P2x8dCW0r6TSYRQyf80D8_Y5FdpUwEc5iqczJmegHRCl3x8eI1';
     let membersData = [];
     let sheetLoading = false;
     let sheetError = '';
 
-    function splitLinks(v){return String(v??'').match(/https?:\/\/[^\s,]+/g)||[];}
-    function normalizeSheetEvent(r){
-        const photos=Array.from({length:10},(_,i)=>r[`phone_${String(i+1).padStart(2,'0')}_link`]).filter(Boolean);
-        const linkEntries=[['dramas_link','🎬 劇集'],['mv_link','🎵 MV'],['vlog_link','📹 Vlog'],['GMMtv LIVE HOUSE_link','🏠 GMMTV LIVE HOUSE'],['LIVE_link','🔴 LIVE'],['short video_link','🎞️ 短影音']].flatMap(([k,label])=>splitLinks(r[k]).map(url=>({url,label,key:k})));
-        return Object.assign({},r,{date:normalizeSheetDate(r.date),title:String(r.title||''),content:String(r.description||''),photo:photos,link:linkEntries.find(x=>x.key==='dramas_link')?.url||'',linkText:linkEntries.find(x=>x.key==='dramas_link')?.label||'',videoLink:linkEntries.find(x=>x.key!=='dramas_link')?.url||'',videoText:linkEntries.find(x=>x.key!=='dramas_link')?.label||'',tags:String(r.tags||'')});
-    }
-    function normalizeSheetDate(v){const s=String(v??'').trim();const m=s.match(/^(\d{4})[-\/.](\d{1,2})[-\/.](\d{1,2})/);return m?`${m[1]}-${String(m[2]).padStart(2,'0')}-${String(m[3]).padStart(2,'0')}`:s;}
     function jsonpSheet(action,params={}){return new Promise((resolve,reject)=>{const cb='EB_'+Date.now()+'_'+Math.random().toString(36).slice(2);const sc=document.createElement('script');const q=new URLSearchParams(Object.assign({action:action,callback:cb,t:Date.now()},params));let timer=null,done=false;window[cb]=d=>{if(done)return;done=true;if(timer)clearTimeout(timer);sc.remove();delete window[cb];if(d&&d.success===false)reject(new Error(d.message||'API 失敗'));else resolve(d||{});};sc.onerror=()=>{if(done)return;done=true;if(timer)clearTimeout(timer);sc.remove();delete window[cb];reject(new Error('無法載入 Google Apps Script'));};sc.src=GAS_URL+'?'+q.toString();document.head.appendChild(sc);timer=setTimeout(()=>{if(done)return;done=true;sc.remove();setTimeout(()=>delete window[cb],60000);reject(new Error('Google Sheets 回應逾時'));},30000);});}
-    async function postSheet(payload){const body=JSON.stringify(payload);await fetch(GAS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body});}
-    async function loadSheetData(){if(sheetLoading)return;sheetLoading=true;sheetError='';try{const result=await jsonpSheet('getAll');const payload=result?.data&&typeof result.data==='object'?result.data:result;const ev=Array.isArray(payload?.events)?payload.events:[];const mem=Array.isArray(payload?.members)?payload.members:[];if(ev.length){eventsData=ev.map(normalizeSheetEvent);}membersData=mem;renderYearFilters();renderTimeline();renderCalendar();renderGallery();renderFavorites();updateStats();renderTagBar('timeline-tag-container',activeTag,'setActiveTag');renderTagBar('gallery-tag-container',galleryTag,'setGalleryTag');updateHeaderTagBar();renderProfile();}catch(e){sheetError=e.message||String(e);renderProfile();}finally{sheetLoading=false;}}
-    function editorValue(key){const el=document.querySelector(`#sheet-editor [data-edit="${CSS.escape(key)}"]`);return el?(el.type==='checkbox'?el.checked:el.value):'';}
-    function editorFields(fields,rec){return fields.map(f=>{const key=f[0],label=f[1],type=f[2]||'text',full=!!f[3],val=rec?.[key]??'';if(type==='textarea')return `<div class="edit-field ${full?'full':''}"><label>${escapeHTML(label)}</label><textarea data-edit="${escapeHTML(key)}">${escapeHTML(val)}</textarea></div>`;if(type==='checkbox')return `<div class="edit-field"><label><input type="checkbox" data-edit="${escapeHTML(key)}" ${String(val).toLowerCase()==='true'||val===true?'checked':''}> ${escapeHTML(label)}</label></div>`;return `<div class="edit-field ${full?'full':''}"><label>${escapeHTML(label)}</label><input type="${type}" data-edit="${escapeHTML(key)}" value="${escapeHTML(val)}"></div>`;}).join('');}
-    function showEditor(title,fields,rec,save,del){const delBtn=del?'<button class="delete-btn" onclick="'+del+'">刪除</button>':'';document.getElementById('sheet-editor')?.remove();const el=document.createElement('div');el.id='sheet-editor';el.className='edit-overlay';el.innerHTML=`<div class="edit-box"><div style="display:flex;justify-content:space-between;align-items:center"><h3 style="margin:0">${escapeHTML(title)}</h3><button class="mini-btn" onclick="closeEditor()">✕</button></div><div class="edit-grid">${editorFields(fields,rec)}</div><div class="edit-actions">${delBtn}<button class="cancel-btn" onclick="closeEditor()">取消</button><button class="save-btn" onclick="${save}">儲存</button></div></div>`;document.body.appendChild(el);}
-    function closeEditor(){document.getElementById('sheet-editor')?.remove();}
-    function openEventForm(event=null){const r=event||{};const fields=[['date','日期','date'],['title','標題','text'],['category','分類'],['tags','標籤'],['description','內容','textarea',true],['dramas_link','劇集連結'],['mv_link','MV 連結'],['vlog_link','Vlog 連結'],['GMMtv LIVE HOUSE_link','GMMtv LIVE HOUSE 連結'],['LIVE_link','LIVE 連結'],['short video_link','短影音連結'],['is_featured','精選','checkbox'],...Array.from({length:10},(_,i)=>[`phone_${String(i+1).padStart(2,'0')}_link`,`照片 ${i+1} URL`])];window._sheetEvent=event||null;showEditor(event?'✏️ 編輯紀錄':'＋ 新增紀錄',fields,r,'saveEventFromEditor()',event?'deleteEventFromEditor()':'');}
-    function openEventFormByKey(key){const e=eventsData.find(x=>eventKey(x)===key);if(e)openEventForm(e);}
-    function openEventFormByElement(btn){const card=btn.closest('.event-card');const key=card?.dataset.eventKey;openEventFormByKey(key);}
-    function collectEditor(){const out={};document.querySelectorAll('#sheet-editor [data-edit]').forEach(el=>out[el.dataset.edit]=el.type==='checkbox'?el.checked:el.value);return out;}
-    async function saveEventFromEditor(){const rec=collectEditor(),old=window._sheetEvent;try{if(!rec.date||!rec.title){alert('請至少填寫日期和標題。');return;}if(old)rec._originalKey={date:old.date,title:old.title,category:old.category||''};await postSheet({action:old?'updateEvent':'createEvent',record:rec,originalKey:old?old._originalKey:{}});closeEditor();await new Promise(r=>setTimeout(r,700));await loadSheetData();alert(old?'紀錄已更新':'紀錄已新增');}catch(e){alert(e.message||String(e));}}
-    async function deleteEventFromEditor(){const old=window._sheetEvent;if(!old)return;if(!confirm(`確定要刪除「${old.title}」嗎？`))return;try{await postSheet({action:'deleteEvent',originalKey:old._originalKey||{date:old.date,title:old.title,category:old.category||''}});closeEditor();await new Promise(r=>setTimeout(r,700));await loadSheetData();}catch(e){alert(e.message||String(e));}}
-    function openMemberForm(mId=''){const m=membersData.find(x=>String(x.m_id||'')===String(mId||''))||null;window._sheetMember=m;const fields=[['m_id','成員 ID'],['display_name','顯示名稱'],['name_zh','中文名'],['name_th','泰文名'],['name_en','英文名'],['nickname','nickname'],['birth_date','生日','date'],['zodiac','星座'],['Height / Weight','身高 / 體重'],['occupation','職業'],['company','公司'],['photo_url(大頭照用)','大頭照 URL','text',true],['instagram','Instagram'],['x','X'],['tiktok','TikTok'],['youtube','YouTube'],['support_color','應援色'],['hobby','喜好','text',true],['pet','寵物'],['diet_allergy','飲食／過敏','text',true],['暱稱','暱稱（額外欄位）'],['gender','性別']];showEditor(m?'✏️ 編輯成員':'＋ 新增成員',fields,m,'saveMemberFromEditor()',m?'deleteMemberFromEditor()':'');}
-    async function saveMemberFromEditor(){const rec=collectEditor(),old=window._sheetMember;try{await postSheet({action:old?'updateMember':'createMember',m_id:old?.m_id||'',record:rec});closeEditor();await new Promise(r=>setTimeout(r,700));await loadSheetData();alert(old?'成員已更新':'成員已新增');}catch(e){alert(e.message||String(e));}}
-    async function deleteMemberFromEditor(){const old=window._sheetMember;if(!old)return;if(!confirm(`確定要刪除「${old.name_en||old.display_name||old.m_id}」嗎？`))return;try{await postSheet({action:'deleteMember',m_id:old.m_id});closeEditor();await new Promise(r=>setTimeout(r,700));await loadSheetData();}catch(e){alert(e.message||String(e));}}
-    function renderProfile(){const c=document.getElementById('profile-container');if(!c)return;if(!membersData.length){c.innerHTML=sheetError?`<div class="sheet-status error">${escapeHTML(sheetError)}</div>`:'<div class="card"><div class="results-note">目前沒有從 Google Sheets 取得 members 資料。</div></div>';return;}c.innerHTML=membersData.map(m=>{const name=m.nickname||m['暱稱']||m.name_en||m.display_name||m.m_id;const photo=m['photo_url(大頭照用)']||m.photo_url||'';const img=photo?`<img src="${escapeHTML(getImageCandidates(photo)[0])}" alt="${escapeHTML(name)}" class="profile-avatar" onerror="handleImageFallback(this)">`:'';return `<div class="card" style="margin-bottom:20px">${img}<div class="profile-info"><h3 style="margin:5px 0 2px;color:var(--accent-pink);">${escapeHTML(name)}</h3><span style="font-size:.85rem;color:var(--text-sub);">${escapeHTML(m.name_en||m.display_name||'')}</span></div><div class="info-row"><span>暱稱</span><strong>${escapeHTML(m.nickname||m['暱稱']||'')}</strong></div><div class="info-row"><span>生日</span><strong>${escapeHTML(m.birth_date||'')}</strong></div><div class="info-row"><span>星座</span><strong>${escapeHTML(m.zodiac||'')}</strong></div><div class="info-row"><span>性別</span><strong>${escapeHTML(m.gender||'')}</strong></div><div class="info-row"><span>身高 / 體重</span><strong>${escapeHTML(m['Height / Weight']||'')}</strong></div><div class="info-row"><span>喜好</span><strong>${escapeHTML(m.hobby||'')}</strong></div><div class="info-row"><span>寵物</span><strong>${escapeHTML(m.pet||'')}</strong></div><div class="actions" style="justify-content:flex-end;margin-top:10px"><button class="manage-edit-btn" onclick="openMemberForm('${escapeHTML(m.m_id||'')}')">✏️ 編輯</button></div></div>`;}).join('');}
+    function normalizeSheetEvent(r){const photos=Array.from({length:10},(_,i)=>r[`phone_${String(i+1).padStart(2,'0')}_link`]).filter(Boolean);return Object.assign({},r,{date:normalizeSheetDate(r.date),title:String(r.title||''),content:String(r.description||''),photo:photos,link:r.dramas_link||'',linkText:'🎬 劇集連結',videoLink:r.mv_link||r.vlog_link||r['GMMtv LIVE HOUSE_link']||r.LIVE_link||r['short video_link']||'',videoText:'相關連結'});}
+    function normalizeSheetDate(v){const s=String(v??'').trim();const m=s.match(/^(\d{4})[-\/.](\d{1,2})[-\/.](\d{1,2})/);return m?`${m[1]}-${String(m[2]).padStart(2,'0')}-${String(m[3]).padStart(2,'0')}`:s;}
+    async function loadSheetData(){if(sheetLoading)return;sheetLoading=true;sheetError='';try{const result=await jsonpSheet('getEmiAll');const payload=result&&result.data?result.data:result;if(Array.isArray(payload.events))eventsData=payload.events.map(normalizeSheetEvent);membersData=Array.isArray(payload.members)?payload.members:[];renderYearFilters();renderTimeline();renderCalendar();renderGallery();renderFavorites();updateStats();renderTagBar('timeline-tag-container',activeTag,'setActiveTag');renderTagBar('gallery-tag-container',galleryTag,'setGalleryTag');updateHeaderTagBar();renderProfile();}catch(e){sheetError=e.message||String(e);renderProfile();}finally{sheetLoading=false;}}
+    function renderProfile(){const c=document.getElementById('profile-container');if(!c)return;if(!membersData.length){c.innerHTML=sheetError?`<div class="sheet-status error">${escapeHTML(sheetError)}</div>`:'<div class="card"><div class="results-note">目前沒有從 Google Sheets 取得 members 資料。</div></div>';return;}c.innerHTML=membersData.map(m=>{const name=m.nickname||m['暱稱']||m.name_en||m.display_name||m.m_id||'未命名';const photo=memberPhotoHTML(m);const visible=Object.entries(m).filter(([k,v])=>v!==undefined&&v!==null&&String(v).trim()!==''&&!MEMBER_PHOTO_KEYS.has(k)&&!['instagram','x','tiktok','youtube'].includes(k));return `<div class="card" style="margin-bottom:20px">${photo}<div class="profile-info"><h3 style="margin:5px 0 2px;color:var(--accent-pink);">${escapeHTML(name)}</h3><span style="font-size:.85rem;color:var(--text-sub);">${escapeHTML(m.name_en||m.display_name||'')}</span>${memberAccountsHTML(m)}</div><div class="all-data-grid">${visible.map(([k,v])=>`<div class="all-data-item full"><span class="all-data-label">${escapeHTML(k)}</span><span class="all-data-value">${fieldValueHTML(v)}</span></div>`).join('')}</div></div>`;}).join('');}
 
     function formatDate(dateString) {
         const d = new Date(dateString + 'T00:00:00');
@@ -1173,6 +1157,64 @@
         return `<img class="carousel-img ${extra}" src="${escapeHTML(candidates[0])}" data-candidates="${escapeHTML(JSON.stringify(candidates))}" data-fallback-index="0" data-drive-url="${escapeHTML(toDriveViewUrl(url))}" alt="${escapeHTML(title)}" loading="lazy" onerror="handleImageFallback(this)">`;
     }
 
+    function normalizeUrl(value) {
+        let s=String(value??'').trim();
+        if(!s)return '';
+        s=s.replace(/^htps:\/\//i,'https://').replace(/^ttp:\/\//i,'http://');
+        return /^https?:\/\//i.test(s)?s:'https://'+s;
+    }
+
+    const EVENT_PHOTO_KEYS = new Set(['phone_01_link','phone_02_link','phone_03_link','phone_04_link','phone_05_link','phone_06_link','phone_07_link','phone_08_link','phone_09_link','phone_10_link']);
+    const MEMBER_PHOTO_KEYS = new Set(['photo_url(大頭照用)','photo_url','photo_url_2','photo_url_3']);
+    const MEMBER_ACCOUNT_KEYS = [['instagram','📷 Instagram'],['x','𝕏 X'],['tiktok','🎵 TikTok'],['youtube','▶ YouTube'],['facebook','📘 Facebook']];
+    function isUrlValue(v){return /^https?:\/\//i.test(String(v??'').trim()) || /^htps:\/\//i.test(String(v??'').trim()) || /^www\./i.test(String(v??'').trim());}
+    function allDataHTML(record,photoKeys=new Set()){
+        if(!record||typeof record!=='object')return '';
+        const entries=Object.entries(record).filter(([k,v])=>k!=='photo'&&v!==undefined&&v!==null&&String(v).trim()!=='');
+        if(!entries.length)return '';
+        return '<section style="margin-top:16px"><div class="section-title"><h3>📋 完整資料</h3></div><div class="all-data-grid">'+entries.filter(([k])=>!photoKeys.has(k)&&k!=='_originalKey'&&k!=='linkEntries'&&k!=='explicitTags').map(([k,v])=>{
+            if(Array.isArray(v)||typeof v==='object')v=JSON.stringify(v,null,2);
+            const val=String(v);
+            const html=isUrlValue(val)?'<a href="'+escapeHTML(normalizeUrl(val))+'" target="_blank" rel="noopener noreferrer">'+escapeHTML(val)+' ↗</a>':escapeHTML(val);
+            return '<div class="all-data-item full"><span class="all-data-label">'+escapeHTML(k)+'</span><span class="all-data-value">'+html+'</span></div>';
+        }).join('')+'</div></section>';
+    }
+    function memberAccountsHTML(m){const out=MEMBER_ACCOUNT_KEYS.filter(([k])=>m&&m[k]).map(([k,label])=>`<a href="${escapeHTML(normalizeUrl(m[k]))}" target="_blank" rel="noopener noreferrer">${label} ↗</a>`);return out.length?`<div class="member-socials">${out.join('')}</div>`:'';}
+    function memberPhotoHTML(m){const raw=[m?.['photo_url(大頭照用)'],m?.photo_url,m?.photo_url_2,m?.photo_url_3].filter(Boolean);if(!raw.length)return '';return `<div class="sheet-photo-grid">${raw.map(u=>`<img src="${escapeHTML(getImageCandidates(u)[0])}" alt="" loading="lazy" onerror="handleImageFallback(this)">`).join('')}</div>`;}
+    function eventLinkEntries(event) {
+        const definitions = [
+            ['dramas_link','🎬 劇集連結'],['mv_link','🎵 MV'],['vlog_link','📹 Vlog'],
+            ['GMMtv LIVE HOUSE_link','🏠 GMMTV LIVE HOUSE'],['LIVE_link','🔴 LIVE'],['short video_link','🎞️ 短影音'],
+            ['link','🔗 相關連結'],['videoLink','📺 影片']
+        ];
+        const out=[]; const seen=new Set();
+        definitions.forEach(([key,label])=>{
+            const raw=event?.[key];
+            const vals=Array.isArray(raw)?raw:String(raw??'').split(/[\n,，]/).map(x=>x.trim()).filter(Boolean);
+            vals.forEach((v,i)=>{
+                const url=normalizeUrl(v); if(!url||seen.has(url))return; seen.add(url);
+                let text=label; if(vals.length>1) text += ` ${i+1}`;
+                if(key==='link' && event?.linkText) text=event.linkText;
+                if(key==='videoLink' && event?.videoText) text=event.videoText;
+                out.push({url,text,key});
+            });
+        });
+        Object.entries(event||{}).forEach(([key,raw])=>{
+            if(!key||EVENT_PHOTO_KEYS.has(key)||definitions.some(x=>x[0]===key)||key.startsWith('_')||key==='photo'||raw==null||String(raw).trim()==='')return;
+            const vals=Array.isArray(raw)?raw:String(raw).split(/[\n,，]/).map(x=>x.trim()).filter(Boolean);
+            vals.forEach((v,i)=>{if(!isUrlValue(v))return;const url=normalizeUrl(v);if(seen.has(url))return;seen.add(url);out.push({url,text:(key+(vals.length>1?' '+(i+1):'')),key});});
+        });
+        return out;
+    }
+
+    function renderEventLinks(event) {
+        const links=eventLinkEntries(event);
+        if(!links.length)return '';
+        return `<div class="event-link-list">${links.map((x,i)=>`<a class="event-link-btn ${i===0?'primary':''}" href="${escapeHTML(x.url)}" target="_blank" rel="noopener noreferrer">${escapeHTML(x.text)} ↗</a>`).join('')}</div>`;
+    }
+
+    function renderPhotoOpenButton(url,index=0) { return ''; }
+
     function renderTimeline() {
         const container = document.getElementById('timeline-container');
         const filtered = filteredEvents(true);
@@ -1182,13 +1224,13 @@
             const photos = Array.isArray(event.photo)?event.photo:[];
             const favorite = isFavorite(event);
             const carousel = photos.length ? `<div class="photo-carousel" data-index="0">
-                ${photos.map((url,i)=>`<img class="carousel-img ${i===0?'active':''}" src="${escapeHTML(getImageCandidates(url)[0])}" data-candidates="${escapeHTML(JSON.stringify(getImageCandidates(url)))}" data-fallback-index="0" data-drive-url="${escapeHTML(toDriveViewUrl(url))}" alt="${escapeHTML(event.title)} 照片 ${i+1}" loading="lazy" onclick="event.stopPropagation(); openPhotoViewer(${JSON.stringify(filtered.indexOf(event))}, ${i})" onerror="handleImageFallback(this)">`).join('')}
+                ${photos.map((url,i)=>`<div style="position:relative;"><img class="carousel-img ${i===0?'active':''}" src="${escapeHTML(getImageCandidates(url)[0])}" data-candidates="${escapeHTML(JSON.stringify(getImageCandidates(url)))}" data-fallback-index="0" data-drive-url="${escapeHTML(toDriveViewUrl(url))}" alt="${escapeHTML(event.title)} 照片 ${i+1}" loading="lazy" onerror="handleImageFallback(this)">${renderPhotoOpenButton(url,i)}</div>`).join('')}
                 ${photos.length>1?`<button class="carousel-btn carousel-prev" onclick="changeCarousel(this,-1);event.stopPropagation();">❮</button><button class="carousel-btn carousel-next" onclick="changeCarousel(this,1);event.stopPropagation();">❯</button><div class="carousel-indicators">${photos.map((_,i)=>`<span class="indicator-dot ${i===0?'active':''}" onclick="goCarousel(this,${i});event.stopPropagation();"></span>`).join('')}</div>`:''}
                 ${photos.length>1?`<span class="photo-count-badge">📷 ${photos.length}</span>`:''}
             </div>` : '';
-            const links = [event.link?`<a href="${escapeHTML(event.link)}" target="_blank" rel="noopener">${escapeHTML(event.linkText||'相關連結')}</a>`:'',event.videoLink?`<a href="${escapeHTML(event.videoLink)}" target="_blank" rel="noopener">${escapeHTML(event.videoText||'觀看影片')}</a>`:''].filter(Boolean).join('<span style="margin:0 8px;color:#d8c8ce;">•</span>');
+            const links = renderEventLinks(event);
             const tags = inferTags(event).map(t=>`<span class="event-tag">${escapeHTML(t)}</span>`).join('');
-            return `<div class="timeline-item"><div class="timeline-date">${formatDate(event.date)}</div><div class="card event-card" data-event-key="${escapeHTML(eventKey(event))}" tabindex="0"><div class="event-top"><div><div class="badge-duo">EmiBonnie</div><h3 style="margin:0;color:var(--text-main);">${escapeHTML(event.title)}</h3></div><button class="favorite-btn ${favorite?'active':''}" aria-label="收藏事件" onclick="toggleFavorite(eventsData.find(e=>eventKey(e)==='${eventKey(event).replace(/'/g,"\\'")}'),event)">${favorite?'♥':'♡'}</button><button type="button" class="manage-edit-btn" onclick="openEventFormByElement(this);event.stopPropagation();">✏️</button></div>${event.content?`<p style="margin:10px 0 0;line-height:1.8;color:var(--text-sub);white-space:pre-line;">${escapeHTML(event.content)}</p>`:''}${tags?`<div class="event-tags">${tags}</div>`:''}${links?`<div style="margin-top:12px;font-size:.85rem;">${links}</div>`:''}${carousel}</div></div>`;
+            return `<div class="timeline-item"><div class="timeline-date">${formatDate(event.date)}</div><div class="card event-card" data-event-key="${escapeHTML(eventKey(event))}" tabindex="0"><div class="event-top"><div><div class="badge-duo">EmiBonnie</div><h3 style="margin:0;color:var(--text-main);">${escapeHTML(event.title)}</h3></div><button class="favorite-btn ${favorite?'active':''}" aria-label="收藏事件" onclick="toggleFavorite(eventsData.find(e=>eventKey(e)==='${eventKey(event).replace(/'/g,"\\'")}'),event)">${favorite?'♥':'♡'}</button></div>${event.content?`<p style="margin:10px 0 0;line-height:1.8;color:var(--text-sub);white-space:pre-line;">${escapeHTML(event.content)}</p>`:''}${tags?`<div class="event-tags">${tags}</div>`:''}${links?`<div style="margin-top:12px;font-size:.85rem;">${links}</div>`:''}${carousel}</div></div>`;
         }).join('');
         container.querySelectorAll('.event-card').forEach(card=>{
             const key = card.dataset.eventKey;
@@ -1244,9 +1286,9 @@
         const currentPhoto=photos[modalPhotoIndex]||'';
         const favorite=isFavorite(event);
         const tags=inferTags(event).map(t=>`<span class="modal-tag">${escapeHTML(t)}</span>`).join('');
-        const eventLinks=[event.link?`<a href="${escapeHTML(event.link)}" target="_blank" rel="noopener">${escapeHTML(event.linkText||'相關連結')}</a>`:'',event.videoLink?`<a href="${escapeHTML(event.videoLink)}" target="_blank" rel="noopener">${escapeHTML(event.videoText||'📺 觀看影片')}</a>`:''].filter(Boolean).join('<span style="margin:0 8px;color:#d8c8ce;">•</span>');
-        const photoBlock = photos.length ? `<div class="modal-photo-shell"><img class="modal-main-photo" id="modal-event-photo" src="${escapeHTML(getImageCandidates(currentPhoto)[0])}" data-candidates="${escapeHTML(JSON.stringify(getImageCandidates(currentPhoto)))}" data-fallback-index="0" data-drive-url="${escapeHTML(toDriveViewUrl(currentPhoto))}" onerror="handleImageFallback(this)" onclick="event.stopPropagation();openModal(this.dataset.driveUrl||this.src,this.dataset.driveUrl)"><div class="modal-photo-nav"><button class="mini-btn" onclick="changeModalPhoto(-1);event.stopPropagation();">❮ 上一張</button><span style="font-size:.72rem;color:var(--text-sub);">${modalPhotoIndex+1} / ${photos.length}</span><button class="mini-btn" onclick="changeModalPhoto(1);event.stopPropagation();">下一張 ❯</button></div><div class="modal-thumbs">${photos.map((p,i)=>`<img src="${escapeHTML(getImageCandidates(p)[0])}" data-candidates="${escapeHTML(JSON.stringify(getImageCandidates(p)))}" data-fallback-index="0" class="${i===modalPhotoIndex?'active':''}" onclick="changeModalPhotoTo(${i});event.stopPropagation();" onerror="handleImageFallback(this)">`).join('')}</div></div>` : '<div style="height:220px;border-radius:18px;background:#faf6f8;display:flex;align-items:center;justify-content:center;color:var(--text-sub);">♡ 暫無照片</div>';
-        body.innerHTML=`<div class="event-modal-left">${photoBlock}</div><div class="event-modal-right"><div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;"><div><div class="timeline-date">${formatDate(event.date)}</div><h3 style="margin:4px 0 8px;color:var(--text-main);">${escapeHTML(event.title)}</h3></div><button class="favorite-btn ${favorite?'active':''}" onclick="toggleFavorite(eventsData.find(e=>eventKey(e)==='${eventKey(event).replace(/'/g,"\\'")}'),event);renderEventModal()">${favorite?'♥':'♡'}</button><button type="button" class="manage-edit-btn" onclick="openEventFormByElement(this);event.stopPropagation();">✏️ 編輯</button></div><p style="margin:0;line-height:1.85;color:var(--text-sub);white-space:pre-line;">${escapeHTML(event.content||'這一天留下了一筆活動紀錄。')}</p>${tags?`<div class="modal-tags">${tags}</div>`:''}${eventLinks?`<div style="margin-top:14px;font-size:.85rem;line-height:1.9;">${eventLinks}</div>`:''}</div>`;
+        const eventLinks=renderEventLinks(event);
+        const photoBlock = photos.length ? `<div class="modal-photo-shell"><img class="modal-main-photo" id="modal-event-photo" src="${escapeHTML(getImageCandidates(currentPhoto)[0])}" data-candidates="${escapeHTML(JSON.stringify(getImageCandidates(currentPhoto)))}" data-fallback-index="0" data-drive-url="${escapeHTML(toDriveViewUrl(currentPhoto))}" onerror="handleImageFallback(this)"><div class="modal-photo-nav"><button class="mini-btn" onclick="changeModalPhoto(-1);event.stopPropagation();">❮ 上一張</button><span style="font-size:.72rem;color:var(--text-sub);">${modalPhotoIndex+1} / ${photos.length}</span><button class="mini-btn" onclick="changeModalPhoto(1);event.stopPropagation();">下一張 ❯</button></div><div class="modal-thumbs">${photos.map((p,i)=>`<img src="${escapeHTML(getImageCandidates(p)[0])}" data-candidates="${escapeHTML(JSON.stringify(getImageCandidates(p)))}" data-fallback-index="0" class="${i===modalPhotoIndex?'active':''}"  onerror="handleImageFallback(this)">`).join('')}</div></div>` : '<div style="height:220px;border-radius:18px;background:#faf6f8;display:flex;align-items:center;justify-content:center;color:var(--text-sub);">♡ 暫無照片</div>';
+        body.innerHTML=`<div class="event-modal-left">${photoBlock}</div><div class="event-modal-right"><div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;"><div><div class="timeline-date">${formatDate(event.date)}</div><h3 style="margin:4px 0 8px;color:var(--text-main);">${escapeHTML(event.title)}</h3></div><button class="favorite-btn ${favorite?'active':''}" onclick="toggleFavorite(eventsData.find(e=>eventKey(e)==='${eventKey(event).replace(/'/g,"\\'")}'),event);renderEventModal()">${favorite?'♥':'♡'}</button></div><p style="margin:0;line-height:1.85;color:var(--text-sub);white-space:pre-line;">${escapeHTML(event.content||'這一天留下了一筆活動紀錄。')}</p>${tags?`<div class="modal-tags">${tags}</div>`:''}${eventLinks?`<div style="margin-top:14px;font-size:.85rem;line-height:1.9;">${eventLinks}</div>`:''}${allDataHTML(event,EVENT_PHOTO_KEYS)}</div>`;
         document.getElementById('event-modal-nav').style.display=modalEvents.length>1?'flex':'none';
         document.getElementById('event-counter').textContent=`${modalEventIndex+1} / ${modalEvents.length}`;
     }
@@ -1266,7 +1308,7 @@
             (event.photo||[]).forEach((photo,index)=>photos.push({photo,title:event.title,date:event.date,event}));
         });
         document.getElementById('gallery-result-note').textContent=`顯示 ${photos.length} 張照片`;
-        container.innerHTML=photos.length?photos.map((item,index)=>`<div class="gallery-item-card"><button class="favorite-btn gallery-fav ${isFavorite(item.event)?'active':''}" onclick="toggleFavorite(eventsData.find(e=>eventKey(e)==='${eventKey(item.event).replace(/'/g,"\\'")}'),event)">${isFavorite(item.event)?'♥':'♡'}</button><img src="${escapeHTML(getImageCandidates(item.photo)[0])}" data-candidates="${escapeHTML(JSON.stringify(getImageCandidates(item.photo)))}" data-fallback-index="0" data-drive-url="${escapeHTML(toDriveViewUrl(item.photo))}" alt="${escapeHTML(item.title)}" loading="lazy" onclick="openGalleryViewer(${index},'gallery')" onerror="handleImageFallback(this)"><div class="photo-count-badge">📷 ${index+1}</div><div style="font-size:.7rem;color:var(--text-sub);padding:5px 2px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHTML(item.date.replaceAll('-','.'))} · ${escapeHTML(item.title)}</div></div>`).join(''):'<div style="grid-column:1/-1;text-align:center;color:var(--text-sub);padding:30px;">找不到符合條件的照片 ♡</div>';
+        container.innerHTML=photos.length?photos.map((item,index)=>`<div class="gallery-item-card"><button class="favorite-btn gallery-fav ${isFavorite(item.event)?'active':''}" onclick="toggleFavorite(eventsData.find(e=>eventKey(e)==='${eventKey(item.event).replace(/'/g,"\\'")}'),event)">${isFavorite(item.event)?'♥':'♡'}</button><img src="${escapeHTML(getImageCandidates(item.photo)[0])}" data-candidates="${escapeHTML(JSON.stringify(getImageCandidates(item.photo)))}" data-fallback-index="0" data-drive-url="${escapeHTML(toDriveViewUrl(item.photo))}" alt="${escapeHTML(item.title)}" loading="lazy" onerror="handleImageFallback(this)"><div class="photo-count-badge">📷 ${index+1}</div><div style="font-size:.7rem;color:var(--text-sub);padding:5px 2px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHTML(item.date.replaceAll('-','.'))} · ${escapeHTML(item.title)}</div></div>`).join(''):'<div style="grid-column:1/-1;text-align:center;color:var(--text-sub);padding:30px;">找不到符合條件的照片 ♡</div>';
         window._galleryPhotos=photos;
     }
 
@@ -1283,7 +1325,7 @@
         const item=(window._galleryPhotos||[])[index]; if(!item)return;
         const body=document.getElementById('event-modal-body');
         const candidate=getImageCandidates(item.photo)[0];
-        body.innerHTML=`<div class="event-modal-left"><div class="modal-photo-shell"><img class="modal-main-photo" src="${escapeHTML(candidate)}" data-candidates="${escapeHTML(JSON.stringify(getImageCandidates(item.photo)))}" data-fallback-index="0" data-drive-url="${escapeHTML(toDriveViewUrl(item.photo))}" onerror="handleImageFallback(this)" onclick="event.stopPropagation();openModal(this.dataset.driveUrl||this.src,this.dataset.driveUrl)"><div class="modal-photo-nav"><button class="mini-btn" onclick="changeGalleryPhoto(-1);event.stopPropagation();">❮ 上一張</button><span style="font-size:.72rem;color:var(--text-sub);">${index+1} / ${(window._galleryPhotos||[]).length}</span><button class="mini-btn" onclick="changeGalleryPhoto(1);event.stopPropagation();">下一張 ❯</button></div></div></div><div class="event-modal-right"><div class="timeline-date">${formatDate(item.date)}</div><h3 style="margin:4px 0 10px;color:var(--text-main);">${escapeHTML(item.title)}</h3><p style="margin:0;line-height:1.8;color:var(--text-sub);">照片收藏</p><div style="margin-top:14px;"><button class="mini-btn" onclick="closeEventModal();setTimeout(()=>switchTab('timeline'),80)">↗ 回到時間軸</button></div></div>`;
+        body.innerHTML=`<div class="event-modal-left"><div class="modal-photo-shell"><img class="modal-main-photo" src="${escapeHTML(candidate)}" data-candidates="${escapeHTML(JSON.stringify(getImageCandidates(item.photo)))}" data-fallback-index="0" data-drive-url="${escapeHTML(toDriveViewUrl(item.photo))}" onerror="handleImageFallback(this)"><div class="modal-photo-nav"><button class="mini-btn" onclick="changeGalleryPhoto(-1);event.stopPropagation();">❮ 上一張</button><span style="font-size:.72rem;color:var(--text-sub);">${index+1} / ${(window._galleryPhotos||[]).length}</span><button class="mini-btn" onclick="changeGalleryPhoto(1);event.stopPropagation();">下一張 ❯</button></div></div></div><div class="event-modal-right"><div class="timeline-date">${formatDate(item.date)}</div><h3 style="margin:4px 0 10px;color:var(--text-main);">${escapeHTML(item.title)}</h3><p style="margin:0;line-height:1.8;color:var(--text-sub);">照片收藏</p><div style="margin-top:14px;"><button class="mini-btn" onclick="closeEventModal();setTimeout(()=>switchTab('timeline'),80)">↗ 回到時間軸</button></div></div>`;
         document.getElementById('event-modal-nav').style.display='none';
         window._galleryViewerIndex=index;
     }
