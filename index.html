@@ -959,7 +959,7 @@
     let galleryTag = '全部';
     let globalSearch = '';
     const STORAGE_KEY = 'emibonnie-favorites-v2';
-    const GAS_URL = 'https://script.google.com/macros/s/AKfycbw4_H1mak2yFjt2WdswhgDu-ofF3bxOVKX1V2gSknNLxHoOPgSI459HGT7nzGXEmOVU6w/exec';
+    const GAS_URL = 'YOUR_EMIBONNIE_GAS_WEB_APP_URL'; // 只填 EmiBonnie 自己的 Apps Script /exec，不要填泰百劇宇宙的網址
     let membersData = [];
     let sheetLoading = false;
     let sheetError = '';
@@ -1108,7 +1108,7 @@
     function matchesSearch(event, search) {
         if (!search.trim()) return true;
         const q = search.trim().toLowerCase();
-        return [event.date, event.title, event.content, event.linkText, event.videoText, ...inferTags(event)].join(' ').toLowerCase().includes(q);
+        return Object.values(event).filter(v=>typeof v==='string'||typeof v==='number'||typeof v==='boolean').join(' ') .concat(' ',inferTags(event).join(' ')).toLowerCase().includes(q);
     }
 
     function matchesTag(event, tag) {
@@ -1194,7 +1194,7 @@
         const raw=String(value).trim();
         if(!raw)return '';
         // 一格中若有多個 URL，全部分開變成可點連結；非 URL 內容維持純文字。
-        const parts=raw.split(/\s+/).filter(Boolean);
+        const parts=raw.split(/[\s,，、]+/).filter(Boolean);
         if(parts.length>1 && parts.every(isUrlValue)){
             return parts.map(function(url){const u=normalizeUrl(url);return '<a href="'+escapeHTML(u)+'" target="_blank" rel="noopener noreferrer">'+escapeHTML(url)+' ↗</a>';}).join('<br>');
         }
@@ -1228,7 +1228,7 @@
             return '<div class="all-data-item full"><span class="all-data-label">'+escapeHTML(k)+'</span><span class="all-data-value">'+html+'</span></div>';
         }).join('')+'</div></section>';
     }
-    function memberAccountsHTML(m){const out=MEMBER_ACCOUNT_KEYS.filter(([k])=>m&&m[k]).map(([k,label])=>`<a href="${escapeHTML(normalizeUrl(m[k]))}" target="_blank" rel="noopener noreferrer">${label} ↗</a>`);return out.length?`<div class="member-socials">${out.join('')}</div>`:'';}
+    function accountUrl(platform,value){const raw=String(value??'').trim();if(!raw)return '';if(/^https?:\/\//i.test(raw)||/^htps:\/\//i.test(raw)||/^www\./i.test(raw))return normalizeUrl(raw);const u=raw.replace(/^@/,'');const base={instagram:'https://www.instagram.com/',x:'https://x.com/',tiktok:'https://www.tiktok.com/@',youtube:'https://www.youtube.com/@',facebook:'https://www.facebook.com/'};return base[platform]?base[platform]+encodeURIComponent(u):normalizeUrl(raw);}function memberAccountsHTML(m){const out=MEMBER_ACCOUNT_KEYS.filter(([k])=>m&&String(m[k]??'').trim()).map(([k,label])=>`<a href="${escapeHTML(accountUrl(k,m[k]))}" target="_blank" rel="noopener noreferrer">${label} ↗</a>`);return out.length?`<div class="member-socials">${out.join('')}</div>`:'';}
     function memberPhotoHTML(m){
         const keys=['photo_url(大頭照用)','photo_url','photo_url_2','photo_url_3'];
         const photos=[];keys.forEach(k=>{const v=String(m?.[k]||'').trim();if(v&&photos.indexOf(v)===-1)photos.push(v);});
@@ -1236,10 +1236,39 @@
         return '<div class="member-photo-gallery">'+photos.map((u,i)=>'<img class="profile-avatar" src="'+escapeHTML(getImageCandidates(u)[0])+'" alt="" onerror="handleImageFallback(this)" />').join('')+'</div>';
     }
 
+    function eventLinkEntries(event) {
+        if (!event) return [];
+        const fields = [
+            ['dramas_link','🎬 劇集'],
+            ['mv_link','🎵 MV'],
+            ['vlog_link','📹 Vlog'],
+            ['GMMtv LIVE HOUSE_link','🏠 GMMTV LIVE HOUSE'],
+            ['LIVE_link','🔴 LIVE'],
+            ['short video_link','🎞️ 短影音']
+        ];
+        const out=[];
+        fields.forEach(([key,label])=>{
+            const urls = splitLinks(event[key]);
+            urls.forEach((url,n)=>out.push({url:url,text:urls.length>1?`${label} ${n+1}`:label,key:key}));
+        });
+        // 保留舊網站原本的 link / videoLink 相容資料，但不重複已加入的網址。
+        [[event.link,event.linkText||'🔗 相關連結'],[event.videoLink,event.videoText||'📺 影片']].forEach(([url,text])=>{
+            const u=String(url||'').trim();
+            if(u && !out.some(x=>x.url===u)) out.push({url:u,text:text,key:'legacy'});
+        });
+        return out;
+    }
+
+    function splitLinks(value) {
+        const s=String(value??'').trim();
+        if(!s)return [];
+        return [...new Set((s.match(/https?:\/\/[^\s,，、]+/g)||[]).map(normalizeUrl).filter(Boolean))];
+    }
+
     function renderEventLinks(event) {
         const links=eventLinkEntries(event);
         if(!links.length)return '';
-        return `<div class="event-link-list">${links.map((x,i)=>`<a class="event-link-btn ${i===0?'primary':''}" href="${escapeHTML(x.url)}" target="_blank" rel="noopener noreferrer">${escapeHTML(x.text)} ↗</a>`).join('')}</div>`;
+        return `<div class="event-link-list">${links.map((x,i)=>`<a class="event-link-btn ${i===0?'primary':''}" href="${escapeHTML(normalizeUrl(x.url))}" target="_blank" rel="noopener noreferrer">${escapeHTML(x.text)} ↗</a>`).join('')}</div>`;
     }
 
     function renderPhotoOpenButton(url,index=0) { return ''; }
