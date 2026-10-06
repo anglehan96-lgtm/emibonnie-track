@@ -995,6 +995,27 @@
     }
     function normalizeSheetEvent(r){const photos=Array.from({length:10},(_,i)=>r[`phone_${String(i+1).padStart(2,'0')}_link`]).filter(Boolean);return Object.assign({},r,{date:normalizeSheetDate(r.date),title:String(r.title||''),content:String(r.description||''),photo:photos,link:r.dramas_link||'',linkText:'🎬 劇集連結',videoLink:r.mv_link||r.vlog_link||r['GMMtv LIVE HOUSE_link']||r.LIVE_link||r['short video_link']||'',videoText:'相關連結'});}
     function normalizeSheetDate(v){const s=String(v??'').trim();const m=s.match(/^(\d{4})[-\/.](\d{1,2})[-\/.](\d{1,2})/);return m?`${m[1]}-${String(m[2]).padStart(2,'0')}-${String(m[3]).padStart(2,'0')}`:s;}
+    function normalizeMember(r){
+        const m=Object.assign({},r||{});
+        // 保留 Google Sheets 原欄位，同時提供前端會用到的統一欄位名稱。
+        const pick=(...keys)=>{for(const k of keys){if(m[k]!==undefined&&m[k]!==null&&String(m[k]).trim()!=='')return m[k];}return '';};
+        m.m_id=pick('m_id','M_ID','id','ID');
+        m.display_name=pick('display_name','Display Name','displayName','姓名');
+        m.name_zh=pick('name_zh','Name_Zh','中文名','中文姓名');
+        m.name_th=pick('name_th','Name_Th','泰文名','泰文姓名');
+        m.name_en=pick('name_en','Name_En','英文名','英文姓名');
+        m.nickname=pick('nickname','暱稱','昵称','Nickname');
+        m.instagram=pick('instagram','Instagram');
+        m.x=pick('x','X','twitter','Twitter');
+        m.tiktok=pick('tiktok','TikTok');
+        m.youtube=pick('youtube','YouTube');
+        m.facebook=pick('facebook','Facebook');
+        m['photo_url(大頭照用)']=pick('photo_url(大頭照用)','photo_url','Photo URL','photo_url(大頭照)');
+        // 常見多張照片欄位也一併保留；原始欄位不會被刪除。
+        m.photo_url_2=pick('photo_url_2','photo_url_02','photo_02_link');
+        m.photo_url_3=pick('photo_url_3','photo_url_03','photo_03_link');
+        return m;
+    }
     async function loadSheetData(){if(sheetLoading)return;sheetLoading=true;sheetError='';try{let ev,mem;try{ev=await jsonpSheet('getEmiEvents');mem=await jsonpSheet('getEmiMembers');}catch(primary){ev=await jsonpSheet('getEvents');mem=await jsonpSheet('getMembers');}const evData=ev&&ev.data?ev.data:[];const memData=mem&&mem.data?mem.data:[];eventsData=Array.isArray(evData)?evData.map(normalizeSheetEvent):[];membersData=Array.isArray(memData)?memData.map(normalizeMember):[];renderYearFilters();renderTimeline();renderCalendar();renderGallery();renderFavorites();updateStats();renderTagBar('timeline-tag-container',activeTag,'setActiveTag');renderTagBar('gallery-tag-container',galleryTag,'setGalleryTag');updateHeaderTagBar();renderProfile();}catch(e){sheetError=e.message||String(e);renderProfile();const note=document.getElementById('timeline-result-note');if(note)note.innerHTML='<span style="color:#A35F6D;">'+escapeHTML(sheetError)+'</span> <button class="mini-btn" onclick="loadSheetData()">重新連線</button>';}finally{sheetLoading=false;}}
     function renderProfile(){const c=document.getElementById('profile-container');if(!c)return;if(!membersData.length){c.innerHTML=sheetError?`<div class="sheet-status error">${escapeHTML(sheetError)}</div>`:'<div class="card"><div class="results-note">目前沒有從 Google Sheets 取得 members 資料。</div></div>';return;}c.innerHTML=membersData.map(m=>{const name=m.nickname||m['暱稱']||m.name_en||m.display_name||m.m_id||'未命名';const photo=memberPhotoHTML(m);const visible=Object.entries(m).filter(([k,v])=>v!==undefined&&v!==null&&String(v).trim()!==''&&!MEMBER_PHOTO_KEYS.has(k)&&!['instagram','x','tiktok','youtube','facebook'].includes(k));return `<div class="card" style="margin-bottom:20px">${photo}<div class="profile-info"><h3 style="margin:5px 0 2px;color:var(--accent-pink);">${escapeHTML(name)}</h3><span style="font-size:.85rem;color:var(--text-sub);">${escapeHTML(m.name_en||m.display_name||'')}</span>${memberAccountsHTML(m)}</div><div class="all-data-grid">${visible.map(([k,v])=>`<div class="all-data-item full"><span class="all-data-label">${escapeHTML(k)}</span><span class="all-data-value">${fieldValueHTML(v)}</span></div>`).join('')}</div></div>`;}).join('');}
 
