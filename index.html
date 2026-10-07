@@ -707,6 +707,11 @@
         .gallery-toolbar { display:flex; flex-direction:column; gap:10px; margin-bottom:14px; }
         .gallery-item-card { position:relative; }
         .gallery-item-card .gallery-fav { position:absolute; right:8px; top:8px; z-index:3; }
+        .photo-favorite-inline { position:absolute; right:8px; top:8px; z-index:4; }
+        .modal-photo-shell { position:relative; }
+        .modal-photo-fav { position:absolute; right:12px; top:12px; z-index:5; }
+        .featured-tag { border:1px solid rgba(255,190,95,.45); }
+        .favorite-photo-grid { margin-top:12px; }
         .photo-count-badge { position:absolute; left:8px; bottom:35px; background:rgba(45,35,40,.62); color:#fff; font-size:.66rem; padding:4px 7px; border-radius:999px; backdrop-filter:blur(4px); }
         .modal-photo-shell { width:100%; }
         .modal-main-photo { width:100%; max-height:340px; object-fit:contain; border-radius:18px; background:#151515; display:block; cursor:pointer; }
@@ -753,6 +758,92 @@
         .manage-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.manage-btn{border:1px solid #efd8df;background:#fff7f9;color:#9f6072;padding:8px 12px;border-radius:12px;font-weight:700;cursor:pointer}.manage-btn:hover{background:#ffeef3;transform:translateY(-1px)}
         .support-color-wrap{display:inline-flex;align-items:center;gap:8px;vertical-align:middle}.support-color-swatch{width:22px;height:22px;border-radius:7px;border:1px solid rgba(0,0,0,.12);display:inline-block;box-shadow:inset 0 0 0 1px rgba(255,255,255,.55)}
         .today-calendar-day{outline:2px solid #ff758c;outline-offset:-2px;background:#fff4f7!important}.today-dot{position:absolute;right:5px;bottom:4px;width:6px;height:6px;border-radius:50%;background:#ff758c}
+
+        /* ===== 點開詳情：電腦 / 手機分開排版，避免內容被擋 ===== */
+        #eventModal { overflow-y:auto; }
+        .event-modal-content {
+            width:min(1100px, calc(100vw - 48px));
+            max-width:none;
+            max-height:92vh;
+        }
+        .event-modal-body {
+            display:grid;
+            grid-template-columns:minmax(0, 1.12fr) minmax(360px, .88fr);
+            gap:28px;
+            padding:30px;
+            align-items:start;
+            overflow:hidden;
+        }
+        .event-modal-left,
+        .event-modal-right { min-width:0; width:auto; }
+        .event-modal-left { align-self:start; }
+        .event-modal-right {
+            max-height:calc(92vh - 118px);
+            overflow-y:auto;
+            overflow-x:hidden;
+            padding:2px 8px 8px 2px;
+            scrollbar-width:thin;
+        }
+        .modal-photo-shell { min-width:0; }
+        .modal-main-photo {
+            width:100%;
+            max-height:52vh;
+            object-fit:contain;
+        }
+        .modal-thumbs { max-width:100%; }
+        .all-data-grid { min-width:0; }
+        .all-data-item,
+        .all-data-value,
+        .event-link-list { min-width:0; }
+        .all-data-value { overflow-wrap:anywhere; word-break:break-word; }
+        .calendar-own-tag { border:1px dashed rgba(166,76,105,.35); }
+        .event-link-btn,
+        .account-link,
+        .member-socials a { max-width:100%; overflow-wrap:anywhere; }
+
+        @media (min-width:601px) and (max-width:900px) {
+            .event-modal-content { width:min(94vw, 900px); }
+            .event-modal-body { grid-template-columns:minmax(0, 1fr) minmax(300px, .9fr); gap:20px; padding:24px; }
+            .modal-main-photo { max-height:46vh; }
+        }
+
+        @media (max-width:600px) {
+            .event-modal-content {
+                width:calc(100vw - 20px);
+                max-width:none;
+                max-height:94vh;
+                border-radius:22px;
+            }
+            .event-modal-body {
+                display:flex;
+                flex-direction:column;
+                gap:14px;
+                padding:18px;
+                max-height:calc(94vh - 62px);
+                overflow-y:auto;
+                overflow-x:hidden;
+                align-items:stretch;
+            }
+            .event-modal-left,
+            .event-modal-right { width:100%; }
+            .event-modal-right {
+                max-height:none;
+                overflow:visible;
+                padding:0 2px 4px 0;
+            }
+            .modal-main-photo {
+                width:100%;
+                max-height:43vh;
+                border-radius:15px;
+            }
+            .modal-photo-nav { flex-wrap:wrap; }
+            .modal-photo-nav .mini-btn { flex:1 1 auto; }
+            .modal-thumbs img { width:56px; height:56px; }
+            .event-modal-nav { padding:10px 14px; }
+            .event-modal-nav button { padding:7px 12px; font-size:.78rem; }
+            .data-modal-content { width:calc(100vw - 20px); max-height:94vh; padding:16px; }
+        }
+
         .data-modal{position:fixed;inset:0;background:rgba(36,20,30,.45);z-index:1800;display:none;align-items:center;justify-content:center;padding:16px}.data-modal-content{width:min(720px,96vw);max-height:92vh;overflow:auto;background:#fff;border-radius:22px;box-shadow:0 20px 60px rgba(80,45,65,.22);padding:20px}.data-modal-header{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px}.data-modal-close{border:0;background:#f7edf1;width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:1rem}.data-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.data-field{display:flex;flex-direction:column;gap:5px}.data-field.full{grid-column:1/-1}.data-field label{font-size:.72rem;color:var(--text-sub);font-weight:700}.data-field input,.data-field textarea,.data-field select{width:100%;box-sizing:border-box;border:1px solid var(--border-color);background:#fff;border-radius:11px;padding:9px 10px;font:inherit;color:var(--text-main)}.data-field textarea{min-height:88px;resize:vertical}.data-field input[type=color]{padding:3px;height:40px}.data-form-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px;position:sticky;bottom:0;background:#fff;padding-top:8px}.danger-btn{border-color:#f0ccd5;background:#fff1f3;color:#b54d67}@media(max-width:600px){.data-form-grid{grid-template-columns:1fr}.data-field.full{grid-column:auto}.manage-actions{justify-content:flex-start}}
     </style>
 </head>
@@ -791,6 +882,10 @@
     </div>
     <div id="calendar" class="tab-content">
         <div class="card">
+            <div class="profile-manage-bar" style="margin-bottom:16px;">
+                <div><h3 style="margin:0;color:var(--text-main);">📅 行事曆管理</h3><div class="results-note" style="text-align:left;margin-top:4px;">時間軸活動會自動同步；這裡新增的事項只會留在行事曆</div></div>
+                <div class="manage-actions"><button class="manage-btn" onclick="openCalendarForm()">＋ 新增行事曆事項</button><button class="manage-btn" onclick="loadSheetData()">↻ 同步</button></div>
+            </div>
             <div class="calendar-header">
                 <!-- 上方：年份切換 -->
                 <div class="calendar-nav-row">
@@ -975,9 +1070,12 @@
     let activeTag = '全部';
     let galleryTag = '全部';
     let globalSearch = '';
-    const STORAGE_KEY = 'emibonnie-favorites-v2';
+    const STORAGE_KEY = 'emibonnie-photo-favorites-v3';
+    const FAVORITES_SYNCED_KEY = 'emibonnie-photo-favorites-cloud-synced-v1';
+    // ⭐ 照片收藏：本機快取 + Google Sheets PhotoFavorites 雲端同步。
     const GAS_URL = 'https://script.google.com/macros/s/AKfycbw4_H1mak2yFjt2WdswhgDu-ofF3bxOVKX1V2gSknNLxHoOPgSI459HGT7nzGXEmOVU6w/exec';
     let membersData = [];
+    let calendarData = [];
     let sheetLoading = false;
     let sheetError = '';
 
@@ -1033,7 +1131,34 @@
         m.photo_url_3=pick('photo_url_3','photo_url_03','photo_03_link');
         return m;
     }
-    async function loadSheetData(){if(sheetLoading)return;sheetLoading=true;sheetError='';try{let ev,mem;try{ev=await jsonpSheet('getEmiEvents');mem=await jsonpSheet('getEmiMembers');}catch(primary){ev=await jsonpSheet('getEvents');mem=await jsonpSheet('getMembers');}const evData=ev&&ev.data?ev.data:[];const memData=mem&&mem.data?mem.data:[];eventsData=Array.isArray(evData)?evData.map(normalizeSheetEvent):[];membersData=Array.isArray(memData)?memData.map(normalizeMember):[];renderYearFilters();renderTimeline();renderCalendar();renderGallery();renderFavorites();updateStats();renderTagBar('timeline-tag-container',activeTag,'setActiveTag');renderTagBar('gallery-tag-container',galleryTag,'setGalleryTag');updateHeaderTagBar();renderProfile();}catch(e){sheetError=e.message||String(e);renderProfile();const note=document.getElementById('timeline-result-note');if(note)note.innerHTML='<span style="color:#A35F6D;">'+escapeHTML(sheetError)+'</span> <button class="mini-btn" onclick="loadSheetData()">重新連線</button>';}finally{sheetLoading=false;}}
+    function normalizeCalendarItem(r){
+        const src=Object.assign({},r||{});
+        return Object.assign(src,{calendar_id:String(src.calendar_id||src.id||''),date:normalizeSheetDate(src.date),title:String(src.title||''),content:String(src.description||''),calendarOnly:true,photo:[],link:'',linkText:'',videoLink:'',videoText:'',category:String(src.category||'提醒')});
+    }
+    async function syncPhotoFavoritesFromCloud(){
+        try{
+            const result=await jsonpSheet('getPhotoFavorites');
+            const cloud=Array.isArray(result&&result.data)?result.data.filter(Boolean):[];
+            let local=getFavorites();
+            const hasSynced=localStorage.getItem(FAVORITES_SYNCED_KEY)==='1';
+            if(!hasSynced){
+                if(cloud.length){
+                    local=cloud;
+                    setFavorites(local);
+                }else if(local.length){
+                    await Promise.all(local.map(key=>postSheet({action:'savePhotoFavorite',favorite_key:key})));
+                }
+                localStorage.setItem(FAVORITES_SYNCED_KEY,'1');
+            }else{
+                local=cloud;
+                localStorage.setItem(STORAGE_KEY,JSON.stringify([...new Set(local)]));
+            }
+            renderFavorites();renderGallery();renderTimeline();updateStats();
+        }catch(err){
+            console.warn('照片收藏雲端同步失敗，先使用本機收藏：',err);
+        }
+    }
+    async function loadSheetData(){if(sheetLoading)return;sheetLoading=true;sheetError='';try{let ev,mem,cal;try{ev=await jsonpSheet('getEmiEvents');mem=await jsonpSheet('getEmiMembers');}catch(primary){ev=await jsonpSheet('getEvents');mem=await jsonpSheet('getMembers');}try{cal=await jsonpSheet('getEmiCalendar');}catch(calErr){try{cal=await jsonpSheet('getCalendar');}catch(_){cal={data:[]};}}const evData=ev&&ev.data?ev.data:[];const memData=mem&&mem.data?mem.data:[];const calData=cal&&cal.data?cal.data:[];eventsData=Array.isArray(evData)?evData.map(normalizeSheetEvent):[];membersData=Array.isArray(memData)?memData.map(normalizeMember):[];calendarData=Array.isArray(calData)?calData.map(normalizeCalendarItem):[];renderYearFilters();renderTimeline();renderCalendar();renderGallery();renderFavorites();updateStats();renderTagBar('timeline-tag-container',activeTag,'setActiveTag');renderTagBar('gallery-tag-container',galleryTag,'setGalleryTag');updateHeaderTagBar();renderProfile();await syncPhotoFavoritesFromCloud();}catch(e){sheetError=e.message||String(e);renderProfile();const note=document.getElementById('timeline-result-note');if(note)note.innerHTML='<span style="color:#A35F6D;">'+escapeHTML(sheetError)+'</span> <button class="mini-btn" onclick="loadSheetData()">重新連線</button>';}finally{sheetLoading=false;}}
     function isInternalIdKey(key){
         const k=String(key||'').trim().toLowerCase();
         return k==='id'||k==='m_id'||k.endsWith('_id')||k.includes('uuid');
@@ -1130,16 +1255,31 @@
     }
 
     function eventKey(event) { return `${event.date}__${event.title}`; }
-    function isFavorite(event) { return getFavorites().includes(eventKey(event)); }
-
-    function toggleFavorite(event, e) {
+    function photoKey(event, photo) {
+        return `${eventKey(event)}__PHOTO__${String(photo || '').trim()}`;
+    }
+    function isPhotoFavorite(event, photo) {
+        return !!event && !!photo && getFavorites().includes(photoKey(event, photo));
+    }
+    function togglePhotoFavorite(eventObj, photo, e) {
         if (e) e.stopPropagation();
-        const key = eventKey(event);
+        if (!eventObj || !photo) return;
+        const key = photoKey(eventObj, photo);
         const favs = getFavorites();
         const index = favs.indexOf(key);
-        if (index >= 0) favs.splice(index,1); else favs.push(key);
+        if (index >= 0) {
+            favs.splice(index,1);
+            postSheet({action:'deletePhotoFavorite',favorite_key:key}).catch(err=>console.warn('取消照片收藏同步失敗',err));
+        } else {
+            favs.push(key);
+            postSheet({action:'savePhotoFavorite',favorite_key:key}).catch(err=>console.warn('照片收藏同步失敗',err));
+        }
+        localStorage.setItem(FAVORITES_SYNCED_KEY,'1');
         setFavorites(favs);
         updateHeaderTagBar();
+    }
+    function isFeatured(event) {
+        return /^(true|1|yes|y|是)$/i.test(String(event?.is_featured ?? '').trim());
     }
 
     function inferTags(event) {
@@ -1338,15 +1478,18 @@
         if (!filtered.length) { container.innerHTML = '<div class="card" style="text-align:center;">找不到符合條件的紀錄 ♡</div>'; return; }
         container.innerHTML = `<div class="year-section"><div class="year-title">${activeYear} 年</div></div>` + filtered.map((event,index)=>{
             const photos = Array.isArray(event.photo)?event.photo:[];
-            const favorite = isFavorite(event);
             const carousel = photos.length ? `<div class="photo-carousel" data-index="0">
-                ${photos.map((url,i)=>`<div style="position:relative;"><img class="carousel-img ${i===0?'active':''}" src="${escapeHTML(getImageCandidates(url)[0])}" data-candidates="${escapeHTML(JSON.stringify(getImageCandidates(url)))}" data-fallback-index="0" data-drive-url="${escapeHTML(toDriveViewUrl(url))}" alt="${escapeHTML(event.title)} 照片 ${i+1}" loading="lazy" onerror="handleImageFallback(this)">${renderPhotoOpenButton(url,i)}</div>`).join('')}
+                ${photos.map((url,i)=>{
+                    const safeUrl=String(url).replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+                    return `<div style="position:relative;"><img class="carousel-img ${i===0?'active':''}" src="${escapeHTML(getImageCandidates(url)[0])}" data-candidates="${escapeHTML(JSON.stringify(getImageCandidates(url)))}" data-fallback-index="0" data-drive-url="${escapeHTML(toDriveViewUrl(url))}" alt="${escapeHTML(event.title)} 照片 ${i+1}" loading="lazy" onerror="handleImageFallback(this)"><button class="favorite-btn photo-favorite-inline ${isPhotoFavorite(event,url)?'active':''}" aria-label="收藏照片" onclick="togglePhotoFavorite(eventsData.find(e=>eventKey(e)==='${eventKey(event).replace(/'/g,"\\'")}'),'${safeUrl}',event)">${isPhotoFavorite(event,url)?'♥':'♡'}</button>${renderPhotoOpenButton(url,i)}</div>`;
+                }).join('')}
                 ${photos.length>1?`<button class="carousel-btn carousel-prev" onclick="changeCarousel(this,-1);event.stopPropagation();">❮</button><button class="carousel-btn carousel-next" onclick="changeCarousel(this,1);event.stopPropagation();">❯</button><div class="carousel-indicators">${photos.map((_,i)=>`<span class="indicator-dot ${i===0?'active':''}" onclick="goCarousel(this,${i});event.stopPropagation();"></span>`).join('')}</div>`:''}
                 ${photos.length>1?`<span class="photo-count-badge">📷 ${photos.length}</span>`:''}
             </div>` : '';
             const links = renderEventLinks(event);
             const tags = inferTags(event).map(t=>`<span class="event-tag">${escapeHTML(t)}</span>`).join('');
-            return `<div class="timeline-item"><div class="timeline-date">${formatDate(event.date)}</div><div class="card event-card" data-event-key="${escapeHTML(eventKey(event))}" tabindex="0"><div class="event-top"><div><div class="badge-duo">EmiBonnie</div><h3 style="margin:0;color:var(--text-main);">${escapeHTML(event.title)}</h3></div><button class="favorite-btn ${favorite?'active':''}" aria-label="收藏事件" onclick="toggleFavorite(eventsData.find(e=>eventKey(e)==='${eventKey(event).replace(/'/g,"\\'")}'),event)">${favorite?'♥':'♡'}</button></div>${event.content?`<p style="margin:10px 0 0;line-height:1.8;color:var(--text-sub);white-space:pre-line;">${escapeHTML(event.content)}</p>`:''}${tags?`<div class="event-tags">${tags}</div>`:''}${links?`<div style="margin-top:12px;font-size:.85rem;">${links}</div>`:''}${carousel}</div></div>`;
+            const featuredBadge = isFeatured(event) ? '<span class="event-tag featured-tag">✨ 精選</span>' : '';
+            return `<div class="timeline-item"><div class="timeline-date">${formatDate(event.date)}</div><div class="card event-card" data-event-key="${escapeHTML(eventKey(event))}" tabindex="0"><div class="event-top"><div><div class="badge-duo">EmiBonnie</div><h3 style="margin:0;color:var(--text-main);">${escapeHTML(event.title)}</h3></div></div>${event.content?`<p style="margin:10px 0 0;line-height:1.8;color:var(--text-sub);white-space:pre-line;">${escapeHTML(event.content)}</p>`:''}${(featuredBadge||tags)?`<div class="event-tags">${featuredBadge}${tags}</div>`:''}${links?`<div style="margin-top:12px;font-size:.85rem;">${links}</div>`:''}${carousel}</div></div>`;
         }).join('');
         container.querySelectorAll('.event-card').forEach(card=>{
             const key = card.dataset.eventKey;
@@ -1400,11 +1543,19 @@
         const photos=Array.isArray(event.photo)?event.photo:[];
         if(modalPhotoIndex>=photos.length) modalPhotoIndex=0;
         const currentPhoto=photos[modalPhotoIndex]||'';
-        const favorite=isFavorite(event);
+        if(event.calendarOnly){
+            body.innerHTML=`<div class="event-modal-left"><div style="height:220px;border-radius:18px;background:#faf6f8;display:flex;align-items:center;justify-content:center;color:var(--text-sub);font-size:2.2rem;">📌</div></div><div class="event-modal-right"><div class="timeline-date">${formatDate(event.date)}</div><h3 style="margin:4px 0 8px;color:var(--text-main);">${escapeHTML(event.title)}</h3>${event.time?`<div style="margin:0 0 8px;color:var(--accent-pink);font-weight:700;">🕒 ${escapeHTML(event.time)}</div>`:''}<p style="margin:0;line-height:1.85;color:var(--text-sub);white-space:pre-line;">${escapeHTML(event.content||'')}</p>${event.category?`<div class="modal-tags"><span class="modal-tag">${escapeHTML(event.category)}</span></div>`:''}${allDataHTML(event,new Set(['calendar_id']))}<div class="manage-actions" style="margin-top:14px;justify-content:flex-start"><button class="manage-btn" onclick="openCalendarFormByModalIndex();event.stopPropagation();">✎ 編輯</button></div></div>`;
+            document.getElementById('event-modal-nav').style.display=modalEvents.length>1?'flex':'none';
+            document.getElementById('event-counter').textContent=`${modalEventIndex+1} / ${modalEvents.length}`;
+            return;
+        }
         const tags=inferTags(event).map(t=>`<span class="modal-tag">${escapeHTML(t)}</span>`).join('');
+        const featuredBadge = isFeatured(event) ? '<span class="modal-tag">✨ 精選事件</span>' : '';
         const eventLinks=renderEventLinks(event);
-        const photoBlock = photos.length ? `<div class="modal-photo-shell"><img class="modal-main-photo" id="modal-event-photo" src="${escapeHTML(getImageCandidates(currentPhoto)[0])}" data-candidates="${escapeHTML(JSON.stringify(getImageCandidates(currentPhoto)))}" data-fallback-index="0" data-drive-url="${escapeHTML(toDriveViewUrl(currentPhoto))}" onerror="handleImageFallback(this)"><div class="modal-photo-nav"><button class="mini-btn" onclick="changeModalPhoto(-1);event.stopPropagation();">❮ 上一張</button><span style="font-size:.72rem;color:var(--text-sub);">${modalPhotoIndex+1} / ${photos.length}</span><button class="mini-btn" onclick="changeModalPhoto(1);event.stopPropagation();">下一張 ❯</button></div><div class="modal-thumbs">${photos.map((p,i)=>`<img src="${escapeHTML(getImageCandidates(p)[0])}" data-candidates="${escapeHTML(JSON.stringify(getImageCandidates(p)))}" data-fallback-index="0" class="${i===modalPhotoIndex?'active':''}"  onerror="handleImageFallback(this)">`).join('')}</div></div>` : '<div style="height:220px;border-radius:18px;background:#faf6f8;display:flex;align-items:center;justify-content:center;color:var(--text-sub);">♡ 暫無照片</div>';
-        body.innerHTML=`<div class="event-modal-left">${photoBlock}</div><div class="event-modal-right"><div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;"><div><div class="timeline-date">${formatDate(event.date)}</div><h3 style="margin:4px 0 8px;color:var(--text-main);">${escapeHTML(event.title)}</h3></div><button class="favorite-btn ${favorite?'active':''}" onclick="toggleFavorite(eventsData.find(e=>eventKey(e)==='${eventKey(event).replace(/'/g,"\\'")}'),event);renderEventModal()">${favorite?'♥':'♡'}</button></div><p style="margin:0;line-height:1.85;color:var(--text-sub);white-space:pre-line;">${escapeHTML(event.content||'這一天留下了一筆活動紀錄。')}</p>${tags?`<div class="modal-tags">${tags}</div>`:''}${eventLinks?`<div style="margin-top:14px;font-size:.85rem;line-height:1.9;">${eventLinks}</div>`:''}${allDataHTML(event,EVENT_PHOTO_KEYS)}<div class="manage-actions" style="margin-top:14px;justify-content:flex-start"><button class="manage-btn" onclick="openEventFormByModalIndex();event.stopPropagation();">✎ 編輯</button></div></div>`;
+        const photoFav = photos.length && isPhotoFavorite(event,currentPhoto);
+        const safePhoto=String(currentPhoto).replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+        const photoBlock = photos.length ? `<div class="modal-photo-shell"><img class="modal-main-photo" id="modal-event-photo" src="${escapeHTML(getImageCandidates(currentPhoto)[0])}" data-candidates="${escapeHTML(JSON.stringify(getImageCandidates(currentPhoto)))}" data-fallback-index="0" data-drive-url="${escapeHTML(toDriveViewUrl(currentPhoto))}" onerror="handleImageFallback(this)"><button class="favorite-btn modal-photo-fav" aria-label="收藏照片" onclick="togglePhotoFavorite(modalEvents[modalEventIndex],'${safePhoto}',event);renderEventModal(true)">${photoFav?'♥':'♡'}</button><div class="modal-photo-nav"><button class="mini-btn" onclick="changeModalPhoto(-1);event.stopPropagation();">❮ 上一張</button><span style="font-size:.72rem;color:var(--text-sub);">${modalPhotoIndex+1} / ${photos.length}</span><button class="mini-btn" onclick="changeModalPhoto(1);event.stopPropagation();">下一張 ❯</button></div><div class="modal-thumbs">${photos.map((p,i)=>`<img src="${escapeHTML(getImageCandidates(p)[0])}" data-candidates="${escapeHTML(JSON.stringify(getImageCandidates(p)))}" data-fallback-index="0" class="${i===modalPhotoIndex?'active':''}" onerror="handleImageFallback(this)">`).join('')}</div></div>` : '<div style="height:220px;border-radius:18px;background:#faf6f8;display:flex;align-items:center;justify-content:center;color:var(--text-sub);">♡ 暫無照片</div>';
+        body.innerHTML=`<div class="event-modal-left">${photoBlock}</div><div class="event-modal-right"><div><div class="timeline-date">${formatDate(event.date)}</div><h3 style="margin:4px 0 8px;color:var(--text-main);">${escapeHTML(event.title)}</h3></div><p style="margin:0;line-height:1.85;color:var(--text-sub);white-space:pre-line;">${escapeHTML(event.content||'這一天留下了一筆活動紀錄。')}</p>${(featuredBadge||tags)?`<div class="modal-tags">${featuredBadge}${tags}</div>`:''}${eventLinks?`<div style="margin-top:14px;font-size:.85rem;line-height:1.9;">${eventLinks}</div>`:''}${allDataHTML(event,EVENT_PHOTO_KEYS)}<div class="manage-actions" style="margin-top:14px;justify-content:flex-start"><button class="manage-btn" onclick="openEventFormByModalIndex();event.stopPropagation();">✎ 編輯</button></div></div>`;
         document.getElementById('event-modal-nav').style.display=modalEvents.length>1?'flex':'none';
         document.getElementById('event-counter').textContent=`${modalEventIndex+1} / ${modalEvents.length}`;
     }
@@ -1425,7 +1576,10 @@
             (event.photo||[]).forEach((photo,index)=>photos.push({photo,title:event.title,date:event.date,event}));
         });
         document.getElementById('gallery-result-note').textContent=`顯示 ${photos.length} 張照片`;
-        container.innerHTML=photos.length?photos.map((item,index)=>`<div class="gallery-item-card"><button class="favorite-btn gallery-fav ${isFavorite(item.event)?'active':''}" onclick="toggleFavorite(eventsData.find(e=>eventKey(e)==='${eventKey(item.event).replace(/'/g,"\\'")}'),event)">${isFavorite(item.event)?'♥':'♡'}</button><img src="${escapeHTML(getImageCandidates(item.photo)[0])}" data-candidates="${escapeHTML(JSON.stringify(getImageCandidates(item.photo)))}" data-fallback-index="0" data-drive-url="${escapeHTML(toDriveViewUrl(item.photo))}" alt="${escapeHTML(item.title)}" loading="lazy" onerror="handleImageFallback(this)"><div class="photo-count-badge">📷 ${index+1}</div><div style="font-size:.7rem;color:var(--text-sub);padding:5px 2px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHTML(item.date.replaceAll('-','.'))} · ${escapeHTML(item.title)}</div></div>`).join(''):'<div style="grid-column:1/-1;text-align:center;color:var(--text-sub);padding:30px;">找不到符合條件的照片 ♡</div>';
+        container.innerHTML=photos.length?photos.map((item,index)=>{
+            const safePhoto=String(item.photo).replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+            return `<div class="gallery-item-card" onclick="openGalleryViewer(${index})"><button class="favorite-btn gallery-fav ${isPhotoFavorite(item.event,item.photo)?'active':''}" aria-label="收藏照片" onclick="togglePhotoFavorite(eventsData.find(e=>eventKey(e)==='${eventKey(item.event).replace(/'/g,"\\'")}'),'${safePhoto}',event)">${isPhotoFavorite(item.event,item.photo)?'♥':'♡'}</button><img src="${escapeHTML(getImageCandidates(item.photo)[0])}" data-candidates="${escapeHTML(JSON.stringify(getImageCandidates(item.photo)))}" data-fallback-index="0" data-drive-url="${escapeHTML(toDriveViewUrl(item.photo))}" alt="${escapeHTML(item.title)}" loading="lazy" onerror="handleImageFallback(this)"><div class="photo-count-badge">📷 ${index+1}</div><div style="font-size:.7rem;color:var(--text-sub);padding:5px 2px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHTML(item.date.replaceAll('-','.'))} · ${escapeHTML(item.title)}</div></div>`;
+        }).join(''):'<div style="grid-column:1/-1;text-align:center;color:var(--text-sub);padding:30px;">找不到符合條件的照片 ♡</div>';
         window._galleryPhotos=photos;
     }
 
@@ -1442,18 +1596,33 @@
         const item=(window._galleryPhotos||[])[index]; if(!item)return;
         const body=document.getElementById('event-modal-body');
         const candidate=getImageCandidates(item.photo)[0];
-        body.innerHTML=`<div class="event-modal-left"><div class="modal-photo-shell"><img class="modal-main-photo" src="${escapeHTML(candidate)}" data-candidates="${escapeHTML(JSON.stringify(getImageCandidates(item.photo)))}" data-fallback-index="0" data-drive-url="${escapeHTML(toDriveViewUrl(item.photo))}" onerror="handleImageFallback(this)"><div class="modal-photo-nav"><button class="mini-btn" onclick="changeGalleryPhoto(-1);event.stopPropagation();">❮ 上一張</button><span style="font-size:.72rem;color:var(--text-sub);">${index+1} / ${(window._galleryPhotos||[]).length}</span><button class="mini-btn" onclick="changeGalleryPhoto(1);event.stopPropagation();">下一張 ❯</button></div></div></div><div class="event-modal-right"><div class="timeline-date">${formatDate(item.date)}</div><h3 style="margin:4px 0 10px;color:var(--text-main);">${escapeHTML(item.title)}</h3><p style="margin:0;line-height:1.8;color:var(--text-sub);">照片收藏</p><div style="margin-top:14px;"><button class="mini-btn" onclick="closeEventModal();setTimeout(()=>switchTab('timeline'),80)">↗ 回到時間軸</button></div></div>`;
+        const photoFav=isPhotoFavorite(item.event,item.photo);
+        body.innerHTML=`<div class="event-modal-left"><div class="modal-photo-shell"><img class="modal-main-photo" src="${escapeHTML(candidate)}" data-candidates="${escapeHTML(JSON.stringify(getImageCandidates(item.photo)))}" data-fallback-index="0" data-drive-url="${escapeHTML(toDriveViewUrl(item.photo))}" onerror="handleImageFallback(this)"><button class="favorite-btn modal-photo-fav" aria-label="收藏照片" onclick="togglePhotoFavorite(window._galleryPhotos[${index}].event,window._galleryPhotos[${index}].photo,event);renderGalleryViewer(${index})">${photoFav?'♥':'♡'}</button><div class="modal-photo-nav"><button class="mini-btn" onclick="changeGalleryPhoto(-1);event.stopPropagation();">❮ 上一張</button><span style="font-size:.72rem;color:var(--text-sub);">${index+1} / ${(window._galleryPhotos||[]).length}</span><button class="mini-btn" onclick="changeGalleryPhoto(1);event.stopPropagation();">下一張 ❯</button></div></div></div><div class="event-modal-right"><div class="timeline-date">${formatDate(item.date)}</div><h3 style="margin:4px 0 10px;color:var(--text-main);">${escapeHTML(item.title)}</h3><p style="margin:0;line-height:1.8;color:var(--text-sub);">單張照片收藏</p></div>`;
         document.getElementById('event-modal-nav').style.display='none';
         window._galleryViewerIndex=index;
     }
+
     function changeGalleryPhoto(delta){const photos=window._galleryPhotos||[];if(!photos.length)return;let i=Number(window._galleryViewerIndex||0);i=(i+delta+photos.length)%photos.length;renderGalleryViewer(i);}
 
     function renderFavorites(){
         const container=document.getElementById('favorites-container'); if(!container)return;
-        let items=eventsData.filter(isFavorite).filter(e=>matchesSearch(e,globalSearch));
-        document.getElementById('favorites-result-note').textContent=`${items.length} 筆收藏事件`;
-        if(!items.length){container.innerHTML='<div class="favorite-list-empty">還沒有收藏事件 ♡<br>在時間軸上的 ♡ 點一下就可以加入收藏。</div>';return;}
-        container.innerHTML=items.sort((a,b)=>b.date.localeCompare(a.date)).map(e=>`<div class="card" style="margin-bottom:12px;cursor:pointer;" onclick="openEventModal(eventsData.filter(isFavorite), eventsData.filter(isFavorite).findIndex(x=>eventKey(x)==='${eventKey(e).replace(/'/g,"\\'")}'))"><div class="event-top"><div><div class="timeline-date">${formatDate(e.date)}</div><h3 style="margin:0;color:var(--text-main);">${escapeHTML(e.title)}</h3><div class="event-tags">${inferTags(e).map(t=>`<span class="event-tag">${escapeHTML(t)}</span>`).join('')}</div></div><button class="favorite-btn active" onclick="toggleFavorite(eventsData.find(x=>eventKey(x)==='${eventKey(e).replace(/'/g,"\\'")}'),event)">♥</button></div></div>`).join('');
+        const items=[];
+        eventsData.forEach(event=>{
+            (event.photo||[]).forEach(photo=>{
+                if(isPhotoFavorite(event,photo) && matchesSearch(event,globalSearch)) items.push({event,photo});
+            });
+        });
+        document.getElementById('favorites-result-note').textContent=`${items.length} 張收藏照片`;
+        if(!items.length){container.innerHTML='<div class="favorite-list-empty">還沒有收藏照片 ♡<br>在照片上的 ♡ 點一下就可以加入收藏。</div>';return;}
+        window._favoritesGalleryPhotos=items;
+        container.innerHTML=`<div class="gallery-grid favorite-photo-grid">${items.map((item,index)=>`<div class="gallery-item-card" onclick="openFavoritePhotoViewer(${index})"><button class="favorite-btn gallery-fav active" aria-label="取消收藏" onclick="togglePhotoFavorite(window._favoritesGalleryPhotos[${index}].event,window._favoritesGalleryPhotos[${index}].photo,event)">♥</button><img src="${escapeHTML(getImageCandidates(item.photo)[0])}" data-candidates="${escapeHTML(JSON.stringify(getImageCandidates(item.photo)))}" data-fallback-index="0" data-drive-url="${escapeHTML(toDriveViewUrl(item.photo))}" alt="${escapeHTML(item.event.title)}" loading="lazy" onerror="handleImageFallback(this)"><div style="font-size:.7rem;color:var(--text-sub);padding:5px 2px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHTML(item.event.date.replaceAll('-','.'))} · ${escapeHTML(item.event.title)}</div></div>`).join('')}</div>`;
+    }
+    function openFavoritePhotoViewer(index){
+        const items=window._favoritesGalleryPhotos||[];
+        if(!items[index])return;
+        window._galleryPhotos=items;
+        renderGalleryViewer(index);
+        document.getElementById('eventModal').style.display='flex';
     }
 
     let dataFormMode='';
@@ -1461,9 +1630,12 @@
     let dataFormOriginalKey=null;
     const DEFAULT_EVENT_FIELDS=['date','title','category','description','tags','dramas_link','mv_link','vlog_link','GMMtv LIVE HOUSE_link','LIVE_link','short video_link','is_featured','phone_01_link','phone_02_link','phone_03_link','phone_04_link','phone_05_link','phone_06_link','phone_07_link','phone_08_link','phone_09_link','phone_10_link'];
     const DEFAULT_MEMBER_FIELDS=['m_id','display_name','name_zh','name_th','name_en','nickname','birth_date','zodiac','Height / Weight','occupation','company','photo_url(大頭照用)','instagram','x','tiktok','youtube','support_color','hobby','pet','diet_allergy','暱稱','gender'];
+    const DEFAULT_CALENDAR_FIELDS=['calendar_id','date','title','time','category','description'];
     function getSheetFields(kind){
-        const keys=new Set(kind==='event'?DEFAULT_EVENT_FIELDS:DEFAULT_MEMBER_FIELDS);
-        (kind==='event'?eventsData:membersData).forEach(r=>Object.keys(r||{}).forEach(k=>{if(k)keys.add(k);}));
+        const defaults=kind==='event'?DEFAULT_EVENT_FIELDS:(kind==='member'?DEFAULT_MEMBER_FIELDS:DEFAULT_CALENDAR_FIELDS);
+        const source=kind==='event'?eventsData:(kind==='member'?membersData:calendarData);
+        const keys=new Set(defaults);
+        source.forEach(r=>Object.keys(r||{}).forEach(k=>{if(k)keys.add(k);}));
         return Array.from(keys).filter(k=>!isInternalIdKey(k));
     }
     function fieldInputType(key,value){
@@ -1474,7 +1646,7 @@
         return 'text';
     }
     function fieldLabel(key){
-        const map={date:'日期',title:'標題',category:'分類',description:'內容',tags:'標籤',dramas_link:'劇集連結',mv_link:'MV 連結',vlog_link:'Vlog 連結','GMMtv LIVE HOUSE_link':'GMMTV LIVE HOUSE 連結',LIVE_link:'LIVE 連結','short video_link':'短影音連結',is_featured:'精選',support_color:'應援色',display_name:'顯示名稱',name_zh:'中文名',name_th:'泰文名',name_en:'英文名',nickname:'Nickname／暱稱',birth_date:'生日','Height / Weight':'身高／體重',occupation:'職業',company:'公司','photo_url(大頭照用)':'大頭照',diet_allergy:'飲食／過敏',gender:'性別',hobby:'興趣',pet:'寵物',zodiac:'星座'};
+        const map={date:'日期',title:'標題',time:'時間',category:'分類',description:'內容',tags:'標籤',dramas_link:'劇集連結',mv_link:'MV 連結',vlog_link:'Vlog 連結','GMMtv LIVE HOUSE_link':'GMMTV LIVE HOUSE 連結',LIVE_link:'LIVE 連結','short video_link':'短影音連結',is_featured:'精選',support_color:'應援色',display_name:'顯示名稱',name_zh:'中文名',name_th:'泰文名',name_en:'英文名',nickname:'Nickname／暱稱',birth_date:'生日','Height / Weight':'身高／體重',occupation:'職業',company:'公司','photo_url(大頭照用)':'大頭照',diet_allergy:'飲食／過敏',gender:'性別',hobby:'興趣',pet:'寵物',zodiac:'星座'};
         return map[key]||key;
     }
     function formControlHTML(key,value){
@@ -1490,8 +1662,9 @@
     }
     function openDataForm(kind,record={},editing=false,originalKey=null){
         dataFormMode=kind;dataFormEditing=editing;dataFormOriginalKey=originalKey;
-        document.getElementById('data-modal-title').textContent=editing?(kind==='event'?'✎ 編輯紀錄':'✎ 編輯成員'):(kind==='event'?'＋ 新增紀錄':'＋ 新增成員');
-        document.getElementById('data-modal-note').textContent=editing?'更新後會同步回 Google Sheets':'新增後會寫入 Google Sheets，ID 由系統處理且不顯示';
+        const titleText=kind==='event'?'紀錄':(kind==='member'?'成員':'行事曆事項');
+        document.getElementById('data-modal-title').textContent=editing?`✎ 編輯${titleText}`:`＋ 新增${titleText}`;
+        document.getElementById('data-modal-note').textContent=editing?'更新後會同步回 Google Sheets':'新增後會寫入 Google Sheets，系統 ID 不顯示';
         document.getElementById('data-form-grid').innerHTML=getSheetFields(kind).map(k=>formControlHTML(k,record[k])).join('');
         document.getElementById('data-delete-btn').style.display=editing?'inline-flex':'none';
         document.getElementById('data-submit-btn').disabled=false;
@@ -1500,6 +1673,8 @@
     function openEventForm(record=null){const r=record||{date:TODAY_ISO};openDataForm('event',r,!!record,record?{date:record.date,title:record.title,category:record.category}:null);}
     function openMemberForm(record=null){if(!record)return;openDataForm('member',record,true,String(record.m_id||''));}
     function openMemberFormByIndex(index){const record=membersData[Number(index)];if(record)openMemberForm(record);}
+    function openCalendarForm(record=null){const r=record||{date:TODAY_ISO,title:'',time:'',category:'提醒',description:''};openDataForm('calendar',r,!!record,record?String(record.calendar_id||''):null);}
+    function openCalendarFormByModalIndex(){const record=modalEvents[modalEventIndex];if(record&&record.calendarOnly)openCalendarForm(record);}
     function closeDataModal(){document.getElementById('dataModal').style.display='none';}
     function closeDataModalOnBackdrop(e){if(e.target&&e.target.id==='dataModal')closeDataModal();}
     function collectDataForm(){
@@ -1520,7 +1695,7 @@
             const record=collectDataForm();
             if(dataFormMode==='event'&&!record.date)throw new Error('日期不能空白');
             if(dataFormMode==='event'&&!String(record.title||'').trim())throw new Error('標題不能空白');
-            const payload=dataFormMode==='event'?(dataFormEditing?{action:'updateEvent',originalKey:dataFormOriginalKey,record}:{action:'createEvent',record}):(dataFormEditing?{action:'updateMember',m_id:dataFormOriginalKey,record}:(()=>{throw new Error('成員只能編輯，不能新增');})());
+            let payload;if(dataFormMode==='event')payload=dataFormEditing?{action:'updateEvent',originalKey:dataFormOriginalKey,record}:{action:'createEvent',record};else if(dataFormMode==='member')payload={action:'updateMember',m_id:dataFormOriginalKey,record};else if(dataFormMode==='calendar')payload=dataFormEditing?{action:'updateCalendar',calendar_id:dataFormOriginalKey,record}:{action:'createCalendar',record};else throw new Error('未知資料類型');
             await postSheet(payload);closeDataModal();
             const note=document.getElementById('timeline-result-note');if(note)note.textContent='資料已送出，正在同步 Google Sheets…';
             setTimeout(()=>loadSheetData(),1000);
@@ -1528,7 +1703,7 @@
     }
     async function deleteEditingRecord(){
         if(!dataFormEditing||!confirm(`確定刪除這筆${dataFormMode==='event'?'紀錄':'成員'}嗎？`))return;
-        try{await postSheet(dataFormMode==='event'?{action:'deleteEvent',originalKey:dataFormOriginalKey}:{action:'deleteMember',m_id:dataFormOriginalKey});closeDataModal();setTimeout(()=>loadSheetData(),1000);}catch(err){alert(err.message||String(err));}
+        try{let payload;if(dataFormMode==='event')payload={action:'deleteEvent',originalKey:dataFormOriginalKey};else if(dataFormMode==='member')payload={action:'deleteMember',m_id:dataFormOriginalKey};else if(dataFormMode==='calendar')payload={action:'deleteCalendar',calendar_id:dataFormOriginalKey};else throw new Error('未知資料類型');await postSheet(payload);closeDataModal();setTimeout(()=>loadSheetData(),1000);}catch(err){alert(err.message||String(err));}
     }
     function renderCalendar(){
         const year=calendarDate.getFullYear(),month=calendarDate.getMonth();
@@ -1538,12 +1713,14 @@
         for(let i=0;i<firstDay;i++)container.insertAdjacentHTML('beforeend','<div class="calendar-day empty"></div>');
         for(let day=1;day<=daysInMonth;day++){
             const iso=`${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
-            const events=eventsData.filter(e=>normalizeSheetDate(e.date)===iso);
-            const tags=events.map(e=>`<div class="calendar-event-tag">${escapeHTML(e.title)}</div>`).join('');
+            const timelineItems=eventsData.filter(e=>normalizeSheetDate(e.date)===iso);
+            const ownItems=calendarData.filter(e=>normalizeSheetDate(e.date)===iso);
+            const items=[...timelineItems,...ownItems];
+            const tags=items.map(e=>`<div class="calendar-event-tag ${e.calendarOnly?'calendar-own-tag':''}">${e.calendarOnly?'📌 ':''}${escapeHTML(e.title)}${e.time?` <span style="opacity:.72">${escapeHTML(e.time)}</span>`:''}</div>`).join('');
             const isToday=iso===TODAY_ISO;
-            const cell=document.createElement('div');cell.className='calendar-day'+(events.length?' has-event':'')+(isToday?' today-calendar-day':'');
-            cell.innerHTML=`<div class="day-number">${day}</div>${tags}${events.some(isFavorite)?'<div style="position:absolute;right:4px;top:3px;font-size:.65rem;">⭐</div>':''}${isToday?'<span class="today-dot" title="今天"></span>':''}`;
-            if(events.length)cell.onclick=()=>openEventModal(events,0);
+            const cell=document.createElement('div');cell.className='calendar-day'+(items.length?' has-event':'')+(isToday?' today-calendar-day':'');
+            cell.innerHTML=`<div class="day-number">${day}</div>${tags}${items.some(e=>!e.calendarOnly&&isFeatured(e))?'<div style="position:absolute;right:4px;top:3px;font-size:.65rem;">⭐</div>':''}${isToday?'<span class="today-dot" title="今天"></span>':''}`;
+            if(items.length)cell.onclick=()=>openEventModal(items,0);
             container.appendChild(cell);
         }
     }
